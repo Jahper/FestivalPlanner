@@ -32,6 +32,9 @@ public class Agenda {
     public void addArtist(Artist artist) {
         this.artistList.add(artist);
     }
+    public void addPerformance(Performance performance){
+        this.performanceList.add(performance);
+    }
 
     public void removePodium(Podium podium) {
         this.podiumList.remove(podium);
