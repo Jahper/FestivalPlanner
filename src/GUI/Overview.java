@@ -20,12 +20,12 @@ public class Overview extends Tab {
     }
 
     private Node getCanvas() {
+        Canvas canvas = new Canvas();
 
 
 
 
-
-        return new Canvas();//todo
+        return canvas;
     }
 
     public Tab getTab(){
