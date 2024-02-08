@@ -1,5 +1,6 @@
 package GUI;
 
+import Data.Agenda;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Label;
@@ -9,12 +10,13 @@ import java.awt.*;
 
 public class Overview extends Tab {
     private Tab tab;
-    public Overview(String name){
+    private Agenda agenda;
+    public Overview(String name, Agenda agenda){
         Tab overview = new Tab(name);
-        Tableview tableview = new Tableview("tabelview");
         overview.setContent(new Label("hsbvjsjvsdfjbsfb"));
         overview.setContent(getCanvas());
         this.tab = overview;
+        this.agenda = agenda;
     }
 
     private Node getCanvas() {
