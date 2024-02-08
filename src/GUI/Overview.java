@@ -11,6 +11,8 @@ public class Overview extends Tab {
     private Tab tab;
     public Overview(String name){
         Tab overview = new Tab(name);
+        Tableview tableview = new Tableview("tabelview");
+        overview.setContent(new Label("hsbvjsjvsdfjbsfb"));
         overview.setContent(getCanvas());
         this.tab = overview;
     }
