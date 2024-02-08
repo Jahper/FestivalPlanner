@@ -4,9 +4,11 @@ import Data.Artist;
 import Data.Performance;
 import Data.Podium;
 import javafx.application.Application;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class GUI extends Application {
@@ -24,17 +26,18 @@ public class GUI extends Application {
         TabPane tabPane = new TabPane(overview.getTab(), tableview.getTab());
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
-        Scene scene = new Scene(tabPane,500,500);
+        Scene scene = new Scene(tabPane);
         primaryStage.setScene(scene);
+        primaryStage.setMaximized(true);
         primaryStage.show();
     }
     public void testData(){
-//        agenda.addArtist(new Artist("Korte Frans", "Happy Hardcore"));
-//        agenda.addArtist(new Artist("Duits Frans", "Happy Hardcore"));
-//        agenda.addArtist(new Artist("Ronnie niet Flex", "Rap"));
-//
-//        agenda.addPodium(new Podium("Stage 1"));
-//        agenda.addPodium(new Podium("Stage 2"));
+        agenda.addArtist(new Artist("Korte Frans", "Happy Hardcore"));
+        agenda.addArtist(new Artist("Duits Frans", "Happy Hardcore"));
+        agenda.addArtist(new Artist("Ronnie niet Flex", "Rap"));
+
+        agenda.addPodium(new Podium("Stage 1"));
+        agenda.addPodium(new Podium("Stage 2"));
 
         agenda.addPerformance(new Performance(new Podium("stage 1"), 10, 14,
                 new Artist("Duits Frans", "Rap"), 10));
