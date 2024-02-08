@@ -3,6 +3,7 @@ package GUI;
 import Data.Agenda;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 
@@ -15,6 +16,11 @@ public class Overview extends Tab {
         Tab overview = new Tab(name);
         overview.setContent(new Label("hsbvjsjvsdfjbsfb"));
         overview.setContent(getCanvas());
+
+        Button b = new Button("peop");
+        overview.setContent(b);
+        b.setOnAction(event -> {});
+
         this.tab = overview;
         this.agenda = agenda;
     }
