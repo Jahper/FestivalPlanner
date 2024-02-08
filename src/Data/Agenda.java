@@ -7,10 +7,10 @@ public class Agenda {
     private ArrayList<Podium> podiumList;
     private ArrayList<Performance> performanceList;
 
-    public Agenda(ArrayList<Artist> artistList, ArrayList<Podium> podiumList, ArrayList<Performance> performanceList) {
-        this.artistList = artistList;
-        this.podiumList = podiumList;
-        this.performanceList = performanceList;
+    public Agenda() {
+        this.artistList = new ArrayList<>();
+        this.podiumList = new ArrayList<>();
+        this.performanceList = new ArrayList<>();
     }
 
     public ArrayList<Artist> getArtistList() {
@@ -33,8 +33,8 @@ public class Agenda {
         this.artistList.add(artist);
     }
 
-    public void removePodium(Podium podiump) {
-        this.podiumList.remove(podiump);
+    public void removePodium(Podium podium) {
+        this.podiumList.remove(podium);
     }
 
     public void removeArtist(Artist artist) {
