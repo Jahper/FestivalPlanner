@@ -32,13 +32,22 @@ public class Agenda {
     public void addArtist(Artist artist) {
         this.artistList.add(artist);
     }
-    
-    public void removePodium() {
+
+    public void removePodium(String name) {
+        for (Podium podium : this.podiumList) {
+            if (podium.getName().equals(name)) {
+                this.podiumList.remove(podium);
+            }
+        }
 
     }
 
-    public void removeArtist() {
-
+    public void removeArtist(String name) {
+        for (Artist artist : this.artistList) {
+            if (artist.getName().equals(name)) {
+                this.podiumList.remove(artist);
+            }
+        }
     }
 
     @Override
