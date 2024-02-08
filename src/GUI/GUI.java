@@ -1,5 +1,4 @@
 package GUI;
-
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Tab;
@@ -15,11 +14,12 @@ public class GUI extends Application {
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Festival planner");
         Tab tab1 = new Tab("hallo");
-        Tab tab2 = new Tab("hoi");
-        TabPane tabPane = new TabPane(tab1,tab2);
+        Overview overview = new Overview("Overview");
+        Tableview tableview = new Tableview("Tableview");
+        TabPane tabPane = new TabPane(tableview.getTab(),overview.getTab());
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
-        Scene scene = new Scene(tabPane);
+        Scene scene = new Scene(tabPane,500,500);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
