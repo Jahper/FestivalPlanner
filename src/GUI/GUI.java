@@ -21,7 +21,7 @@ public class GUI extends Application {
         primaryStage.setTitle("Festival planner");
         Overview overview = new Overview("Overview", this.agenda);
         Tableview tableview = new Tableview("Tableview", this.agenda);
-        TabPane tabPane = new TabPane(tableview.getTab(), overview.getTab());
+        TabPane tabPane = new TabPane(overview.getTab(), tableview.getTab());
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
         Scene scene = new Scene(tabPane,500,500);
