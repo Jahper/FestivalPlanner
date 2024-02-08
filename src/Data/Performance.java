@@ -16,6 +16,14 @@ public class Performance {
         this.artists = artists;
         this.popularity = popularity;
     }
+    public Performance(Podium podium, int startTime, int endTime, Artist artist, int popularity){
+        this.podium = podium;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.artists = new ArrayList<>();
+        this.artists.add(artist);
+        this.popularity = popularity;
+    }
 
     public Podium getPodium() {
         return podium;

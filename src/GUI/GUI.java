@@ -1,5 +1,8 @@
 package GUI;
 import Data.Agenda;
+import Data.Artist;
+import Data.Performance;
+import Data.Podium;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Tab;
@@ -14,6 +17,7 @@ public class GUI extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        testData();
         primaryStage.setTitle("Festival planner");
         Overview overview = new Overview("Overview", this.agenda);
         Tableview tableview = new Tableview("Tableview", this.agenda);
@@ -23,5 +27,18 @@ public class GUI extends Application {
         Scene scene = new Scene(tabPane,500,500);
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+    public void testData(){
+//        agenda.addArtist(new Artist("Korte Frans", "Happy Hardcore"));
+//        agenda.addArtist(new Artist("Duits Frans", "Happy Hardcore"));
+//        agenda.addArtist(new Artist("Ronnie niet Flex", "Rap"));
+//
+//        agenda.addPodium(new Podium("Stage 1"));
+//        agenda.addPodium(new Podium("Stage 2"));
+
+        agenda.addPerformance(new Performance(new Podium("stage 1"), 10, 14,
+                new Artist("Duits Frans", "Rap"), 10));
+        agenda.addPerformance(new Performance(new Podium("stage 2"), 15, 17,
+                new Artist("Korte Frans", "Country"), 9));
     }
 }
