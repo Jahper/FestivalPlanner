@@ -3,7 +3,6 @@ import Data.Agenda;
 import Data.Artist;
 import Data.Performance;
 import Data.Podium;
-import GUI.Overview.Overview;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.TabPane;
