@@ -112,7 +112,7 @@ public class Tableview extends Tab {
                 try {
                     agenda.addPerformance(new Performance(
                             addPodium.getValue(),
-                            addBeginTimeHour.getText(),addBeginTimeMinutes.getText(), addBeginTimeHour.getText(),addEndTimeMinutes.getText(),
+                            addBeginTimeHour.getText(),addBeginTimeMinutes.getText(), addEndTimeHour.getText(),addEndTimeMinutes.getText(),
                             addArtist.getValue(),
                             Integer.parseInt(addPopularity.getText())));
 
