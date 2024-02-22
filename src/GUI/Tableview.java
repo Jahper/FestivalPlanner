@@ -112,7 +112,7 @@ public class Tableview extends Tab {
                 try {
                     agenda.addPerformance(new Performance(
                             addPodium.getValue(),
-                            addBeginTimeHour.getText(),addBeginTimeMinutes.getText(), addBeginTimeHour.getText(),addEndTimeMinutes.getText(),
+                            addBeginTimeHour.getText(),addBeginTimeMinutes.getText(), addEndTimeHour.getText(),addEndTimeMinutes.getText(),
                             addArtist.getValue(),
                             Integer.parseInt(addPopularity.getText())));
 
@@ -132,7 +132,7 @@ public class Tableview extends Tab {
 
         });
 
-
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         table.getColumns().addAll(stageCol, artistCol, beginTimeCol,endTimeCol,popularityCol);
 
         hb.getChildren().addAll(addPodium,addArtist, addBeginTimeHour,seperatorLabel,addBeginTimeMinutes,toLabel, addEndTimeHour,seperatorLabel1, addEndTimeMinutes, addPopularity,addButton);
