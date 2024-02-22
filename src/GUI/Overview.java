@@ -13,7 +13,7 @@ import java.awt.*;
 public class Overview extends Tab {
     private Tab tab;
     private Agenda agenda;
-    private Popup popup = new Popup();
+    private Popup popup;
     public Overview(String name, Agenda agenda){
         Tab overview = new Tab(name);
         overview.setContent(new Label("hsbvjsjvsdfjbsfb"));
@@ -31,6 +31,7 @@ public class Overview extends Tab {
 
         this.tab = overview;
         this.agenda = agenda;
+        this.popup = new Popup(this.agenda);
     }
 
     private Node getCanvas() {
