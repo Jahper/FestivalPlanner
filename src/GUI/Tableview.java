@@ -31,8 +31,8 @@ public class Tableview extends Tab {
 
     public Tableview(String name, Agenda agenda){
 
-        for (Performance performance:agenda.getPerformanceList()) {
-            data.add(performance);
+        for (Performance peformance:agenda.getPerformanceList()) {
+            data.add(peformance);
         }
         System.out.println(data);
         this.agenda = agenda;
@@ -90,7 +90,8 @@ public class Tableview extends Tab {
         addButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                data.add(new Performance(agenda.getPodiumList().get(0),
+                data.add(new Performance(new Podium(
+                        addPodium.getText()),
                         Integer.parseInt(addBeginTime.getText()), Integer.parseInt(addEndTime.getText()),
                         new Artist(addArtist.getText(), addGenre.getText()),
                         Integer.parseInt(addPopularity.getText())));

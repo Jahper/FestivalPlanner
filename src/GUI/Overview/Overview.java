@@ -14,6 +14,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.scene.control.Button;
 import org.jfree.fx.FXGraphics2D;
 import org.jfree.fx.ResizableCanvas;
 
@@ -32,9 +33,11 @@ public class Overview extends Tab {
     final ArrayList<Shape> performanceRectangles = new ArrayList<>();
 
     public Overview(String name, Agenda agenda) {
+
         Tab overview = new Tab(name);
         this.tab = overview;
         this.agenda = agenda;
+
 
         for (Artist artist : agenda.getArtistList()) {
             artists.add(artist);
@@ -50,9 +53,14 @@ public class Overview extends Tab {
 
         this.canvas = getCanvas(borderPane);
 
+        Button refreshButton = new Button("Refresh");
+
+        refreshButton.setOnAction(event -> update());
+
         borderPane.setLeft(getPodiums());
         borderPane.setCenter(this.canvas);
         borderPane.setTop(getTimetable());
+        borderPane.setBottom(refreshButton);
 
         overview.setContent(borderPane);
 
@@ -122,6 +130,7 @@ public class Overview extends Tab {
     }
     public void update(){
         this.canvas = getCanvas(this.borderPane);
+        System.out.println(performances.size());
     }
 
     public TableView getTableView() {
