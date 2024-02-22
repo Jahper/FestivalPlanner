@@ -9,7 +9,6 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
-import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -27,6 +26,7 @@ public class Overview extends Tab {
     private Agenda agenda;
     private BorderPane borderPane;
     private ResizableCanvas canvas;
+    private FXGraphics2D graphics;
     final ObservableList<Artist> artists = FXCollections.observableArrayList();
     final ObservableList<Podium> podiums = FXCollections.observableArrayList();
     final ObservableList<Performance> performances = FXCollections.observableArrayList();
@@ -53,6 +53,8 @@ public class Overview extends Tab {
 
         this.canvas = getCanvas(borderPane);
 
+
+
         Button refreshButton = new Button("Refresh");
 
         refreshButton.setOnAction(event -> update());
@@ -68,14 +70,18 @@ public class Overview extends Tab {
     }
 
     private ResizableCanvas getCanvas(BorderPane borderPane) {
-        ResizableCanvas canvas = new ResizableCanvas(g -> draw(g), borderPane);
-        draw(new FXGraphics2D(canvas.getGraphicsContext2D()));
+        this.canvas = new ResizableCanvas(g -> draw(g), borderPane);
+        this.graphics = new FXGraphics2D(canvas.getGraphicsContext2D());
+        draw(graphics);
 
         return canvas;
     }
 
     public void draw(FXGraphics2D graphics) {
+        this.graphics = graphics;
         graphics.setColor(Color.BLUE);
+        graphics.setBackground(Color.white);
+        graphics.clearRect(0, 0, 1920, 1080);
         drawPerformance(graphics);
         for (Shape shape : performanceRectangles) {
             graphics.fill(shape);
@@ -84,13 +90,15 @@ public class Overview extends Tab {
     }
 
     public void drawPerformance(FXGraphics2D graphics) {//standaard spacing voor blokjes is 74
+
         for (Performance performance : performances) {//podiums.indexOf(performance.getPodium()) * 100
-            Shape shape = new Rectangle2D.Double(performance.getStartTime() * 75, podiums.indexOf(performance.getPodium()) * 100,
-                    performance.getEndTime() * 75- performance.getStartTime() * 75, 100);
+            Shape shape = new Rectangle2D.Double(performance.getStartTime() * 0.75 + 80 , podiums.indexOf(performance.getPodium()) * 100,
+                    performance.getEndTime() * 0.75 - performance.getStartTime() * 0.75, 100);
             performanceRectangles.add(shape);
-            System.out.println(podiums.indexOf(performance.getPodium()));
+            System.out.println(performance.getStartTime() * 0.75);
+            System.out.println(performance.getEndTime() * 0.75 - performance.getStartTime() * 0.75);
+//            System.out.println(podiums.indexOf(performance.getPodium()));
 //            Shape shape = new Rectangle2D.Double(81,0,81,100);
-//            performanceRectangles.add(shape);
 
 
         }
@@ -129,15 +137,22 @@ public class Overview extends Tab {
         return timetable;
     }
     public void update(){
-        this.canvas = getCanvas(this.borderPane);
+//        this.canvas = getCanvas(this.borderPane);
+        draw(graphics);
+        performances.clear();
+        for (Performance performance : agenda.getPerformanceList()) {
+            performances.add(performance);
+        }
+        artists.clear();
+        for (Artist artist : agenda.getArtistList()) {
+            artists.add(artist);
+        }
+        podiums.clear();
+        for (Podium podium : agenda.getPodiumList()) {
+            podiums.add(podium);
+        }
         System.out.println(performances.size());
-    }
-
-    public TableView getTableView() {
-        TableView tableView = new TableView<>();
-
-
-        return tableView;
+        System.out.println(agenda.getPerformanceList().size());
     }
 
     public Tab getTab() {

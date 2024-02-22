@@ -31,7 +31,8 @@ public class Performance {
         this.startTimeGui = startTimeHour + ":" + startTimeMinute;
         this.endTimeGui= endTimeHour+":"+endTimeMinute;
         this.artistName=artist.getName();
-
+        System.out.println(startTime);
+        System.out.println(endTime);
     }
 
     public Podium getPodium() {
