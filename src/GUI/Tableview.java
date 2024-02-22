@@ -132,7 +132,7 @@ public class Tableview extends Tab {
 
         });
 
-
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         table.getColumns().addAll(stageCol, artistCol, beginTimeCol,endTimeCol,popularityCol);
 
         hb.getChildren().addAll(addPodium,addArtist, addBeginTimeHour,seperatorLabel,addBeginTimeMinutes,toLabel, addEndTimeHour,seperatorLabel1, addEndTimeMinutes, addPopularity,addButton);
