@@ -17,6 +17,6 @@ public class Podium {
 
     @Override
     public String toString() {
-        return "Podium: " + this.name;
+        return this.name;
     }
 }

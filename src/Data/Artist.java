@@ -6,9 +6,12 @@ public class Artist {
     private String name;
     private String genre;
 
+    private String nameGui;
+
     public Artist(String name, String genre) {
         this.name = name;
         this.genre = genre;
+        this.nameGui = name;
     }
 
     public String getName() {
@@ -27,11 +30,13 @@ public class Artist {
         this.genre = genre;
     }
 
+    public String getNameGui() {
+        return this.nameGui;
+    }
+
     @Override
     public String toString() {
-        return "Artist{" +
-                "name='" + name + '\'' +
-                ", genre='" + genre + '\'' +
-                '}';
+        return
+                "name= " + name + ", genre= " + genre;
     }
 }
