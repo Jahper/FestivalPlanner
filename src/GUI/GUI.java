@@ -39,9 +39,9 @@ public class GUI extends Application {
         agenda.addPodium(new Podium("Stage 1"));
         agenda.addPodium(new Podium("Stage 2"));
 
-        agenda.addPerformance(new Performance(new Podium("stage 1"), 10, 14,
+        agenda.addPerformance(new Performance(new Podium("stage 1"), "10", "14","10","15",
                 new Artist("Duits Frans", "Rap"), 10));
-        agenda.addPerformance(new Performance(new Podium("stage 2"), 15, 17,
+        agenda.addPerformance(new Performance(new Podium("stage 2"), "15","10", "17","30",
                 new Artist("Korte Frans", "Country"), 9));
     }
 }

@@ -5,24 +5,33 @@ import java.util.ArrayList;
 public class Performance {
     private Podium podium;
     private int startTime;
+    private String startTimeGui;
     private int endTime;
+    private String endTimeGui;
     private ArrayList<Artist> artists;
     private int popularity;
-
-    public Performance(Podium podium, int startTime, int endTime, ArrayList<Artist> artists, int popularity) {
+    private String artistName;
+    public Performance(Podium podium, String startTimeHour, String startTimeMinute, String endTimeHour,String endTimeMinute, ArrayList<Artist> artists, int popularity) {
         this.podium = podium;
         this.startTime = startTime;
-        this.endTime = endTime;
+        this.endTime = Integer.parseInt(endTimeHour+endTimeMinute);
         this.artists = artists;
         this.popularity = popularity;
+        this.startTimeGui = startTimeHour + ":" + startTimeMinute;
+        this.endTimeGui= endTimeHour+":"+endTimeMinute;
     }
-    public Performance(Podium podium, int startTime, int endTime, Artist artist, int popularity){
+
+    public Performance(Podium podium, String startTimeHour, String startTimeMinute, String endTimeHour,String endTimeMinute, Artist artist, int popularity) {
         this.podium = podium;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.startTime = Integer.parseInt(startTimeHour + startTimeMinute);
+        this.endTime = Integer.parseInt(endTimeHour+endTimeMinute);
         this.artists = new ArrayList<>();
         this.artists.add(artist);
         this.popularity = popularity;
+        this.startTimeGui = startTimeHour + ":" + startTimeMinute;
+        this.endTimeGui= endTimeHour+":"+endTimeMinute;
+        this.artistName=artist.getName();
+
     }
 
     public Podium getPodium() {
@@ -37,16 +46,16 @@ public class Performance {
         return startTime;
     }
 
-    public void setStartTime(int startTime) {
-        this.startTime = startTime;
+    public void setStartTime(String startTimeHour, String startTimeMinute) {
+        this.startTime = Integer.parseInt(startTimeHour + startTimeMinute);
     }
 
     public int getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(int endTime) {
-        this.endTime = endTime;
+    public void setEndTime(String endTimeHour, String endTimeMinute) {
+        this.endTime = Integer.parseInt(endTimeHour+endTimeMinute);
     }
 
     public ArrayList<Artist> getArtists() {
@@ -63,6 +72,17 @@ public class Performance {
 
     public void setPopularity(int popularity) {
         this.popularity = popularity;
+    }
+
+    public String getStartTimeGui() {
+        return startTimeGui;
+    }
+    public String getEndTimeGui() {
+        return endTimeGui;
+    }
+
+    public String getArtistName(){
+        return artistName;
     }
 
     @Override
