@@ -23,6 +23,9 @@ public class Popup{
     private Agenda agenda;
     private Stage stage;
     final ObservableList<Artist> artists = FXCollections.observableArrayList();
+    final ObservableList<Podium> podiums = FXCollections.observableArrayList();
+    private Artist artistChange = new Artist("","");
+    private Podium podiumChange = new Podium("");
 
 
     public Popup(Agenda agenda) {
@@ -71,7 +74,7 @@ public class Popup{
 
         return stage;
     }
-    public Scene addArtist(){
+    private Scene addArtist(){
         BorderPane borderPane = new BorderPane();
         Label artistNameLabel = new Label("Name");
         Label artistGenreLabel = new Label("Genre");
@@ -135,7 +138,7 @@ public class Popup{
         return scene;
     }
 
-    public Scene addPoduim(){
+    private Scene addPoduim(){
         BorderPane borderPane = new BorderPane();
         Label podiumNameLabel = new Label("Name");
 
@@ -210,12 +213,16 @@ public class Popup{
             stage.setScene(changeArtist());
         });
 
+        podiumButton.setOnAction(event -> {
+            stage.setScene(changePodium());
+        });
+
 
         Scene scene = new Scene(borderPane);
         stage.setScene(scene);
         return stage;
     }
-    public Scene changeArtist(){
+    private Scene changeArtist(){
         for (Artist a : agenda.getArtistList()) {
             if (!artists.contains(a)){
             artists.add(a);
@@ -233,18 +240,17 @@ public class Popup{
 
         Button changeButton = new Button("Change");
 
-
-        HBox hBox = new HBox();
-        hBox.setSpacing(35);
-        hBox.getChildren().add(artistComboBox);
-        hBox.setAlignment(Pos.CENTER);
+        VBox vBox = new VBox();
+        vBox.getChildren().add(artistComboBox);
+        vBox.setSpacing(35);
 
         borderPane.setTop(label);
-        borderPane.setCenter(hBox);
+        borderPane.setCenter(vBox);
         borderPane.setBottom(changeButton);
 
         changeButton.setOnAction(event -> {
             this.stage.setScene(changeArtistSave());
+            this.artistChange = (Artist) artistComboBox.getValue();
         });
 
         Scene scene = new Scene(borderPane);
@@ -252,7 +258,7 @@ public class Popup{
 
     }
 
-    public Scene changeArtistSave(){
+    private Scene changeArtistSave(){
         BorderPane borderPane = new BorderPane();
 
         Label label = new Label("Artiest veranderen");
@@ -261,8 +267,8 @@ public class Popup{
 
         Button changeButton = new Button("Change");
 
-        TextField artistTextField = new TextField();
-        TextField genreTextField = new TextField();
+        TextField artistTextField = new TextField(artistChange.getName());
+        TextField genreTextField = new TextField(artistChange.getGenre());
 
         Label artistLabel = new Label("Artist");
         Label genreLabel = new Label("Genre");
@@ -283,12 +289,167 @@ public class Popup{
 
         changeButton.setOnAction(event -> {
             for (Artist a:artists) {
-                a.getName()
+                if (this.artistChange.equals(a)){
+                    a.setName(artistTextField.getText());
+                    a.setGenre(genreTextField.getText());
+                }
             }
+            System.out.println(agenda.getArtistList());
         });
 
         Scene scene = new Scene(borderPane);
         return scene;
-
     }
+
+    private Scene changePodium() {
+        for (Podium p : agenda.getPodiumList()) {
+            if (!podiums.contains(p)) {
+                podiums.add(p);
+            }
+        }
+        BorderPane borderPane = new BorderPane();
+
+        Label label = new Label("Podium veranderen");
+        label.setFont(new Font(25));
+        label.setAlignment(Pos.CENTER);
+
+        ComboBox artistComboBox = new ComboBox<>();
+        artistComboBox.setMinSize(200, 50);
+        artistComboBox.setItems(podiums);
+
+        Button changeButton = new Button("Change");
+
+        VBox vBox = new VBox();
+        vBox.getChildren().add(artistComboBox);
+        vBox.setSpacing(35);
+
+        borderPane.setTop(label);
+        borderPane.setCenter(vBox);
+        borderPane.setBottom(changeButton);
+
+        changeButton.setOnAction(event -> {
+            this.stage.setScene(changePodiumSave());
+            this.podiumChange = (Podium) artistComboBox.getValue();
+        });
+
+        Scene scene = new Scene(borderPane);
+        return scene;
+    }
+
+    private Scene changePodiumSave(){
+        BorderPane borderPane = new BorderPane();
+
+        Label label = new Label("Podium veranderen");
+        label.setFont(new Font(25));
+        label.setAlignment(Pos.CENTER);
+
+        Button changeButton = new Button("Change");
+
+        TextField podiumTextField = new TextField(artistChange.getName());
+
+        Label podiumLabel = new Label("Podium");
+
+
+        VBox vBox = new VBox();
+        vBox.getChildren().add(podiumLabel);
+        vBox.getChildren().add(podiumTextField);
+        vBox.setSpacing(35);
+
+        vBox.setAlignment(Pos.CENTER);
+
+        borderPane.setTop(label);
+        borderPane.setCenter(vBox);
+        borderPane.setBottom(changeButton);
+
+        changeButton.setOnAction(event -> {
+            for (Podium p:podiums) {
+                if (this.podiumChange.equals(p)){
+                    p.setName(podiumTextField.getText());
+                }
+            }
+            System.out.println(agenda.getPodiumList());
+        });
+
+        Scene scene = new Scene(borderPane);
+        return scene;
+    }
+
+
+
+//    public Stage deletePopUp(){
+//        this.stage = new Stage();
+//        stage.setWidth(400);
+//        stage.setHeight(400);
+//        stage.initStyle(StageStyle.UTILITY);
+//        stage.setResizable(false);
+//        BorderPane borderPane = new BorderPane();
+//
+//        Label label = new Label("Kies een optie om te verwijderen");
+//        label.setFont(new Font(25));
+//        label.setAlignment(Pos.CENTER);
+//
+//        Button artistButton = new Button("Artist");
+//        artistButton.setMinSize(150,75);
+//        artistButton.setFont(new Font(20));
+//        Button podiumButton = new Button("Podium");
+//        podiumButton.setMinSize(150, 75);
+//        podiumButton.setFont(new Font(20));
+//
+//        HBox hBox = new HBox();
+//        hBox.setSpacing(35);
+//        hBox.getChildren().add(artistButton);
+//        hBox.getChildren().add(podiumButton);
+//        hBox.setAlignment(Pos.CENTER);
+//
+//        borderPane.setTop(label);
+//        borderPane.setCenter(hBox);
+//
+//        artistButton.setOnAction(event -> {
+//            stage.setScene(deleteArtist());
+//        });
+//
+//        Scene scene = new Scene(borderPane);
+//        stage.setScene(scene);
+//        return stage;
+//    }
+//    private Scene deleteArtist(){
+//        for (Artist a : agenda.getArtistList()) {
+//            if (!artists.contains(a)){
+//                artists.add(a);
+//            }
+//        }
+//        BorderPane borderPane = new BorderPane();
+//
+//        Label label = new Label("Artiest verwijderen");
+//        label.setFont(new Font(25));
+//        label.setAlignment(Pos.CENTER);
+//
+//        Button deleteButton = new Button("Delete");
+//
+//        ComboBox artistComboBox = new ComboBox<>();
+//        artistComboBox.setMinSize(200,50);
+//        artistComboBox.setItems(artists);
+//
+//
+//        borderPane.setTop(label);
+//        borderPane.setCenter(artistComboBox);
+//        borderPane.setBottom(deleteButton);
+//
+//        deleteButton.setOnAction(event -> {
+////            for (Artist a : artists) {
+////                if (artistComboBox.getValue().equals(a)){
+////                    artists.remove(a);
+////                }
+////            }
+//            artists.remove(artistComboBox.getValue());
+//            agenda.getArtistList().remove(artistComboBox.getValue());
+//            System.out.println(agenda.getArtistList());
+//        });
+//
+//
+//
+//        Scene scene = new Scene(borderPane);
+//        return scene;
+//    }
+
 }

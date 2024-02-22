@@ -19,16 +19,6 @@ public class Overview extends Tab {
         overview.setContent(new Label("hsbvjsjvsdfjbsfb"));
         overview.setContent(getCanvas());
 
-        Button b = new Button("add");
-        Button c = new Button("Change");
-        VBox vBox = new VBox();
-        vBox.getChildren().add(b);
-        vBox.getChildren().add(c);
-        overview.setContent(vBox);
-
-        b.setOnAction(event -> {popup.addPopup().show();});
-        c.setOnAction(event -> {popup.changePopup().show();});
-
         this.tab = overview;
         this.agenda = agenda;
         this.popup = new Popup(this.agenda);
