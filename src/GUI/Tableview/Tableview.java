@@ -34,8 +34,8 @@ public class Tableview implements Refreshable {
 
     public Tableview(String name, Agenda agenda) {
 
-        for (Performance peformance : agenda.getPerformanceList()) {
-            data.add(peformance);
+        for (Performance performance : agenda.getPerformanceList()) {
+            data.add(performance);
         }
         this.agenda = agenda;
         Tab overview = new Tab(name);
@@ -109,29 +109,25 @@ public class Tableview implements Refreshable {
         addArtist.setItems(artists);
 
 
-        addButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                try {
-                    agenda.addPerformance(new Performance(
-                            addPodium.getValue(),
-                            addBeginTimeHour.getText(), addBeginTimeMinutes.getText(), addEndTimeHour.getText(), addEndTimeMinutes.getText(),
-                            addArtist.getValue(),
-                            Integer.parseInt(addPopularity.getText())));
+        addButton.setOnAction(event -> {
+            try {
+                agenda.addPerformance(new Performance(
+                        addPodium.getValue(),
+                        addBeginTimeHour.getText(), addBeginTimeMinutes.getText(), addEndTimeHour.getText(), addEndTimeMinutes.getText(),
+                        addArtist.getValue(),
+                        Integer.parseInt(addPopularity.getText())));
 
-                    data.clear();
+                data.clear();
 
-                    for (Performance peformance : agenda.getPerformanceList()) {
-                        data.add(peformance);
-                    }
-
-                } catch (Exception e) {
-
+                for (Performance peformance : agenda.getPerformanceList()) {
+                    data.add(peformance);
                 }
-                addEndTime.clear();
-                addPopularity.clear();
-            }
 
+            } catch (Exception e) {
+
+            }
+            addEndTime.clear();
+            addPopularity.clear();
         });
 
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -157,8 +153,8 @@ public class Tableview implements Refreshable {
     @Override
     public void update() {
         data.clear();
-        for (Performance peformance : agenda.getPerformanceList()) {
-            data.add(peformance);
+        for (Performance performance : agenda.getPerformanceList()) {
+            data.add(performance);
         }
         podiums.clear();
         for (Podium podium : agenda.getPodiumList()) {

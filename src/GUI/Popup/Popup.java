@@ -85,7 +85,6 @@ public class Popup implements Refreshable {
 
         return stage;
     }
-
     private Scene addArtist() {
         BorderPane borderPane = new BorderPane();
         Label artistNameLabel = new Label("Name");
@@ -116,6 +115,7 @@ public class Popup implements Refreshable {
                 System.out.println(agenda.getArtistList());
                 artistNameTextField.clear();
                 artistGenreTextField.clear();
+                refresh(gui);
             }
         });
 
@@ -129,13 +129,11 @@ public class Popup implements Refreshable {
 
         });
 
-
         borderPane.setCenter(vBox);
         borderPane.setBottom(hBox);
 
         return new Scene(borderPane);
     }
-
     private Scene addPodium() {
         BorderPane borderPane = new BorderPane();
         Label podiumNameLabel = new Label("Name");
@@ -158,6 +156,7 @@ public class Popup implements Refreshable {
                 agenda.addPodium(new Podium(podiumNameTextField.getText()));
                 System.out.println(agenda.getPodiumList());
                 podiumNameTextField.clear();
+                refresh(gui);
             }
         });
 
@@ -169,10 +168,8 @@ public class Popup implements Refreshable {
             this.stage.close();
         });
 
-
         return new Scene(borderPane);
     }
-
     public Stage changePopup() {
         this.stage = new Stage();
         stage.setWidth(400);
@@ -206,12 +203,10 @@ public class Popup implements Refreshable {
             stage.setScene(changePodium());
         });
 
-
         Scene scene = new Scene(borderPane);
         stage.setScene(scene);
         return stage;
     }
-
     private Scene changeArtist() {
         BorderPane borderPane = new BorderPane();
 
@@ -238,16 +233,13 @@ public class Popup implements Refreshable {
         });
 
         return new Scene(borderPane);
-
     }
-
     private Scene changeArtistSave() {
         BorderPane borderPane = new BorderPane();
 
         Label label = new Label("Artiest veranderen");
         label.setFont(new Font(25));
         label.setAlignment(Pos.CENTER);
-
         Button changeButton = new Button("Change");
 
         TextField artistTextField = new TextField(artistChange.getName());
@@ -255,7 +247,6 @@ public class Popup implements Refreshable {
 
         Label artistLabel = new Label("Artist");
         Label genreLabel = new Label("Genre");
-
 
         VBox vBox = new VBox(artistLabel, artistTextField, genreLabel, genreTextField);
         vBox.setSpacing(35);
@@ -273,12 +264,12 @@ public class Popup implements Refreshable {
                     a.setGenre(genreTextField.getText());
                 }
             }
+            refresh(gui);
             System.out.println(agenda.getArtistList());
         });
 
         return new Scene(borderPane);
     }
-
     private Scene changePodium() {
         BorderPane borderPane = new BorderPane();
 
@@ -306,7 +297,6 @@ public class Popup implements Refreshable {
 
         return new Scene(borderPane);
     }
-
     private Scene changePodiumSave() {
         BorderPane borderPane = new BorderPane();
 
@@ -319,7 +309,6 @@ public class Popup implements Refreshable {
         TextField podiumTextField = new TextField(artistChange.getName());
 
         Label podiumLabel = new Label("Podium");
-
 
         VBox vBox = new VBox(podiumLabel, podiumTextField);
         vBox.setSpacing(35);
@@ -337,12 +326,11 @@ public class Popup implements Refreshable {
                 }
             }
             System.out.println(agenda.getPodiumList());
+            refresh(gui);
         });
 
         return new Scene(borderPane);
     }
-
-
     public Stage deletePopUp(){
         this.stage = new Stage();
         stage.setWidth(400);
@@ -394,7 +382,6 @@ public class Popup implements Refreshable {
         podiumComboBox.setMinSize(200,50);
         podiumComboBox.setItems(podiums);
 
-
         borderPane.setTop(label);
         borderPane.setCenter(podiumComboBox);
         borderPane.setBottom(deleteButton);
@@ -420,7 +407,6 @@ public class Popup implements Refreshable {
         ComboBox artistComboBox = new ComboBox<>();
         artistComboBox.setMinSize(200,50);
         artistComboBox.setItems(artists);
-
 
         borderPane.setTop(label);
         borderPane.setCenter(artistComboBox);

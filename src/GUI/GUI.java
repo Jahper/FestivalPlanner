@@ -49,11 +49,6 @@ public class GUI extends Application {
                 new Artist("Korte Frans", "Country"), 9));
     }
 
-//    public void refresh(this) {
-//        overview.refresh(this);
-//    }
-
-
     public Agenda getAgenda() {
         return agenda;
     }

@@ -61,7 +61,6 @@ public class Overview implements Refreshable {
 
         this.canvas = getCanvas(borderPane);
 
-
         Button refreshButton = new Button("Refresh");
         Button addPerformance = new Button("Add");
         Button changeButton = new Button("Change");
@@ -73,7 +72,6 @@ public class Overview implements Refreshable {
             update();
             refresh(this.gui);
         });
-        //todo
         addPerformance.setOnAction(event -> {
             popup.addPopup().show();
 
@@ -105,28 +103,21 @@ public class Overview implements Refreshable {
         graphics.setColor(Color.BLUE);
         graphics.setBackground(Color.white);
         graphics.clearRect(0, 0, 1920, 1080);
-        drawPerformance(graphics);
+        drawPerformance();
         for (Shape shape : performanceRectangles) {
             graphics.fill(shape);
             graphics.draw(shape);
         }
     }
 
-    public void drawPerformance(FXGraphics2D graphics) {//standaard spacing voor blokjes is 74
-
-        for (Performance performance : performances) {//podiums.indexOf(performance.getPodium()) * 100
+    public void drawPerformance() {
+        for (Performance performance : performances) {
             Shape shape = new Rectangle2D.Double(performance.getStartTime() * 0.75, podiums.indexOf(performance.getPodium()) * 100,
                     performance.getEndTime() * 0.75 - performance.getStartTime() * 0.75, 100);
             performanceRectangles.add(shape);
             System.out.println(performance.getStartTime() * 0.75);
             System.out.println(performance.getEndTime() * 0.75 - performance.getStartTime() * 0.75);
-//            System.out.println(podiums.indexOf(performance.getPodium()));
-//            Shape shape = new Rectangle2D.Double(81,0,81,100);
-
-
         }
-//        Shape shape = new Rectangle2D.Double(162,0,81,100);
-//        performanceRectangles.add(shape);
     }
 
     //toont podiums aan zijkant van scherm
@@ -164,7 +155,6 @@ public class Overview implements Refreshable {
     }
     @Override
     public void update() {
-//        this.canvas = getCanvas(this.borderPane);
         performances.clear();
         for (Performance performance : agenda.getPerformanceList()) {
             performances.add(performance);
@@ -177,8 +167,7 @@ public class Overview implements Refreshable {
         for (Podium podium : agenda.getPodiumList()) {
             podiums.add(podium);
         }
-//        System.out.println(performances.size());
-//        System.out.println(agenda.getPerformanceList().size());
+
         borderPane.setLeft(getPodiums());
         draw(graphics);
     }
