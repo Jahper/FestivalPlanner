@@ -72,6 +72,7 @@ public class Overview extends Tab {
         //todo
         addPerformance.setOnAction(event -> {
             popup.addPopup().show();
+
         });
         changeButton.setOnAction(event -> {
             popup.changePopup().show();
@@ -110,7 +111,7 @@ public class Overview extends Tab {
     public void drawPerformance(FXGraphics2D graphics) {//standaard spacing voor blokjes is 74
 
         for (Performance performance : performances) {//podiums.indexOf(performance.getPodium()) * 100
-            Shape shape = new Rectangle2D.Double(performance.getStartTime() * 0.75 + 80, podiums.indexOf(performance.getPodium()) * 100,
+            Shape shape = new Rectangle2D.Double(performance.getStartTime() * 0.75, podiums.indexOf(performance.getPodium()) * 100,
                     performance.getEndTime() * 0.75 - performance.getStartTime() * 0.75, 100);
             performanceRectangles.add(shape);
             System.out.println(performance.getStartTime() * 0.75);
@@ -129,6 +130,8 @@ public class Overview extends Tab {
     private Node getPodiums() {
         ArrayList<Podium> podiums = agenda.getPodiumList();
         VBox stages = new VBox();
+        stages.setMaxWidth(150);
+        stages.setMinWidth(150);
         stages.setSpacing(75);
         for (Podium podium : podiums) {
             Label l = new Label(podium.toString());
