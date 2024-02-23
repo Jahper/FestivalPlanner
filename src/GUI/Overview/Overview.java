@@ -56,24 +56,30 @@ public class Overview extends Tab {
 
 
         Button refreshButton = new Button("Refresh");
+        Button addPerformance = new Button("Add");
+        Button changeButton = new Button("Change");
+        Button removeButton = new Button("Remove");
+
+        HBox buttonBox = new HBox(refreshButton, addPerformance, changeButton, removeButton);
 
         refreshButton.setOnAction(event -> update());
+        //todo
+        addPerformance.setOnAction(event -> {});
+        changeButton.setOnAction(event -> {});
+        removeButton.setOnAction(event -> {});
 
         borderPane.setLeft(getPodiums());
         borderPane.setCenter(this.canvas);
         borderPane.setTop(getTimetable());
-        borderPane.setBottom(refreshButton);
+        borderPane.setBottom(buttonBox);
 
         overview.setContent(borderPane);
-
-
     }
 
     private ResizableCanvas getCanvas(BorderPane borderPane) {
         this.canvas = new ResizableCanvas(g -> draw(g), borderPane);
         this.graphics = new FXGraphics2D(canvas.getGraphicsContext2D());
         draw(graphics);
-
         return canvas;
     }
 
@@ -105,7 +111,8 @@ public class Overview extends Tab {
 //        Shape shape = new Rectangle2D.Double(162,0,81,100);
 //        performanceRectangles.add(shape);
     }
-
+    //toont podiums aan zijkant van scherm
+    //todo ook podiums aan zijkant updaten als deze toegevoegd worden
     private Node getPodiums() {
         ArrayList<Podium> podiums = agenda.getPodiumList();
         VBox stages = new VBox();
@@ -138,7 +145,6 @@ public class Overview extends Tab {
     }
     public void update(){
 //        this.canvas = getCanvas(this.borderPane);
-        draw(graphics);
         performances.clear();
         for (Performance performance : agenda.getPerformanceList()) {
             performances.add(performance);
@@ -153,6 +159,7 @@ public class Overview extends Tab {
         }
         System.out.println(performances.size());
         System.out.println(agenda.getPerformanceList().size());
+        draw(graphics);
     }
 
     public Tab getTab() {
