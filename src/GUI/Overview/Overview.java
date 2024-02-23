@@ -4,7 +4,9 @@ import Data.Agenda;
 import Data.Artist;
 import Data.Performance;
 import Data.Podium;
-import GUI.Popup;
+import GUI.GUI;
+import GUI.Popup.Popup;
+import GUI.Refreshable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -22,8 +24,9 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
-public class Overview extends Tab {
+public class Overview implements Refreshable {
     private Tab tab;
+    private GUI gui;
     private Agenda agenda;
     private BorderPane borderPane;
     private ResizableCanvas canvas;
@@ -35,12 +38,13 @@ public class Overview extends Tab {
     private Popup popup;
 
 
-    public Overview(String name, Agenda agenda) {
+    public Overview(GUI gui, Popup popup) {
+        this.gui = gui;
 
-        Tab overview = new Tab(name);
+        Tab overview = new Tab("Overview");
         this.tab = overview;
-        this.agenda = agenda;
-        this.popup = new Popup(this.agenda);
+        this.agenda = gui.getAgenda();
+        this.popup = popup;
 
 
         for (Artist artist : agenda.getArtistList()) {
@@ -67,7 +71,7 @@ public class Overview extends Tab {
 
         refreshButton.setOnAction(event -> {
             update();
-            borderPane.setLeft(getPodiums());
+            refresh(this.gui);
         });
         //todo
         addPerformance.setOnAction(event -> {
@@ -78,7 +82,7 @@ public class Overview extends Tab {
             popup.changePopup().show();
         });
         removeButton.setOnAction(event -> {
-
+            popup.deletePopUp().show();
         });
 
         borderPane.setLeft(getPodiums());
@@ -126,7 +130,6 @@ public class Overview extends Tab {
     }
 
     //toont podiums aan zijkant van scherm
-    //todo ook podiums aan zijkant updaten als deze toegevoegd worden
     private Node getPodiums() {
         ArrayList<Podium> podiums = agenda.getPodiumList();
         VBox stages = new VBox();
@@ -159,7 +162,7 @@ public class Overview extends Tab {
         }
         return timetable;
     }
-
+    @Override
     public void update() {
 //        this.canvas = getCanvas(this.borderPane);
         performances.clear();
@@ -174,12 +177,18 @@ public class Overview extends Tab {
         for (Podium podium : agenda.getPodiumList()) {
             podiums.add(podium);
         }
-        System.out.println(performances.size());
-        System.out.println(agenda.getPerformanceList().size());
+//        System.out.println(performances.size());
+//        System.out.println(agenda.getPerformanceList().size());
+        borderPane.setLeft(getPodiums());
         draw(graphics);
     }
 
     public Tab getTab() {
         return this.tab;
+    }
+
+    @Override
+    public void refresh(GUI gui) {
+        gui.refresh();
     }
 }
