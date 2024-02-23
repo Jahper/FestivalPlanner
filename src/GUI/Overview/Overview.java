@@ -4,6 +4,7 @@ import Data.Agenda;
 import Data.Artist;
 import Data.Performance;
 import Data.Podium;
+import GUI.Popup;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -31,12 +32,15 @@ public class Overview extends Tab {
     final ObservableList<Podium> podiums = FXCollections.observableArrayList();
     final ObservableList<Performance> performances = FXCollections.observableArrayList();
     final ArrayList<Shape> performanceRectangles = new ArrayList<>();
+    private Popup popup;
+
 
     public Overview(String name, Agenda agenda) {
 
         Tab overview = new Tab(name);
         this.tab = overview;
         this.agenda = agenda;
+        this.popup = new Popup(this.agenda);
 
 
         for (Artist artist : agenda.getArtistList()) {
@@ -54,7 +58,6 @@ public class Overview extends Tab {
         this.canvas = getCanvas(borderPane);
 
 
-
         Button refreshButton = new Button("Refresh");
         Button addPerformance = new Button("Add");
         Button changeButton = new Button("Change");
@@ -62,11 +65,20 @@ public class Overview extends Tab {
 
         HBox buttonBox = new HBox(refreshButton, addPerformance, changeButton, removeButton);
 
-        refreshButton.setOnAction(event -> update());
+        refreshButton.setOnAction(event -> {
+            update();
+            borderPane.setLeft(getPodiums());
+        });
         //todo
-        addPerformance.setOnAction(event -> {});
-        changeButton.setOnAction(event -> {});
-        removeButton.setOnAction(event -> {});
+        addPerformance.setOnAction(event -> {
+            popup.addPopup().show();
+        });
+        changeButton.setOnAction(event -> {
+            popup.changePopup().show();
+        });
+        removeButton.setOnAction(event -> {
+
+        });
 
         borderPane.setLeft(getPodiums());
         borderPane.setCenter(this.canvas);
@@ -98,7 +110,7 @@ public class Overview extends Tab {
     public void drawPerformance(FXGraphics2D graphics) {//standaard spacing voor blokjes is 74
 
         for (Performance performance : performances) {//podiums.indexOf(performance.getPodium()) * 100
-            Shape shape = new Rectangle2D.Double(performance.getStartTime() * 0.75 + 80 , podiums.indexOf(performance.getPodium()) * 100,
+            Shape shape = new Rectangle2D.Double(performance.getStartTime() * 0.75 + 80, podiums.indexOf(performance.getPodium()) * 100,
                     performance.getEndTime() * 0.75 - performance.getStartTime() * 0.75, 100);
             performanceRectangles.add(shape);
             System.out.println(performance.getStartTime() * 0.75);
@@ -111,6 +123,7 @@ public class Overview extends Tab {
 //        Shape shape = new Rectangle2D.Double(162,0,81,100);
 //        performanceRectangles.add(shape);
     }
+
     //toont podiums aan zijkant van scherm
     //todo ook podiums aan zijkant updaten als deze toegevoegd worden
     private Node getPodiums() {
@@ -143,7 +156,8 @@ public class Overview extends Tab {
         }
         return timetable;
     }
-    public void update(){
+
+    public void update() {
 //        this.canvas = getCanvas(this.borderPane);
         performances.clear();
         for (Performance performance : agenda.getPerformanceList()) {
