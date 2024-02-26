@@ -306,8 +306,8 @@ public class Popup implements Refreshable {
                 artistList.add(artistBox.getValue());
                 performance.setArtists(new ArrayList<>(artistList));
                 performance.setPopularity(popularityBox.getValue());
-                System.out.println(performance);
                 refresh(gui);
+                this.stage.close();
             }
         });
         return new Scene(borderPane);
@@ -366,7 +366,7 @@ public class Popup implements Refreshable {
                 }
             }
             refresh(gui);
-            System.out.println(agenda.getArtistList());
+            this.stage.close();
         });
 
         return new Scene(borderPane);
@@ -421,6 +421,7 @@ public class Popup implements Refreshable {
             }
             System.out.println(agenda.getPodiumList());
             refresh(gui);
+            this.stage.close();
         });
 
         return new Scene(borderPane);
@@ -469,6 +470,7 @@ public class Popup implements Refreshable {
             agenda.getPerformanceList().remove(podiumComboBox.getValue());
             performances.remove(podiumComboBox.getValue());
             refresh(gui);
+            this.stage.close();
         });
 
         return new Scene(borderPane);
@@ -491,6 +493,7 @@ public class Popup implements Refreshable {
             agenda.getPodiumList().remove(podiumComboBox.getValue());
             podiums.remove(podiumComboBox.getValue());
             refresh(gui);
+            this.stage.close();
         });
 
         return new Scene(borderPane);
@@ -513,6 +516,7 @@ public class Popup implements Refreshable {
             agenda.getArtistList().remove(artistComboBox.getValue());
             artists.remove(artistComboBox.getValue());
             refresh(gui);
+            this.stage.close();
         });
 
         return new Scene(borderPane);
