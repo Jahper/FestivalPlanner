@@ -66,8 +66,9 @@ public class Overview implements Refreshable {
         Button addPerformance = new Button("Add");
         Button changeButton = new Button("Change");
         Button removeButton = new Button("Remove");
+        Button infoButton = new Button("INFO TEST!!!!!!!!!!!!!");
 
-        HBox buttonBox = new HBox(refreshButton, addPerformance, changeButton, removeButton);
+        HBox buttonBox = new HBox(refreshButton, addPerformance, changeButton, removeButton, infoButton);
 
         refreshButton.setOnAction(event -> {
             update();
@@ -83,6 +84,8 @@ public class Overview implements Refreshable {
         removeButton.setOnAction(event -> {
             popup.deletePopUp().show();
         });
+
+        infoButton.setOnAction(event -> popup.infoPopup().show());
 
         borderPane.setLeft(getPodiums());
         borderPane.setCenter(this.canvas);
