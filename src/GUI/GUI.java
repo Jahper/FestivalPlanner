@@ -34,6 +34,8 @@ public class GUI extends Application {
         primaryStage.setScene(scene);
         primaryStage.setMaximized(true);
         primaryStage.show();
+
+        refresh();
     }
     public void testData(){
         agenda.addArtist(new Artist("Korte Frans", "Happy Hardcore"));

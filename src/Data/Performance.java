@@ -75,6 +75,7 @@ public class Performance {
 
     public void setStartTime(String startTimeHour, String startTimeMinute) {
         this.startTime = Integer.parseInt(startTimeHour + startTimeMinute);
+        this.startTimeGui = startTimeHour + ":" + startTimeMinute;
     }
 
     public int getEndTime() {
@@ -83,6 +84,7 @@ public class Performance {
 
     public void setEndTime(String endTimeHour, String endTimeMinute) {
         this.endTime = Integer.parseInt(endTimeHour + endTimeMinute);
+        this.endTimeGui = endTimeHour + ":" + endTimeMinute;
     }
 
     public ArrayList<Artist> getArtists() {
