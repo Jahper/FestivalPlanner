@@ -8,30 +8,57 @@ public class Performance {
     private String startTimeGui;
     private int endTime;
     private String endTimeGui;
-    private ArrayList<Artist> artists;
+    private ArrayList<Artist> artists = new ArrayList<>();
     private int popularity;
     private String artistName;
-    public Performance(Podium podium, String startTimeHour, String startTimeMinute, String endTimeHour,String endTimeMinute, ArrayList<Artist> artists, int popularity) {
-        this.podium = podium;
-        this.startTime = startTime;
-        this.endTime = Integer.parseInt(endTimeHour+endTimeMinute);
-        this.artists = artists;
-        this.popularity = popularity;
-        this.startTimeGui = startTimeHour + ":" + startTimeMinute;
-        this.endTimeGui= endTimeHour+":"+endTimeMinute;
-    }
 
-    public Performance(Podium podium, String startTimeHour, String startTimeMinute, String endTimeHour,String endTimeMinute, Artist artist, int popularity) {
+    public Performance(Podium podium, String startTimeHour, String startTimeMinute, String endTimeHour, String endTimeMinute, ArrayList<Artist> artists, int popularity) {
         this.podium = podium;
         this.startTime = Integer.parseInt(startTimeHour + startTimeMinute);
-        this.endTime = Integer.parseInt(endTimeHour+endTimeMinute);
-        this.artists = new ArrayList<>();
+        this.endTime = Integer.parseInt(endTimeHour + endTimeMinute);
+        this.popularity = popularity;
+        this.startTimeGui = startTimeHour + ":" + startTimeMinute;
+        this.endTimeGui = endTimeHour + ":" + endTimeMinute;
+
+        for (Artist artist : artists) {
+            this.artists.add(artist);
+        }
+    }
+
+    public Performance(Podium podium, String startTime, String endTime, ArrayList<Artist> artists, int popularity) {
+        this.podium = podium;
+        this.popularity = popularity;
+        this.startTimeGui = startTime;
+        this.endTimeGui = endTime;
+
+        if (startTime.length() > 4) {
+            this.startTime = Integer.parseInt(startTime.substring(0,2) + startTime.substring(3));
+        } else {
+            this.startTime = Integer.parseInt(startTime.substring(0,1) + startTime.substring(2));
+        }
+
+        if (endTime.length() > 4) {
+            this.endTime = Integer.parseInt(endTime.substring(0,2) + endTime.substring(3));
+        } else {
+            this.endTime = Integer.parseInt(endTime.substring(0,1) + endTime.substring(2));
+        }
+
+        this.artistName = "";
+        for (Artist artist : artists) {
+            this.artists.add(artist);
+            this.artistName = this.artistName + artist.getName() + ", ";
+        }
+    }
+
+    public Performance(Podium podium, String startTimeHour, String startTimeMinute, String endTimeHour, String endTimeMinute, Artist artist, int popularity) {
+        this.podium = podium;
+        this.startTime = Integer.parseInt(startTimeHour + startTimeMinute);
+        this.endTime = Integer.parseInt(endTimeHour + endTimeMinute);
         this.artists.add(artist);
         this.popularity = popularity;
         this.startTimeGui = startTimeHour + ":" + startTimeMinute;
-        this.endTimeGui= endTimeHour+":"+endTimeMinute;
-        this.artistName=artist.getName();
-
+        this.endTimeGui = endTimeHour + ":" + endTimeMinute;
+        this.artistName = artist.getName();
     }
 
     public Podium getPodium() {
@@ -55,7 +82,7 @@ public class Performance {
     }
 
     public void setEndTime(String endTimeHour, String endTimeMinute) {
-        this.endTime = Integer.parseInt(endTimeHour+endTimeMinute);
+        this.endTime = Integer.parseInt(endTimeHour + endTimeMinute);
     }
 
     public ArrayList<Artist> getArtists() {
@@ -77,11 +104,12 @@ public class Performance {
     public String getStartTimeGui() {
         return startTimeGui;
     }
+
     public String getEndTimeGui() {
         return endTimeGui;
     }
 
-    public String getArtistName(){
+    public String getArtistName() {
         return artistName;
     }
 
