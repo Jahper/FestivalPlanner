@@ -99,6 +99,7 @@ public class Overview implements Refreshable {
             gui.refresh();
         });
 
+
         borderPane.setLeft(getPodiums());
         borderPane.setCenter(this.canvas);
 //        borderPane.setTop(getTimetable());
