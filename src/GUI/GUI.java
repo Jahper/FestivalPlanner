@@ -47,6 +47,8 @@ public class GUI extends Application {
                 new Artist("Duits Frans", "Rap"), 10));
         agenda.addPerformance(new Performance(agenda.getPodiumList().get(1), "15","10", "17","30",
                 new Artist("Korte Frans", "Country"), 9));
+        agenda.save();
+        agenda.load();
     }
 
     public Agenda getAgenda() {
