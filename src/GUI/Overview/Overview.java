@@ -111,6 +111,7 @@ public class Overview implements Refreshable {
     }
 
     public void drawPerformance() {
+        performanceRectangles.clear();
         for (Performance performance : performances) {
             Shape shape = new Rectangle2D.Double(performance.getStartTime() * 0.75, podiums.indexOf(performance.getPodium()) * 100,
                     performance.getEndTime() * 0.75 - performance.getStartTime() * 0.75, 100);

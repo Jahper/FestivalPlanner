@@ -20,6 +20,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import sun.misc.Perf;
 
 import java.sql.Ref;
 import java.util.ArrayList;
@@ -321,10 +322,18 @@ public class Popup implements Refreshable {
             if (podiumBox.getValue() != null && startHourBox.getValue() != null && startMinuteBox.getValue() != null &&
                     endHourBox.getValue() != null && endMinuteBox.getValue() != null && artistBox.getValue() != null &&
                     popularityBox.getValue() != null) {
-                agenda.addPerformance(new Performance(podiumBox.getValue(), startHourBox.getValue(),
-                        startMinuteBox.getValue(), endHourBox.getValue(), endMinuteBox.getValue(), artistBox.getValue(), popularityBox.getValue())
-                );
-
+//                agenda.addPerformance(new Performance(podiumBox.getValue(), startHourBox.getValue(),
+//                        startMinuteBox.getValue(), endHourBox.getValue(), endMinuteBox.getValue(), artistBox.getValue(), popularityBox.getValue())
+//                );
+                Performance performance = performanceBox.getValue();
+                performance.setPodium(podiumBox.getValue());
+                performance.setStartTime(startHourBox.getValue(), startMinuteBox.getValue());
+                performance.setEndTime(endHourBox.getValue(), endMinuteBox.getValue());
+                ArrayList<Artist> artistList = new ArrayList<>();
+                artistList.add(artistBox.getValue());
+                performance.setArtists(new ArrayList<>(artistList));
+                performance.setPopularity(popularityBox.getValue());
+                System.out.println(performance);
                 refresh(gui);
             }
         });
@@ -478,6 +487,9 @@ public class Popup implements Refreshable {
         label.setFont(new Font(25));
         label.setAlignment(Pos.CENTER);
 
+        Button performanceButton = new Button("Performance");
+        performanceButton.setMinSize(150, 75);
+        performanceButton.setFont(new Font(20));
         Button artistButton = new Button("Artist");
         artistButton.setMinSize(150, 75);
         artistButton.setFont(new Font(20));
@@ -485,23 +497,48 @@ public class Popup implements Refreshable {
         podiumButton.setMinSize(150, 75);
         podiumButton.setFont(new Font(20));
 
-        HBox hBox = new HBox();
-        hBox.setSpacing(35);
-        hBox.getChildren().add(artistButton);
-        hBox.getChildren().add(podiumButton);
-        hBox.setAlignment(Pos.CENTER);
+        VBox vBox = new VBox(performanceButton, artistButton, podiumButton);
+        vBox.setSpacing(35);
+        vBox.setAlignment(Pos.CENTER);
 
         borderPane.setTop(label);
-        borderPane.setCenter(hBox);
+        borderPane.setCenter(vBox);
 
-        artistButton.setOnAction(event -> {
-            stage.setScene(deleteArtist());
-        });
+        performanceButton.setOnAction(event -> stage.setScene(deletePerformance()));
+
+        artistButton.setOnAction(event -> stage.setScene(deleteArtist()));
+
         podiumButton.setOnAction(event -> stage.setScene(deletePodium()));
 
         Scene scene = new Scene(borderPane);
         stage.setScene(scene);
         return stage;
+    }
+
+    private Scene deletePerformance() {
+        BorderPane borderPane = new BorderPane();
+
+        Label label = new Label("Optreden verwijderen");
+        label.setFont(new Font(25));
+        label.setAlignment(Pos.CENTER);
+
+        Button deleteButton = new Button("Delete");
+
+        ComboBox podiumComboBox = new ComboBox<>();
+        podiumComboBox.setMinSize(200, 50);
+        podiumComboBox.setItems(performances);
+
+        borderPane.setTop(label);
+        borderPane.setCenter(podiumComboBox);
+        borderPane.setBottom(deleteButton);
+
+        deleteButton.setOnAction(event -> {
+            agenda.getPerformanceList().remove(podiumComboBox.getValue());
+            performances.remove(podiumComboBox.getValue());
+            refresh(gui);
+        });
+
+        return new Scene(borderPane);
     }
 
     private Scene deletePodium() {
