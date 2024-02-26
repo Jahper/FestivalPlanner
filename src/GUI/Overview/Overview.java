@@ -38,7 +38,7 @@ public class Overview implements Refreshable {
     final ArrayList<Shape> performanceRectangles = new ArrayList<>();
     final ArrayList<Performance2D> performanceInfoList = new ArrayList<>();
     private Popup popup;
-    private double spacing;
+    private int spacing;
 
 
     public Overview(GUI gui, Popup popup) {
@@ -95,32 +95,34 @@ public class Overview implements Refreshable {
     }
 
     private ResizableCanvas getCanvas(BorderPane borderPane) {
-        this.canvas = new ResizableCanvas(g -> draw(g), borderPane);
+        this.canvas = new ResizableCanvas(g -> draw(), borderPane);
         this.graphics = new FXGraphics2D(canvas.getGraphicsContext2D());
-        draw(graphics);
+        draw();
         return canvas;
     }
 
-    public void draw(FXGraphics2D graphics) {
-        this.graphics = graphics;
+    public void draw() {
+        this.spacing = (int) (Math.round(canvas.getWidth() / 24));
+//        this.spacing = 74;
         graphics.setColor(Color.BLUE);
         graphics.setBackground(Color.white);
         graphics.clearRect(0, 0, (int) canvas.getWidth(), (int) canvas.getHeight());
         graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
-        drawPerformance(graphics);
-        drawTimetable(graphics);
+        drawPerformance();
+//        drawTimetable(graphics);
     }
 
-    public void drawPerformance(Graphics2D graphics) {
+    public void drawPerformance() {
         performanceRectangles.clear();
         performanceInfoList.clear();
         for (Performance performance : performances) {
-            Shape shape = new Rectangle2D.Double((performance.getStartTime() * spacing) / 100, podiums.indexOf(performance.getPodium()) * 100 + 40,
-                    (performance.getEndTime() * spacing / 100) - (performance.getStartTime() * spacing / 100), 100);
+            Shape shape = new Rectangle2D.Double(((double) performance.getStartTime() / 100) * spacing, podiums.indexOf(performance.getPodium()) * 100 + 40,
+                    ((double) performance.getEndTime() / 100) * spacing - ((double) performance.getStartTime() / 100) * spacing, 100);
             performanceRectangles.add(shape);
-            performanceInfoList.add(new Performance2D(performance, (int) (performance.getEndTime() * spacing / 100 - performance.getStartTime() * spacing / 100),
-                    (int) (performance.getStartTime() * spacing / 100), podiums.indexOf(performance.getPodium()) * 100)
+            performanceInfoList.add(new Performance2D(performance, (int) (performance.getEndTime() / 100 * spacing - performance.getStartTime() / 100 * spacing),
+                    (int) (performance.getStartTime() / 100 * spacing), podiums.indexOf(performance.getPodium()) * 100)
             );
+
         }
         graphics.setColor(Color.CYAN);
         for (Shape performanceRectangle : performanceRectangles) {
@@ -133,23 +135,26 @@ public class Overview implements Refreshable {
             graphics.drawString(performance2D.getTimeDuration(), performance2D.getX(), performance2D.getY() + 95);
             graphics.drawString(performance2D.getPopularity(), performance2D.getX(), performance2D.getY() + 125);
         }
+//        System.out.println(spacing);
+        drawTimetable();
     }
-    private void drawTimetable(FXGraphics2D graphics) {
+
+    private void drawTimetable() {
         graphics.setColor(Color.black);
-        this.spacing = canvas.getWidth() / 24;
         graphics.drawLine(0, 40, (int) canvas.getWidth(), 40);
         graphics.drawLine(1, 0, 1, (int) canvas.getHeight());
-        graphics.drawLine((int) canvas.getWidth(), 0,(int) canvas.getWidth(), (int) canvas.getHeight());
-        graphics.drawLine(0,  (int) canvas.getHeight(),(int) canvas.getWidth(), (int) canvas.getHeight());
+        graphics.drawLine((int) canvas.getWidth(), 0, (int) canvas.getWidth(), (int) canvas.getHeight());
+        graphics.drawLine(0, (int) canvas.getHeight(), (int) canvas.getWidth(), (int) canvas.getHeight());
         for (int i = 0; i < 24; i++) {
             if (i < 10) {
-                graphics.drawString("0" + i, (int) spacing * i + 35, 20);
+                graphics.drawString("0" + i, (int) spacing * i + (int) spacing / 2, 20);
             } else {
-                graphics.drawString("" + i, (int) spacing * i + 35, 20);
+                graphics.drawString("" + i, (int) spacing * i + (int) spacing / 2, 20);
             }
-            int halfSpacing = (int) (spacing * 0.5 + 44);
+//            int halfSpacing = (int) (spacing * 1.08);
 //            if (i < 23) {
-            graphics.drawLine((int) spacing * i, 0, (int) spacing * i, 40);
+            graphics.drawLine((int) spacing * i, 0, (int) spacing * i, (int) canvas.getHeight());
+//            System.out.println("line: " + spacing * i);
 //            }
         }
     }
@@ -188,7 +193,7 @@ public class Overview implements Refreshable {
         }
 
         borderPane.setLeft(getPodiums());
-        draw(graphics);
+        draw();
     }
 
     public Tab getTab() {

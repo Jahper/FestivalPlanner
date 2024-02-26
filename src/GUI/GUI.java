@@ -43,11 +43,11 @@ public class GUI extends Application {
         agenda.addPodium(new Podium("Stage 1"));
         agenda.addPodium(new Podium("Stage 2"));
 
-        agenda.addPerformance(new Performance(agenda.getPodiumList().get(0), "00", "00","10","00",
-                new Artist("Duits Frans", "Rap"), 10));
-        agenda.addPerformance(new Performance(agenda.getPodiumList().get(1), "15","10", "17","30",
-                new Artist("Korte Frans", "Country"), 9));
-        agenda.save();
+//        agenda.addPerformance(new Performance(agenda.getPodiumList().get(0), "00", "00","23","00",
+//                new Artist("Duits Frans", "Rap"), 10));
+//        agenda.addPerformance(new Performance(agenda.getPodiumList().get(1), "15","00", "17","30",
+//                new Artist("Korte Frans", "Country"), 9));
+//        agenda.save();
         agenda.load();
     }
 
