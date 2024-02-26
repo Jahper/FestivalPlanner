@@ -261,14 +261,12 @@ public class Popup implements Refreshable {
 
         borderPane.setTop(label);
         borderPane.setCenter(vBox);
-        performanceButton.setOnAction(event -> stage.setScene(changePerformance()));
-        artistButton.setOnAction(event -> {
-            stage.setScene(changeArtist());
-        });
 
-        podiumButton.setOnAction(event -> {
-            stage.setScene(changePodium());
-        });
+        performanceButton.setOnAction(event -> stage.setScene(changePerformance()));
+
+        artistButton.setOnAction(event -> stage.setScene(changeArtist()));
+
+        podiumButton.setOnAction(event -> stage.setScene(changePodium()));
 
         Scene scene = new Scene(borderPane);
         stage.setScene(scene);
@@ -278,11 +276,18 @@ public class Popup implements Refreshable {
     private Scene changePerformance() {
         BorderPane borderPane = new BorderPane();
 
+        //todo mogelijk onderste deel van borderpane in methode zetten
         Button applyButton = new Button("Save");
         Button terugButton = new Button("Terug");
         Button exitButton = new Button("Exit");
 
         HBox buttonHbox = new HBox(applyButton, terugButton, exitButton);
+
+        ComboBox<Performance> performanceBox = new ComboBox<>(performances);
+        Button nextButton = new Button("Next");
+        VBox selectPerformance = new VBox(new Label("Selecteer een optreden:"), performanceBox, nextButton);
+
+        borderPane.setCenter(selectPerformance);
 
         ComboBox<Podium> podiumBox = new ComboBox<>(podiums);
         ComboBox<Artist> artistBox = new ComboBox<>(artists);
@@ -303,8 +308,13 @@ public class Popup implements Refreshable {
                 new Label("End time: "), endTimeSelect, new Label("Popularity: "), popularityBox
         );
 
+        nextButton.setOnAction(event -> {
+            Performance performance = performanceBox.getValue();
+//            podiumBox.setPlaceholder();
+            borderPane.setCenter(vBox);
+        });
 
-        borderPane.setCenter(vBox);
+
         borderPane.setBottom(buttonHbox);
 
         applyButton.setOnAction(event -> {
