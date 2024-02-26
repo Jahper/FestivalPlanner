@@ -4,6 +4,9 @@ import Data.Agenda;
 import Data.Artist;
 import Data.Performance;
 import Data.Podium;
+import GUI.GUI;
+import GUI.Popup.Popup;
+import GUI.Refreshable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -21,8 +24,9 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
-public class Overview extends Tab {
+public class Overview implements Refreshable {
     private Tab tab;
+    private GUI gui;
     private Agenda agenda;
     private BorderPane borderPane;
     private ResizableCanvas canvas;
@@ -31,12 +35,17 @@ public class Overview extends Tab {
     final ObservableList<Podium> podiums = FXCollections.observableArrayList();
     final ObservableList<Performance> performances = FXCollections.observableArrayList();
     final ArrayList<Shape> performanceRectangles = new ArrayList<>();
+    final ArrayList<Performance2D> performanceInfoList = new ArrayList<>();
+    private Popup popup;
 
-    public Overview(String name, Agenda agenda) {
 
-        Tab overview = new Tab(name);
+    public Overview(GUI gui, Popup popup) {
+        this.gui = gui;
+
+        Tab overview = new Tab("Overview");
         this.tab = overview;
-        this.agenda = agenda;
+        this.agenda = gui.getAgenda();
+        this.popup = popup;
 
 
         for (Artist artist : agenda.getArtistList()) {
@@ -53,8 +62,6 @@ public class Overview extends Tab {
 
         this.canvas = getCanvas(borderPane);
 
-
-
         Button refreshButton = new Button("Refresh");
         Button addPerformance = new Button("Add");
         Button changeButton = new Button("Change");
@@ -62,11 +69,20 @@ public class Overview extends Tab {
 
         HBox buttonBox = new HBox(refreshButton, addPerformance, changeButton, removeButton);
 
-        refreshButton.setOnAction(event -> update());
-        //todo
-        addPerformance.setOnAction(event -> {});
-        changeButton.setOnAction(event -> {});
-        removeButton.setOnAction(event -> {});
+        refreshButton.setOnAction(event -> {
+            update();
+            refresh(this.gui);
+        });
+        addPerformance.setOnAction(event -> {
+            popup.addPopup().show();
+
+        });
+        changeButton.setOnAction(event -> {
+            popup.changePopup().show();
+        });
+        removeButton.setOnAction(event -> {
+            popup.deletePopUp().show();
+        });
 
         borderPane.setLeft(getPodiums());
         borderPane.setCenter(this.canvas);
@@ -89,33 +105,43 @@ public class Overview extends Tab {
         graphics.setBackground(Color.white);
         graphics.clearRect(0, 0, 1920, 1080);
         drawPerformance(graphics);
-        for (Shape shape : performanceRectangles) {
-            graphics.fill(shape);
-            graphics.draw(shape);
-        }
+        graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
+//        for (Shape shape : performanceRectangles) {
+//            graphics.fill(shape);
+//            graphics.draw(shape);
+//        }
     }
 
-    public void drawPerformance(FXGraphics2D graphics) {//standaard spacing voor blokjes is 74
-
-        for (Performance performance : performances) {//podiums.indexOf(performance.getPodium()) * 100
-            Shape shape = new Rectangle2D.Double(performance.getStartTime() * 0.75 + 80 , podiums.indexOf(performance.getPodium()) * 100,
+    public void drawPerformance(Graphics2D graphics) {
+        performanceRectangles.clear();
+        performanceInfoList.clear();
+        for (Performance performance : performances) {
+            Shape shape = new Rectangle2D.Double(performance.getStartTime() * 0.75, podiums.indexOf(performance.getPodium()) * 100,
                     performance.getEndTime() * 0.75 - performance.getStartTime() * 0.75, 100);
             performanceRectangles.add(shape);
-            System.out.println(performance.getStartTime() * 0.75);
-            System.out.println(performance.getEndTime() * 0.75 - performance.getStartTime() * 0.75);
-//            System.out.println(podiums.indexOf(performance.getPodium()));
-//            Shape shape = new Rectangle2D.Double(81,0,81,100);
-
-
+            performanceInfoList.add(new Performance2D(performance, (int) (performance.getEndTime() * 0.75 - performance.getStartTime() * 0.75),
+                    (int) (performance.getStartTime() * 0.75), podiums.indexOf(performance.getPodium()) * 100)
+            );
         }
-//        Shape shape = new Rectangle2D.Double(162,0,81,100);
-//        performanceRectangles.add(shape);
+        graphics.setColor(Color.CYAN);
+        for (Shape performanceRectangle : performanceRectangles) {
+            graphics.draw(performanceRectangle);
+            graphics.fill(performanceRectangle);
+        }
+        graphics.setColor(Color.BLACK);
+        for (Performance2D performance2D : performanceInfoList) {
+            graphics.drawString(performance2D.getArtists(), performance2D.getX(), performance2D.getY() + 30);
+            graphics.drawString(performance2D.getTimeDuration(), performance2D.getX(), performance2D.getY() + 60);
+            graphics.drawString(performance2D.getPopularity(), performance2D.getX(), performance2D.getY() + 90);
+        }
     }
+
     //toont podiums aan zijkant van scherm
-    //todo ook podiums aan zijkant updaten als deze toegevoegd worden
     private Node getPodiums() {
         ArrayList<Podium> podiums = agenda.getPodiumList();
         VBox stages = new VBox();
+        stages.setMaxWidth(150);
+        stages.setMinWidth(150);
         stages.setSpacing(75);
         for (Podium podium : podiums) {
             Label l = new Label(podium.toString());
@@ -143,8 +169,9 @@ public class Overview extends Tab {
         }
         return timetable;
     }
-    public void update(){
-//        this.canvas = getCanvas(this.borderPane);
+
+    @Override
+    public void update() {
         performances.clear();
         for (Performance performance : agenda.getPerformanceList()) {
             performances.add(performance);
@@ -157,12 +184,17 @@ public class Overview extends Tab {
         for (Podium podium : agenda.getPodiumList()) {
             podiums.add(podium);
         }
-        System.out.println(performances.size());
-        System.out.println(agenda.getPerformanceList().size());
+
+        borderPane.setLeft(getPodiums());
         draw(graphics);
     }
 
     public Tab getTab() {
         return this.tab;
+    }
+
+    @Override
+    public void refresh(GUI gui) {
+        gui.refresh();
     }
 }

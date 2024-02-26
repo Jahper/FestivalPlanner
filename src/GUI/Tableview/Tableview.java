@@ -1,9 +1,11 @@
-package GUI;
+package GUI.Tableview;
 
 import Data.Agenda;
 import Data.Artist;
 import Data.Performance;
 import Data.Podium;
+import GUI.GUI;
+import GUI.Refreshable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -17,9 +19,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import javax.swing.*;
+import java.sql.Ref;
 import java.util.ArrayList;
 
-public class Tableview extends Tab {
+public class Tableview implements Refreshable {
     private Tab tab;
     private Agenda agenda;
     private TableView table = new TableView();
@@ -29,10 +32,10 @@ public class Tableview extends Tab {
     final ObservableList<Podium> podiums = FXCollections.observableArrayList();
     final ObservableList<Artist> artists = FXCollections.observableArrayList();
 
-    public Tableview(String name, Agenda agenda){
+    public Tableview(String name, Agenda agenda) {
 
-        for (Performance peformance:agenda.getPerformanceList()) {
-            data.add(peformance);
+        for (Performance performance : agenda.getPerformanceList()) {
+            data.add(performance);
         }
         this.agenda = agenda;
         Tab overview = new Tab(name);
@@ -41,42 +44,42 @@ public class Tableview extends Tab {
 
         TableColumn stageCol = new TableColumn("Podium");
         stageCol.setCellValueFactory(
-                new PropertyValueFactory<Performance,String>("podium")
+                new PropertyValueFactory<Performance, String>("podium")
         );
         TableColumn artistCol = new TableColumn("Artiest");
         artistCol.setCellValueFactory(
-                new PropertyValueFactory<Performance,String>("artistName")
+                new PropertyValueFactory<Performance, String>("artistName")
         );
         TableColumn beginTimeCol = new TableColumn("Begintijd");
         beginTimeCol.setCellValueFactory(
-                new PropertyValueFactory<Performance,String>("startTimeGui")
+                new PropertyValueFactory<Performance, String>("startTimeGui")
         );
 
         TableColumn endTimeCol = new TableColumn("Eindtijd");
         endTimeCol.setCellValueFactory(
-                new PropertyValueFactory<Performance,Integer>("endTimeGui")
+                new PropertyValueFactory<Performance, Integer>("endTimeGui")
         );
         TableColumn popularityCol = new TableColumn("Populariteit");
         popularityCol.setCellValueFactory(
-                new PropertyValueFactory<Performance,Integer>("Popularity")
+                new PropertyValueFactory<Performance, Integer>("Popularity")
         );
         table.setItems(data);
 
 
         final TextField addBeginTimeHour = new TextField();
-        addBeginTimeHour.setMaxWidth(beginTimeCol.getPrefWidth()/2);
+        addBeginTimeHour.setMaxWidth(beginTimeCol.getPrefWidth() / 2);
         addBeginTimeHour.setPromptText("Begin Time");
 
         final TextField addBeginTimeMinutes = new TextField();
-        addBeginTimeMinutes.setMaxWidth(beginTimeCol.getPrefWidth()/2);
+        addBeginTimeMinutes.setMaxWidth(beginTimeCol.getPrefWidth() / 2);
         addBeginTimeMinutes.setPromptText("Begin Time");
 
         final TextField addEndTimeHour = new TextField();
-        addEndTimeHour.setMaxWidth(endTimeCol.getPrefWidth()/2);
+        addEndTimeHour.setMaxWidth(endTimeCol.getPrefWidth() / 2);
         addEndTimeHour.setPromptText("End Time");
 
         final TextField addEndTimeMinutes = new TextField();
-        addEndTimeMinutes.setMaxWidth(endTimeCol.getPrefWidth()/2);
+        addEndTimeMinutes.setMaxWidth(endTimeCol.getPrefWidth() / 2);
         addEndTimeMinutes.setPromptText("End Time");
 
         final TextField addEndTime = new TextField();
@@ -95,10 +98,10 @@ public class Tableview extends Tab {
         final ComboBox<Artist> addArtist = new ComboBox<>();
         final Button addButton = new Button("Add");
 
-        for (Podium podium:agenda.getPodiumList()) {
+        for (Podium podium : agenda.getPodiumList()) {
             podiums.add(podium);
         }
-        for (Artist artist:agenda.getArtistList()) {
+        for (Artist artist : agenda.getArtistList()) {
             artists.add(artist);
         }
 
@@ -106,36 +109,31 @@ public class Tableview extends Tab {
         addArtist.setItems(artists);
 
 
-        addButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                try {
-                    agenda.addPerformance(new Performance(
-                            addPodium.getValue(),
-                            addBeginTimeHour.getText(),addBeginTimeMinutes.getText(), addEndTimeHour.getText(),addEndTimeMinutes.getText(),
-                            addArtist.getValue(),
-                            Integer.parseInt(addPopularity.getText())));
+        addButton.setOnAction(event -> {
+            try {
+                agenda.addPerformance(new Performance(
+                        addPodium.getValue(),
+                        addBeginTimeHour.getText(), addBeginTimeMinutes.getText(), addEndTimeHour.getText(), addEndTimeMinutes.getText(),
+                        addArtist.getValue(),
+                        Integer.parseInt(addPopularity.getText())));
 
-                    data.clear();
+                data.clear();
 
-                    for (Performance peformance:agenda.getPerformanceList()) {
-                        data.add(peformance);
-                    }
-
+                for (Performance peformance : agenda.getPerformanceList()) {
+                    data.add(peformance);
                 }
-                catch (Exception e){
 
-                }
-                addEndTime.clear();
-                addPopularity.clear();
+            } catch (Exception e) {
+
             }
-
+            addEndTime.clear();
+            addPopularity.clear();
         });
 
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        table.getColumns().addAll(stageCol, artistCol, beginTimeCol,endTimeCol,popularityCol);
+        table.getColumns().addAll(stageCol, artistCol, beginTimeCol, endTimeCol, popularityCol);
 
-        hb.getChildren().addAll(addPodium,addArtist, addBeginTimeHour,seperatorLabel,addBeginTimeMinutes,toLabel, addEndTimeHour,seperatorLabel1, addEndTimeMinutes, addPopularity,addButton);
+        hb.getChildren().addAll(addPodium, addArtist, addBeginTimeHour, seperatorLabel, addBeginTimeMinutes, toLabel, addEndTimeHour, seperatorLabel1, addEndTimeMinutes, addPopularity, addButton);
         hb.setSpacing(3);
 
         final VBox vbox = new VBox();
@@ -147,7 +145,29 @@ public class Tableview extends Tab {
 
         this.tab = overview;
     }
-    public Tab getTab(){
+
+    public Tab getTab() {
         return this.tab;
+    }
+
+    @Override
+    public void update() {
+        data.clear();
+        for (Performance performance : agenda.getPerformanceList()) {
+            data.add(performance);
+        }
+        podiums.clear();
+        for (Podium podium : agenda.getPodiumList()) {
+            podiums.add(podium);
+        }
+        artists.clear();
+        for (Artist artist : agenda.getArtistList()) {
+            artists.add(artist);
+        }
+    }
+
+    @Override
+    public void refresh(GUI gui) {
+        gui.refresh();
     }
 }
