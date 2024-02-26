@@ -32,15 +32,15 @@ public class Performance {
         this.endTimeGui = endTime;
 
         if (startTime.length() > 4) {
-            this.startTime = Integer.parseInt(startTime.substring(0,2) + startTime.substring(3));
+            this.startTime = Integer.parseInt(startTime.substring(0, 2) + startTime.substring(3));
         } else {
-            this.startTime = Integer.parseInt(startTime.substring(0,1) + startTime.substring(2));
+            this.startTime = Integer.parseInt(startTime.substring(0, 1) + startTime.substring(2));
         }
 
         if (endTime.length() > 4) {
-            this.endTime = Integer.parseInt(endTime.substring(0,2) + endTime.substring(3));
+            this.endTime = Integer.parseInt(endTime.substring(0, 2) + endTime.substring(3));
         } else {
-            this.endTime = Integer.parseInt(endTime.substring(0,1) + endTime.substring(2));
+            this.endTime = Integer.parseInt(endTime.substring(0, 1) + endTime.substring(2));
         }
 
         this.artistName = "";
@@ -75,6 +75,7 @@ public class Performance {
 
     public void setStartTime(String startTimeHour, String startTimeMinute) {
         this.startTime = Integer.parseInt(startTimeHour + startTimeMinute);
+        this.startTimeGui = startTimeHour + ":" + startTimeMinute;
     }
 
     public int getEndTime() {
@@ -83,14 +84,20 @@ public class Performance {
 
     public void setEndTime(String endTimeHour, String endTimeMinute) {
         this.endTime = Integer.parseInt(endTimeHour + endTimeMinute);
+        this.endTimeGui = endTimeHour + ":" + endTimeMinute;
     }
 
     public ArrayList<Artist> getArtists() {
         return artists;
     }
 
+    public Artist getArtist() {
+        return artists.get(0);
+    }
+
     public void setArtists(ArrayList<Artist> artists) {
         this.artists = artists;
+        this.artistName = artists.get(0).getName();//todo ook dit in een ArrayList zetten om mogelijk meerdere artieste toe te voegen
     }
 
     public int getPopularity() {
@@ -107,6 +114,22 @@ public class Performance {
 
     public String getEndTimeGui() {
         return endTimeGui;
+    }
+
+    public String getStartTimeHour() {
+        return getStartTimeGui().substring(0, 2);
+    }
+
+    public String getStartTimeMinute() {
+        return getStartTimeGui().substring(3, 5);
+    }
+
+    public String getEndTimeHour() {
+        return endTimeGui.substring(0, 2);
+    }
+
+    public String getEndTimeMinute() {
+        return endTimeGui.substring(3, 5);
     }
 
     public String getArtistName() {

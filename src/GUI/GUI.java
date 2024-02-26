@@ -22,7 +22,8 @@ public class GUI extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        testData();
+//        testData();
+        agenda.load();
         primaryStage.setTitle("Festival planner");
         this.popup = new Popup(this);
         this.overview = new Overview(this, popup);
@@ -34,6 +35,8 @@ public class GUI extends Application {
         primaryStage.setScene(scene);
         primaryStage.setMaximized(true);
         primaryStage.show();
+
+        refresh();
     }
     public void testData(){
         agenda.addArtist(new Artist("Korte Frans", "Happy Hardcore"));
@@ -43,13 +46,14 @@ public class GUI extends Application {
         agenda.addPodium(new Podium("Stage 1"));
         agenda.addPodium(new Podium("Stage 2"));
 
-        agenda.addPerformance(new Performance(agenda.getPodiumList().get(0), "10", "14","10","15",
-                new Artist("Duits Frans", "Rap"), 10));
-        agenda.addPerformance(new Performance(agenda.getPodiumList().get(1), "15","10", "17","30",
-                new Artist("Korte Frans", "Country"), 9));
-        agenda.save();
+//        agenda.addPerformance(new Performance(agenda.getPodiumList().get(0), "00", "00","23","00",
+//                new Artist("Duits Frans", "Rap"), 10));
+//        agenda.addPerformance(new Performance(agenda.getPodiumList().get(1), "15","00", "17","30",
+//                new Artist("Korte Frans", "Country"), 9));
+//        agenda.save();
         agenda.load();
     }
+
 
     public Agenda getAgenda() {
         return agenda;

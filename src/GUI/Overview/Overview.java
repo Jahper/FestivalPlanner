@@ -12,6 +12,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -19,7 +20,6 @@ import javafx.scene.text.Font;
 import javafx.scene.control.Button;
 import org.jfree.fx.FXGraphics2D;
 import org.jfree.fx.ResizableCanvas;
-import org.omg.CosNaming.BindingIterator;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
@@ -38,7 +38,7 @@ public class Overview implements Refreshable {
     final ArrayList<Shape> performanceRectangles = new ArrayList<>();
     final ArrayList<Performance2D> performanceInfoList = new ArrayList<>();
     private Popup popup;
-    private double spacing;
+    private int spacing;
 
 
     public Overview(GUI gui, Popup popup) {
@@ -48,7 +48,6 @@ public class Overview implements Refreshable {
         this.tab = overview;
         this.agenda = gui.getAgenda();
         this.popup = popup;
-
 
         for (Artist artist : agenda.getArtistList()) {
             artists.add(artist);
@@ -65,73 +64,134 @@ public class Overview implements Refreshable {
         this.canvas = getCanvas(borderPane);
 
         Button refreshButton = new Button("Refresh");
-        Button addPerformance = new Button("Add");
-        Button changeButton = new Button("Change");
-        Button removeButton = new Button("Remove");
+        Button addPerformance = new Button("Toevoegen");
+        Button changeButton = new Button("Aanpassen");
+        Button removeButton = new Button("Verwijderen");
+        Button opslaanButton = new Button("Opslaan");
+        Button inladenButton = new Button("Inladen");
 
-        HBox buttonBox = new HBox(refreshButton, addPerformance, changeButton, removeButton);
+        HBox buttonBox = new HBox(refreshButton, addPerformance, changeButton, removeButton, opslaanButton, inladenButton);
 
         refreshButton.setOnAction(event -> {
             update();
             refresh(this.gui);
         });
-        addPerformance.setOnAction(event -> {
-            popup.addPopup().show();
 
+        addPerformance.setOnAction(event -> popup.addPopup().show());
+
+        changeButton.setOnAction(event -> popup.changePopup().show());
+
+        removeButton.setOnAction(event -> popup.deletePopUp().show());
+
+        opslaanButton.setOnAction(event -> {
+            agenda.save();
+            gui.refresh();
         });
-        changeButton.setOnAction(event -> {
-            popup.changePopup().show();
-        });
-        removeButton.setOnAction(event -> {
-            popup.deletePopUp().show();
+        inladenButton.setOnAction(event -> {
+            agenda.load();
+            gui.refresh();
         });
 
         borderPane.setLeft(getPodiums());
         borderPane.setCenter(this.canvas);
-//        borderPane.setTop(getTimetable());
         borderPane.setBottom(buttonBox);
 
         overview.setContent(borderPane);
     }
 
+
     private ResizableCanvas getCanvas(BorderPane borderPane) {
-        this.canvas = new ResizableCanvas(g -> draw(g), borderPane);
+        this.canvas = new ResizableCanvas(g -> draw(), borderPane);
         this.graphics = new FXGraphics2D(canvas.getGraphicsContext2D());
-        draw(graphics);
+        draw();
+        canvas.setOnMouseClicked(event -> {
+            if (event.getButton() != MouseButton.PRIMARY) {
+                Popup p = new Popup(gui);
+                p.addPopup().show();
+                p.getStage().setScene(p.addPerformance());
+            } else if (event.getButton() == MouseButton.PRIMARY){
+                //todo
+            }
+        });
         return canvas;
     }
 
-    public void draw(FXGraphics2D graphics) {
-        this.graphics = graphics;
+    public void draw() {
+        this.spacing = (int) (Math.round(canvas.getWidth() / 24));
         graphics.setColor(Color.BLUE);
         graphics.setBackground(Color.white);
         graphics.clearRect(0, 0, (int) canvas.getWidth(), (int) canvas.getHeight());
         graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
-        drawPerformance(graphics);
-        drawTimetable(graphics);
+        drawPerformance();
     }
 
-    public void drawPerformance(Graphics2D graphics) {
+    public void drawPerformance() {
         performanceRectangles.clear();
         performanceInfoList.clear();
         for (Performance performance : performances) {
-            Shape shape = new Rectangle2D.Double((performance.getStartTime() * spacing) / 100, podiums.indexOf(performance.getPodium()) * 100 + 40,
-                    performance.getEndTime() * spacing / 100 - performance.getStartTime() * spacing / 100, 100);
+            int startMinuteOffset = getMinuteWidth(performance.getStartTime());
+            int endMinuteOffset = getMinuteWidth(performance.getEndTime());
+
+            double beginX = ((double) performance.getStartTime() / 100) * spacing + startMinuteOffset;
+            double endX = ((double) performance.getEndTime() / 100) * spacing - ((double) performance.getStartTime() / 100) * spacing + endMinuteOffset - startMinuteOffset;
+
+            Shape shape = new Rectangle2D.Double(beginX, podiums.indexOf(performance.getPodium()) * 100 + 40, endX, 100);
             performanceRectangles.add(shape);
-            performanceInfoList.add(new Performance2D(performance, (int) (performance.getEndTime() * 0.75 - performance.getStartTime() * 0.75),
-                    (int) (performance.getStartTime() * 0.75), podiums.indexOf(performance.getPodium()) * 100)
+            performanceInfoList.add(new Performance2D(performance, shape, performance.getEndTime() / 100 * spacing - performance.getStartTime() / 100 * spacing,
+                    (int) beginX, podiums.indexOf(performance.getPodium()) * 100)
             );
-        }
-        graphics.setColor(Color.CYAN);
-        for (Shape performanceRectangle : performanceRectangles) {
-            graphics.draw(performanceRectangle);
-            graphics.fill(performanceRectangle);
         }
         graphics.setColor(Color.BLACK);
         for (Performance2D performance2D : performanceInfoList) {
+            graphics.setColor(Color.BLACK);
+            graphics.draw(performance2D.getShape());
+            graphics.setColor(getColor(performance2D.getPerformance().getPopularity()));
+            graphics.fill(performance2D.getShape());
+
+            graphics.setColor(Color.BLACK);
             graphics.drawString(performance2D.getArtists(), performance2D.getX(), performance2D.getY() + 65);
             graphics.drawString(performance2D.getTimeDuration(), performance2D.getX(), performance2D.getY() + 95);
             graphics.drawString(performance2D.getPopularity(), performance2D.getX(), performance2D.getY() + 125);
+        }
+        drawTimetable();
+    }
+
+    private int getMinuteWidth(double startTime) {
+        int baseTime = (int) startTime % 100;
+        int correctedTime = 0;
+        if (startTime != 0) {
+            switch (baseTime) {
+                case 15:
+                    correctedTime = (int) Math.round(spacing * 0.25);
+                    break;
+                case 30:
+                    correctedTime = (int) Math.round(spacing * 0.5);
+                    break;
+                case 45:
+                    correctedTime = (int) Math.round(spacing * 0.75);
+                    break;
+            }
+            return correctedTime - baseTime;
+        }
+        return correctedTime;
+    }
+
+    private void drawTimetable() {
+        graphics.setColor(Color.black);
+        graphics.drawLine(0, 40, (int) canvas.getWidth(), 40);
+        graphics.drawLine(1, 0, 1, (int) canvas.getHeight());
+        graphics.drawLine((int) canvas.getWidth(), 0, (int) canvas.getWidth(), (int) canvas.getHeight());
+        graphics.drawLine(0, (int) canvas.getHeight(), (int) canvas.getWidth(), (int) canvas.getHeight());
+        for (int i = 0; i < 24; i++) {
+            if (i < 10) {
+                graphics.drawString("0" + i, spacing * i + spacing / 2, 20);
+            } else {
+                graphics.drawString("" + i, spacing * i + spacing / 2, 20);
+            }
+            graphics.drawLine(spacing * i, 0, spacing * i, (int) canvas.getHeight());
+        }
+        for (int i = 40; i < canvas.getHeight(); i += 100) {
+            graphics.drawLine(0, i, (int) canvas.getWidth(), i);
         }
     }
 
@@ -141,7 +201,8 @@ public class Overview implements Refreshable {
         VBox podiumVBox = new VBox();
         podiumVBox.setMaxWidth(150);
         podiumVBox.setMinWidth(150);
-        podiumVBox.setSpacing(75);
+        podiumVBox.setSpacing(spacing * 0.7);
+        podiumVBox.setMaxHeight(canvas.getHeight());
         for (Podium podium : podiums) {
             Label l = new Label(podium.toString());
             l.setFont(new Font(20));
@@ -150,27 +211,18 @@ public class Overview implements Refreshable {
         Label podia = new Label("Podia:");
         podia.setFont(new Font(20));
         VBox sideVBox = new VBox(podia, podiumVBox);
+        sideVBox.setSpacing(20);
         return sideVBox;
     }
-
-    private void drawTimetable(FXGraphics2D graphics) {
-        graphics.setColor(Color.black);
-        this.spacing = canvas.getWidth() / 24;
-        graphics.drawLine(0, 40, (int) canvas.getWidth(), 40);
-        graphics.drawLine(1, 0, 1, (int) canvas.getHeight());
-        graphics.drawLine((int) canvas.getWidth(), 0,(int) canvas.getWidth(), (int) canvas.getHeight());
-        graphics.drawLine(0,  (int) canvas.getHeight(),(int) canvas.getWidth(), (int) canvas.getHeight());
-        for (int i = 0; i < 24; i++) {
-            if (i < 10) {
-                graphics.drawString("0" + i, (int) spacing * i + 35, 20);
-            } else {
-                graphics.drawString("" + i, (int) spacing * i + 35, 20);
-            }
-            int halfSpacing = (int) (spacing * 0.5 + 40);
-            if (i < 23) {
-                graphics.drawLine((int) spacing * i + halfSpacing, 0, (int) spacing * i + halfSpacing, 40);
-            }
+    private Color getColor(int popularity) {
+        if (popularity > 8){
+            return Color.red;
+        } else if (popularity > 6) {
+            return Color.orange;
+        } else if (popularity > 4) {
+            return Color.yellow;
         }
+        return Color.green;
     }
 
     @Override
@@ -189,15 +241,16 @@ public class Overview implements Refreshable {
         }
 
         borderPane.setLeft(getPodiums());
-        draw(graphics);
+        draw();
     }
 
-    public Tab getTab() {
-        return this.tab;
-    }
 
     @Override
     public void refresh(GUI gui) {
         gui.refresh();
+    }
+
+    public Tab getTab() {
+        return this.tab;
     }
 }

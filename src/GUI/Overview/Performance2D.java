@@ -3,11 +3,13 @@ package GUI.Overview;
 import Data.Artist;
 import Data.Performance;
 
+import java.awt.*;
 import java.awt.geom.Area;
 import java.util.ArrayList;
 
 public class Performance2D {
     private Performance performance;
+    private Shape shape;
     private int maxLength;
     private int x;
     private int y;
@@ -15,22 +17,24 @@ public class Performance2D {
     private String timeDuration;
     private String popularity;
 
-    public Performance2D(Performance performance, int maxLength, int x, int y) {
+    public Performance2D(Performance performance, Shape shape, int maxLength, int x, int y) {
         this.performance = performance;
-        this.maxLength = maxLength;
+        this.shape = shape;
+        this.maxLength = (maxLength / 10);
+        System.out.println(this.maxLength);
         this.x = x;
         this.y = y;
         createArea();
     }
 
     private void createArea(){
-        this.artists = getArtistString();
-        this.timeDuration = getBeginAndEndTime();
+        this.artists = trimString(getArtistString());
+        this.timeDuration = trimString(getBeginAndEndTime());
         this.popularity = trimString("Popularity: " + performance.getPopularity());
     }
 
     private String getBeginAndEndTime() {
-        return performance.getStartTime() + " - " + performance.getEndTime();
+        return performance.getStartTimeGui() + " - " + performance.getEndTimeGui();
     }
 
     private String getArtistString() {
@@ -49,7 +53,8 @@ public class Performance2D {
     }
     private String trimString(String s){
         if (s.length() > maxLength){
-            return s.substring(0, maxLength);
+            System.out.println(s);
+            return s.substring(0, maxLength) + "...";
         }
         return s;
     }
@@ -72,5 +77,13 @@ public class Performance2D {
 
     public int getY() {
         return y;
+    }
+
+    public Shape getShape() {
+        return shape;
+    }
+
+    public Performance getPerformance() {
+        return performance;
     }
 }
