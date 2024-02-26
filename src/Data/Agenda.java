@@ -23,7 +23,7 @@ public class Agenda {
     }
 
     public void save() {
-        String fileName = this.artistFile.getName();
+        String fileName = this.artistFile.getPath();
 
         try (PrintWriter print = new PrintWriter(fileName)) {
             for (Artist artist : this.artistList) {
@@ -35,7 +35,7 @@ public class Agenda {
             e.printStackTrace();
         }
 
-        fileName = podiumFile.getName();
+        fileName = podiumFile.getPath();
 
         try (PrintWriter print = new PrintWriter(fileName)) {
             for (Podium podium : podiumList) {
@@ -45,7 +45,7 @@ public class Agenda {
             e.printStackTrace();
         }
 
-        fileName = performanceFile.getName();
+        fileName = performanceFile.getPath();
 
         try (PrintWriter print = new PrintWriter(fileName)) {
             for (Performance performance : performanceList) {

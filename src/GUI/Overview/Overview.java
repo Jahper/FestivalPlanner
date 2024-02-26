@@ -116,10 +116,10 @@ public class Overview implements Refreshable {
         performanceInfoList.clear();
         for (Performance performance : performances) {
             Shape shape = new Rectangle2D.Double((performance.getStartTime() * spacing) / 100, podiums.indexOf(performance.getPodium()) * 100 + 40,
-                    performance.getEndTime() * spacing / 100 - performance.getStartTime() * spacing / 100, 100);
+                    (performance.getEndTime() * spacing / 100) - (performance.getStartTime() * spacing / 100), 100);
             performanceRectangles.add(shape);
-            performanceInfoList.add(new Performance2D(performance, (int) (performance.getEndTime() * 0.75 - performance.getStartTime() * 0.75),
-                    (int) (performance.getStartTime() * 0.75), podiums.indexOf(performance.getPodium()) * 100)
+            performanceInfoList.add(new Performance2D(performance, (int) (performance.getEndTime() * spacing / 100 - performance.getStartTime() * spacing / 100),
+                    (int) (performance.getStartTime() * spacing / 100), podiums.indexOf(performance.getPodium()) * 100)
             );
         }
         graphics.setColor(Color.CYAN);
@@ -132,6 +132,25 @@ public class Overview implements Refreshable {
             graphics.drawString(performance2D.getArtists(), performance2D.getX(), performance2D.getY() + 65);
             graphics.drawString(performance2D.getTimeDuration(), performance2D.getX(), performance2D.getY() + 95);
             graphics.drawString(performance2D.getPopularity(), performance2D.getX(), performance2D.getY() + 125);
+        }
+    }
+    private void drawTimetable(FXGraphics2D graphics) {
+        graphics.setColor(Color.black);
+        this.spacing = canvas.getWidth() / 24;
+        graphics.drawLine(0, 40, (int) canvas.getWidth(), 40);
+        graphics.drawLine(1, 0, 1, (int) canvas.getHeight());
+        graphics.drawLine((int) canvas.getWidth(), 0,(int) canvas.getWidth(), (int) canvas.getHeight());
+        graphics.drawLine(0,  (int) canvas.getHeight(),(int) canvas.getWidth(), (int) canvas.getHeight());
+        for (int i = 0; i < 24; i++) {
+            if (i < 10) {
+                graphics.drawString("0" + i, (int) spacing * i + 35, 20);
+            } else {
+                graphics.drawString("" + i, (int) spacing * i + 35, 20);
+            }
+            int halfSpacing = (int) (spacing * 0.5 + 44);
+//            if (i < 23) {
+            graphics.drawLine((int) spacing * i, 0, (int) spacing * i, 40);
+//            }
         }
     }
 
@@ -151,26 +170,6 @@ public class Overview implements Refreshable {
         podia.setFont(new Font(20));
         VBox sideVBox = new VBox(podia, podiumVBox);
         return sideVBox;
-    }
-
-    private void drawTimetable(FXGraphics2D graphics) {
-        graphics.setColor(Color.black);
-        this.spacing = canvas.getWidth() / 24;
-        graphics.drawLine(0, 40, (int) canvas.getWidth(), 40);
-        graphics.drawLine(1, 0, 1, (int) canvas.getHeight());
-        graphics.drawLine((int) canvas.getWidth(), 0,(int) canvas.getWidth(), (int) canvas.getHeight());
-        graphics.drawLine(0,  (int) canvas.getHeight(),(int) canvas.getWidth(), (int) canvas.getHeight());
-        for (int i = 0; i < 24; i++) {
-            if (i < 10) {
-                graphics.drawString("0" + i, (int) spacing * i + 35, 20);
-            } else {
-                graphics.drawString("" + i, (int) spacing * i + 35, 20);
-            }
-            int halfSpacing = (int) (spacing * 0.5 + 40);
-            if (i < 23) {
-                graphics.drawLine((int) spacing * i + halfSpacing, 0, (int) spacing * i + halfSpacing, 40);
-            }
-        }
     }
 
     @Override
