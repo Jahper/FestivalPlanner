@@ -37,6 +37,7 @@ public class Popup implements Refreshable {
     private Artist artistChange = new Artist("", "");
     private Podium podiumChange = new Podium("");
     private Performance performanceChange = null;
+    //todo kijken naar artiesten
 
 
     public Popup(GUI gui) {
