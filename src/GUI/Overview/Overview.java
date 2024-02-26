@@ -19,6 +19,7 @@ import javafx.scene.text.Font;
 import javafx.scene.control.Button;
 import org.jfree.fx.FXGraphics2D;
 import org.jfree.fx.ResizableCanvas;
+import org.omg.CosNaming.BindingIterator;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
@@ -37,6 +38,7 @@ public class Overview implements Refreshable {
     final ArrayList<Shape> performanceRectangles = new ArrayList<>();
     final ArrayList<Performance2D> performanceInfoList = new ArrayList<>();
     private Popup popup;
+    private double spacing;
 
 
     public Overview(GUI gui, Popup popup) {
@@ -86,7 +88,7 @@ public class Overview implements Refreshable {
 
         borderPane.setLeft(getPodiums());
         borderPane.setCenter(this.canvas);
-        borderPane.setTop(getTimetable());
+//        borderPane.setTop(getTimetable());
         borderPane.setBottom(buttonBox);
 
         overview.setContent(borderPane);
@@ -103,20 +105,17 @@ public class Overview implements Refreshable {
         this.graphics = graphics;
         graphics.setColor(Color.BLUE);
         graphics.setBackground(Color.white);
-        graphics.clearRect(0, 0, 1920, 1080);
-        drawPerformance(graphics);
+        graphics.clearRect(0, 0, (int) canvas.getWidth(), (int) canvas.getHeight());
         graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
-//        for (Shape shape : performanceRectangles) {
-//            graphics.fill(shape);
-//            graphics.draw(shape);
-//        }
+        drawPerformance(graphics);
+        drawTimetable(graphics);
     }
 
     public void drawPerformance(Graphics2D graphics) {
         performanceRectangles.clear();
         performanceInfoList.clear();
         for (Performance performance : performances) {
-            Shape shape = new Rectangle2D.Double(performance.getStartTime() * 0.75, podiums.indexOf(performance.getPodium()) * 100,
+            Shape shape = new Rectangle2D.Double(performance.getStartTime() * 0.75, podiums.indexOf(performance.getPodium()) * 100 + 40,
                     performance.getEndTime() * 0.75 - performance.getStartTime() * 0.75, 100);
             performanceRectangles.add(shape);
             performanceInfoList.add(new Performance2D(performance, (int) (performance.getEndTime() * 0.75 - performance.getStartTime() * 0.75),
@@ -130,44 +129,48 @@ public class Overview implements Refreshable {
         }
         graphics.setColor(Color.BLACK);
         for (Performance2D performance2D : performanceInfoList) {
-            graphics.drawString(performance2D.getArtists(), performance2D.getX(), performance2D.getY() + 30);
-            graphics.drawString(performance2D.getTimeDuration(), performance2D.getX(), performance2D.getY() + 60);
-            graphics.drawString(performance2D.getPopularity(), performance2D.getX(), performance2D.getY() + 90);
+            graphics.drawString(performance2D.getArtists(), performance2D.getX(), performance2D.getY() + 65);
+            graphics.drawString(performance2D.getTimeDuration(), performance2D.getX(), performance2D.getY() + 95);
+            graphics.drawString(performance2D.getPopularity(), performance2D.getX(), performance2D.getY() + 125);
         }
     }
 
     //toont podiums aan zijkant van scherm
     private Node getPodiums() {
         ArrayList<Podium> podiums = agenda.getPodiumList();
-        VBox stages = new VBox();
-        stages.setMaxWidth(150);
-        stages.setMinWidth(150);
-        stages.setSpacing(75);
+        VBox podiumVBox = new VBox();
+        podiumVBox.setMaxWidth(150);
+        podiumVBox.setMinWidth(150);
+        podiumVBox.setSpacing(75);
         for (Podium podium : podiums) {
             Label l = new Label(podium.toString());
             l.setFont(new Font(20));
-            stages.getChildren().add(l);
+            podiumVBox.getChildren().add(l);
         }
-        return stages;
+        Label podia = new Label("Podia:");
+        podia.setFont(new Font(20));
+        VBox sideVBox = new VBox(podia, podiumVBox);
+        return sideVBox;
     }
 
-    private Node getTimetable() {
-        HBox timetable = new HBox();
-        Label podia = new Label("Podia:       ");
-        podia.setFont(new Font(20));
-        timetable.getChildren().add(podia);
-        timetable.setSpacing(57);
-
+    private void drawTimetable(FXGraphics2D graphics) {
+        graphics.setColor(Color.black);
+        this.spacing = canvas.getWidth() / 24;
+        graphics.drawLine(0, 40, (int) canvas.getWidth(), 40);
+        graphics.drawLine(1, 0, 1, (int) canvas.getHeight());
+        graphics.drawLine((int) canvas.getWidth(), 0,(int) canvas.getWidth(), (int) canvas.getHeight());
+        graphics.drawLine(0,  (int) canvas.getHeight(),(int) canvas.getWidth(), (int) canvas.getHeight());
         for (int i = 0; i < 24; i++) {
             if (i < 10) {
-                Label l = new Label("0" + i);
-                timetable.getChildren().add(l);
+                graphics.drawString("0" + i, (int) spacing * i + 35, 20);
             } else {
-                Label l = new Label(i + "");
-                timetable.getChildren().add(l);
+                graphics.drawString("" + i, (int) spacing * i + 35, 20);
+            }
+            int halfSpacing = (int) (spacing * 0.5 + 40);
+            if (i < 23) {
+                graphics.drawLine((int) spacing * i + halfSpacing, 0, (int) spacing * i + halfSpacing, 40);
             }
         }
-        return timetable;
     }
 
     @Override
