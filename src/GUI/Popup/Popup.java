@@ -250,6 +250,8 @@ public class Popup implements Refreshable {
         BorderPane borderPane = new BorderPane();
         borderPane.setCenter(selectPerformance);
 
+        performanceChange = performanceBox.getValue();
+
         nextButton.setOnAction(event -> {
             performanceChange = performanceBox.getValue();
             this.stage.setScene(changePerformanceSave());
@@ -263,21 +265,20 @@ public class Popup implements Refreshable {
         ComboBox<Podium> podiumBox = new ComboBox<>(podiums);
         podiumBox.setValue(performanceChange.getPodium());
 
-        //todo artist werkt nog niet helemaal?
         ComboBox<Artist> artistBox = new ComboBox<>(artists);
-        artistBox.setValue(performanceChange.getArtists().get(0));//todo dit fixen??
+        artistBox.setValue(performanceChange.getArtist());
 
-        //todo minutes en hours apart niet een ding
         ComboBox<String> startHourBox = new ComboBox<>(hourList);
-        startHourBox.setValue(performanceChange.getStartTimeGui());
+        startHourBox.setValue(performanceChange.getStartTimeHour());
         ComboBox<String> startMinuteBox = new ComboBox<>(minuteList);
+        startMinuteBox.setValue(performanceChange.getStartTimeMinute());
 
         HBox startTimeSelect = new HBox(startHourBox, new Label(" : "), startMinuteBox);
 
-        //todo hetzelde als bij start
         ComboBox<String> endHourBox = new ComboBox<>(hourList);
-        endHourBox.setValue(performanceChange.getEndTimeGui());
+        endHourBox.setValue(performanceChange.getEndTimeHour());
         ComboBox<String> endMinuteBox = new ComboBox<>(minuteList);
+        endMinuteBox.setValue(performanceChange.getEndTimeMinute());
 
         HBox endTimeSelect = new HBox(endHourBox, new Label(" : "), endMinuteBox);
 
@@ -562,6 +563,10 @@ public class Popup implements Refreshable {
         stage.setHeight(400);
         stage.initStyle(StageStyle.UTILITY);
         stage.setResizable(false);
+        return stage;
+    }
+
+    public Stage getStage() {
         return stage;
     }
 

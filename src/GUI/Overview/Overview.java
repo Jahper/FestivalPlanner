@@ -20,12 +20,10 @@ import javafx.scene.text.Font;
 import javafx.scene.control.Button;
 import org.jfree.fx.FXGraphics2D;
 import org.jfree.fx.ResizableCanvas;
-import org.omg.CosNaming.BindingIterator;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Overview implements Refreshable {
     private Tab tab;
@@ -51,8 +49,6 @@ public class Overview implements Refreshable {
         this.agenda = gui.getAgenda();
         this.popup = popup;
 
-
-
         for (Artist artist : agenda.getArtistList()) {
             artists.add(artist);
         }
@@ -67,7 +63,6 @@ public class Overview implements Refreshable {
 
         this.canvas = getCanvas(borderPane);
 
-
         Button refreshButton = new Button("Refresh");
         Button addPerformance = new Button("Toevoegen");
         Button changeButton = new Button("Aanpassen");
@@ -81,15 +76,13 @@ public class Overview implements Refreshable {
             update();
             refresh(this.gui);
         });
-        addPerformance.setOnAction(event -> {
-            popup.addPopup().show();
-        });
-        changeButton.setOnAction(event -> {
-            popup.changePopup().show();
-        });
-        removeButton.setOnAction(event -> {
-            popup.deletePopUp().show();
-        });
+
+        addPerformance.setOnAction(event -> popup.addPopup().show());
+
+        changeButton.setOnAction(event -> popup.changePopup().show());
+
+        removeButton.setOnAction(event -> popup.deletePopUp().show());
+
         opslaanButton.setOnAction(event -> {
             agenda.save();
             gui.refresh();
@@ -99,15 +92,11 @@ public class Overview implements Refreshable {
             gui.refresh();
         });
 
-
         borderPane.setLeft(getPodiums());
         borderPane.setCenter(this.canvas);
-//        borderPane.setTop(getTimetable());
-
         borderPane.setBottom(buttonBox);
 
         overview.setContent(borderPane);
-//        refreshButton.fire();
     }
 
 
@@ -118,11 +107,10 @@ public class Overview implements Refreshable {
         canvas.setOnMouseClicked(event -> {
             if (event.getButton() != MouseButton.PRIMARY) {
                 Popup p = new Popup(gui);
-
-
                 p.addPopup().show();
-//                p.getStage().setScene(p.addPerformance()); //todo na mergen dit uit commentaar halen
-
+                p.getStage().setScene(p.addPerformance());
+            } else if (event.getButton() == MouseButton.PRIMARY){
+                //todo
             }
         });
         return canvas;
@@ -130,13 +118,11 @@ public class Overview implements Refreshable {
 
     public void draw() {
         this.spacing = (int) (Math.round(canvas.getWidth() / 24));
-//        this.spacing = 74;
         graphics.setColor(Color.BLUE);
         graphics.setBackground(Color.white);
         graphics.clearRect(0, 0, (int) canvas.getWidth(), (int) canvas.getHeight());
         graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
         drawPerformance();
-//        drawTimetable(graphics);
     }
 
     public void drawPerformance() {
@@ -155,16 +141,6 @@ public class Overview implements Refreshable {
                     (int) beginX, podiums.indexOf(performance.getPodium()) * 100)
             );
         }
-//        graphics.setColor(Color.BLACK);
-//        for (Shape performanceRectangle : performanceRectangles) {
-//            graphics.draw(performanceRectangle);
-//            graphics.fill(performanceRectangle);
-//        }
-//        graphics.setColor(Color.CYAN);
-//        for (Shape performanceRectangle : performanceRectangles) {
-//            graphics.draw(performanceRectangle);
-//            graphics.fill(performanceRectangle);
-//        }
         graphics.setColor(Color.BLACK);
         for (Performance2D performance2D : performanceInfoList) {
             graphics.setColor(Color.BLACK);

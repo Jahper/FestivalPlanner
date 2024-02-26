@@ -22,7 +22,8 @@ public class GUI extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        testData();
+//        testData();
+        agenda.load();
         primaryStage.setTitle("Festival planner");
         this.popup = new Popup(this);
         this.overview = new Overview(this, popup);
@@ -52,6 +53,7 @@ public class GUI extends Application {
 //        agenda.save();
         agenda.load();
     }
+
 
     public Agenda getAgenda() {
         return agenda;
