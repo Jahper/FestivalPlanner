@@ -35,6 +35,7 @@ public class Overview implements Refreshable {
     final ObservableList<Podium> podiums = FXCollections.observableArrayList();
     final ObservableList<Performance> performances = FXCollections.observableArrayList();
     final ArrayList<Shape> performanceRectangles = new ArrayList<>();
+    final ArrayList<Performance2D> performanceInfoList = new ArrayList<>();
     private Popup popup;
 
 
@@ -103,21 +104,35 @@ public class Overview implements Refreshable {
         graphics.setColor(Color.BLUE);
         graphics.setBackground(Color.white);
         graphics.clearRect(0, 0, 1920, 1080);
-        drawPerformance();
-        for (Shape shape : performanceRectangles) {
-            graphics.fill(shape);
-            graphics.draw(shape);
-        }
+        drawPerformance(graphics);
+        graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
+//        for (Shape shape : performanceRectangles) {
+//            graphics.fill(shape);
+//            graphics.draw(shape);
+//        }
     }
 
-    public void drawPerformance() {
+    public void drawPerformance(Graphics2D graphics) {
         performanceRectangles.clear();
+        performanceInfoList.clear();
         for (Performance performance : performances) {
             Shape shape = new Rectangle2D.Double(performance.getStartTime() * 0.75, podiums.indexOf(performance.getPodium()) * 100,
                     performance.getEndTime() * 0.75 - performance.getStartTime() * 0.75, 100);
             performanceRectangles.add(shape);
-            System.out.println(performance.getStartTime() * 0.75);
-            System.out.println(performance.getEndTime() * 0.75 - performance.getStartTime() * 0.75);
+            performanceInfoList.add(new Performance2D(performance, (int) (performance.getEndTime() * 0.75 - performance.getStartTime() * 0.75),
+                    (int) (performance.getStartTime() * 0.75), podiums.indexOf(performance.getPodium()) * 100)
+            );
+        }
+        graphics.setColor(Color.CYAN);
+        for (Shape performanceRectangle : performanceRectangles) {
+            graphics.draw(performanceRectangle);
+            graphics.fill(performanceRectangle);
+        }
+        graphics.setColor(Color.BLACK);
+        for (Performance2D performance2D : performanceInfoList) {
+            graphics.drawString(performance2D.getArtists(), performance2D.getX(), performance2D.getY() + 30);
+            graphics.drawString(performance2D.getTimeDuration(), performance2D.getX(), performance2D.getY() + 60);
+            graphics.drawString(performance2D.getPopularity(), performance2D.getX(), performance2D.getY() + 90);
         }
     }
 
@@ -154,6 +169,7 @@ public class Overview implements Refreshable {
         }
         return timetable;
     }
+
     @Override
     public void update() {
         performances.clear();
