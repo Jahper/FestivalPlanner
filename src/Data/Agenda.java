@@ -160,7 +160,7 @@ public class Agenda {
             this.performanceList.add(performance);
         }
     }
-
+    //methode voor het controleren of er geen dubbele boeking is
     public boolean checkForOverlap(Performance performance) {
         if (performance.getStartTime() >= performance.getEndTime()) {
             return false;
@@ -175,6 +175,30 @@ public class Agenda {
 
             if (endTime >= pStartTime && endTime <= pEndTime || startTime >= pStartTime && startTime <= pEndTime) {
                 if (p.getPodium().equals(performance.getPodium()) || p.getArtist().equals(performance.getArtist())) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    //methode voor het controleren of er geen dubbele boeking is voor de setters
+    public boolean checkForOverlapSetter(Performance performance, Performance updatedPerformance) {
+        if (updatedPerformance.getStartTime() >= updatedPerformance.getEndTime()) {
+            return false;
+        }
+
+        int startTime = updatedPerformance.getStartTime();
+        int endTime = updatedPerformance.getEndTime();
+
+        for (Performance p : performanceList) {
+            int pStartTime = p.getStartTime();
+            int pEndTime = p.getEndTime();
+            if (p.equals(performance)){
+                continue;
+            }
+
+            if (endTime >= pStartTime && endTime <= pEndTime || startTime >= pStartTime && startTime <= pEndTime) {
+                if (p.getPodium().equals(updatedPerformance.getPodium()) || p.getArtist().equals(updatedPerformance.getArtist())) {
                     return false;
                 }
             }

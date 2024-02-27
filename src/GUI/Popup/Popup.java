@@ -293,7 +293,7 @@ public class Popup implements Refreshable {
                         startMinuteBox.getValue(), endHourBox.getValue(), endMinuteBox.getValue(), artistBox.getValue(),
                         popularityBox.getValue()
                 );
-                if (agenda.checkForOverlap(checkPerformance)) {
+                if (agenda.checkForOverlapSetter(performanceChange, checkPerformance)) {
                     Performance performance = performanceChange;
                     performance.setPodium(podiumBox.getValue());
                     performance.setStartTime(startHourBox.getValue(), startMinuteBox.getValue());

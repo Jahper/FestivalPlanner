@@ -10,7 +10,6 @@ public class Performance {
     private String endTimeGui;
     private ArrayList<Artist> artists = new ArrayList<>();
     private int popularity;
-    private Artist artistName;
 
     public Performance(Podium podium, String startTimeHour, String startTimeMinute, String endTimeHour, String endTimeMinute, ArrayList<Artist> artists, int popularity) {
         this.podium = podium;
@@ -42,7 +41,6 @@ public class Performance {
         }
 
         this.artists.addAll(artists);
-        this.artistName = this.artists.get(0);
     }
 
     public Performance(Podium podium, String startTimeHour, String startTimeMinute, String endTimeHour, String endTimeMinute, Artist artist, int popularity) {
@@ -53,7 +51,6 @@ public class Performance {
         this.popularity = popularity;
         this.startTimeGui = startTimeHour + ":" + startTimeMinute;
         this.endTimeGui = endTimeHour + ":" + endTimeMinute;
-        this.artistName = artist;
     }
 
     public Podium getPodium() {
@@ -92,7 +89,6 @@ public class Performance {
 
     public void setArtists(ArrayList<Artist> artists) {
         this.artists = artists;
-        this.artistName = artists.get(0);
     }
 
     public int getPopularity() {
