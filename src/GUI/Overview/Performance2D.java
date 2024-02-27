@@ -4,15 +4,14 @@ import Data.Artist;
 import Data.Performance;
 
 import java.awt.*;
-import java.awt.geom.Area;
 import java.util.ArrayList;
 
 public class Performance2D {
-    private Performance performance;
-    private Shape shape;
-    private int maxLength;
-    private int x;
-    private int y;
+    private final Performance performance;
+    private final Shape shape;
+    private final int maxLength;
+    private final int x;
+    private final int y;
     private String artists;
     private String timeDuration;
     private String popularity;
@@ -27,7 +26,7 @@ public class Performance2D {
         createArea();
     }
 
-    private void createArea(){
+    private void createArea() {
         this.artists = trimString(getArtistString());
         this.timeDuration = trimString(getBeginAndEndTime());
         this.popularity = trimString("Popularity: " + performance.getPopularity());
@@ -40,19 +39,20 @@ public class Performance2D {
     private String getArtistString() {
         ArrayList<Artist> artists = performance.getArtists();
         StringBuilder artistName;
-        if (artists.size() == 1){
+        if (artists.size() == 1) {
             artistName = new StringBuilder("Artist: " + artists.get(0).getName());
         } else {
             artistName = new StringBuilder("Artists: ");
             for (Artist artist : artists) {
-                artistName.append(" " + artist.getName() + ",");
+                artistName.append(" ").append(artist.getName()).append(",");
                 //todo laatste comma weghalen
             }
         }
         return String.valueOf(artistName);
     }
-    private String trimString(String s){
-        if (s.length() > maxLength){
+
+    private String trimString(String s) {
+        if (s.length() > maxLength) {
             System.out.println(s);
             return s.substring(0, maxLength) + "...";
         }

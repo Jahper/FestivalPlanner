@@ -26,10 +26,10 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 public class Overview implements Refreshable {
-    private Tab tab;
-    private GUI gui;
-    private Agenda agenda;
-    private BorderPane borderPane;
+    private final Tab tab;
+    private final GUI gui;
+    private final Agenda agenda;
+    private final BorderPane borderPane;
     private ResizableCanvas canvas;
     private FXGraphics2D graphics;
     final ObservableList<Artist> artists = FXCollections.observableArrayList();
@@ -37,7 +37,6 @@ public class Overview implements Refreshable {
     final ObservableList<Performance> performances = FXCollections.observableArrayList();
     final ArrayList<Shape> performanceRectangles = new ArrayList<>();
     final ArrayList<Performance2D> performanceInfoList = new ArrayList<>();
-    private Popup popup;
     private int spacing;
 
 
@@ -47,17 +46,10 @@ public class Overview implements Refreshable {
         Tab overview = new Tab("Overview");
         this.tab = overview;
         this.agenda = gui.getAgenda();
-        this.popup = popup;
 
-        for (Artist artist : agenda.getArtistList()) {
-            artists.add(artist);
-        }
-        for (Podium podium : agenda.getPodiumList()) {
-            podiums.add(podium);
-        }
-        for (Performance performance : agenda.getPerformanceList()) {
-            performances.add(performance);
-        }
+        artists.addAll(agenda.getArtistList());
+        podiums.addAll(agenda.getPodiumList());
+        performances.addAll(agenda.getPerformanceList());
 
         this.borderPane = new BorderPane();
 
@@ -109,7 +101,7 @@ public class Overview implements Refreshable {
                 Popup p = new Popup(gui);
                 p.addPopup().show();
                 p.getStage().setScene(p.addPerformance());
-            } else if (event.getButton() == MouseButton.PRIMARY){
+            } else if (event.getButton() == MouseButton.PRIMARY) {
                 //todo
             }
         });
@@ -214,8 +206,9 @@ public class Overview implements Refreshable {
         sideVBox.setSpacing(20);
         return sideVBox;
     }
+
     private Color getColor(int popularity) {
-        if (popularity > 8){
+        if (popularity > 8) {
             return Color.red;
         } else if (popularity > 6) {
             return Color.orange;
@@ -228,17 +221,13 @@ public class Overview implements Refreshable {
     @Override
     public void update() {
         performances.clear();
-        for (Performance performance : agenda.getPerformanceList()) {
-            performances.add(performance);
-        }
+        performances.addAll(agenda.getPerformanceList());
+
         artists.clear();
-        for (Artist artist : agenda.getArtistList()) {
-            artists.add(artist);
-        }
+        artists.addAll(agenda.getArtistList());
+
         podiums.clear();
-        for (Podium podium : agenda.getPodiumList()) {
-            podiums.add(podium);
-        }
+        podiums.addAll(agenda.getPodiumList());
 
         borderPane.setLeft(getPodiums());
         draw();

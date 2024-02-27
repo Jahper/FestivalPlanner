@@ -6,12 +6,12 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Agenda {
-    private ArrayList<Artist> artistList;
-    private ArrayList<Podium> podiumList;
-    private ArrayList<Performance> performanceList;
-    private File artistFile;
-    private File podiumFile;
-    private File performanceFile;
+    private final ArrayList<Artist> artistList;
+    private final ArrayList<Podium> podiumList;
+    private final ArrayList<Performance> performanceList;
+    private final File artistFile;
+    private final File podiumFile;
+    private final File performanceFile;
 
     public Agenda() {
         this.artistList = new ArrayList<>();
@@ -90,7 +90,7 @@ public class Agenda {
             while (scanner.hasNext()) {
                 this.podiumList.add(new Podium(scanner.nextLine()));
             }
-        }catch (Exception exception) {
+        } catch (Exception exception) {
             exception.printStackTrace();
         }
 
@@ -154,7 +154,8 @@ public class Agenda {
     public void addArtist(Artist artist) {
         this.artistList.add(artist);
     }
-    public void addPerformance(Performance performance){
+
+    public void addPerformance(Performance performance) {
         this.performanceList.add(performance);
     }
 
@@ -165,7 +166,8 @@ public class Agenda {
     public void removeArtist(Artist artist) {
         this.artistList.remove(artist);
     }
-    public void removePerformance(Performance performance){
+
+    public void removePerformance(Performance performance) {
         this.performanceList.remove(performance);
     }
 

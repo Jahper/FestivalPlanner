@@ -20,9 +20,7 @@ public class Performance {
         this.startTimeGui = startTimeHour + ":" + startTimeMinute;
         this.endTimeGui = endTimeHour + ":" + endTimeMinute;
 
-        for (Artist artist : artists) {
-            this.artists.add(artist);
-        }
+        this.artists.addAll(artists);
     }
 
     public Performance(Podium podium, String startTime, String endTime, ArrayList<Artist> artists, int popularity) {
@@ -97,7 +95,7 @@ public class Performance {
 
     public void setArtists(ArrayList<Artist> artists) {
         this.artists = artists;
-        this.artistName = artists.get(0).getName();//todo ook dit in een ArrayList zetten om mogelijk meerdere artieste toe te voegen
+        this.artistName = artists.get(0).getName();//todo ook dit in een ArrayList zetten om mogelijk meerdere artiesten toe te voegen
     }
 
     public int getPopularity() {

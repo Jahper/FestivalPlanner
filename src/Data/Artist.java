@@ -1,7 +1,5 @@
 package Data;
 
-import java.awt.*;
-
 public class Artist {
     private String name;
     private String genre;
@@ -24,6 +22,7 @@ public class Artist {
 
     public void setName(String name) {
         this.name = name;
+        this.nameGui = name;
     }
 
     public void setGenre(String genre) {

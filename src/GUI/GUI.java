@@ -1,8 +1,5 @@
 package GUI;
 import Data.Agenda;
-import Data.Artist;
-import Data.Performance;
-import Data.Podium;
 import GUI.Overview.Overview;
 import GUI.Popup.Popup;
 import GUI.Tableview.Tableview;
@@ -12,7 +9,7 @@ import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
 
 public class GUI extends Application {
-    private Agenda agenda = new Agenda();
+    private final Agenda agenda = new Agenda();
     private Overview overview;
     private Tableview tableview;
     private Popup popup;
@@ -21,8 +18,7 @@ public class GUI extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
-//        testData();
+    public void start(Stage primaryStage) {
         agenda.load();
         primaryStage.setTitle("Festival planner");
         this.popup = new Popup(this);
@@ -38,27 +34,9 @@ public class GUI extends Application {
 
         refresh();
     }
-    public void testData(){
-        agenda.addArtist(new Artist("Korte Frans", "Happy Hardcore"));
-        agenda.addArtist(new Artist("Duits Frans", "Happy Hardcore"));
-        agenda.addArtist(new Artist("Ronnie niet Flex", "Rap"));
-
-        agenda.addPodium(new Podium("Stage 1"));
-        agenda.addPodium(new Podium("Stage 2"));
-
-//        agenda.addPerformance(new Performance(agenda.getPodiumList().get(0), "00", "00","23","00",
-//                new Artist("Duits Frans", "Rap"), 10));
-//        agenda.addPerformance(new Performance(agenda.getPodiumList().get(1), "15","00", "17","30",
-//                new Artist("Korte Frans", "Country"), 9));
-//        agenda.save();
-        agenda.load();
-    }
-
-
     public Agenda getAgenda() {
         return agenda;
     }
-
     public void refresh() {
         overview.update();
         tableview.update();
