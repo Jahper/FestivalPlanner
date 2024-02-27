@@ -41,11 +41,7 @@ public class Performance {
             this.endTime = Integer.parseInt(endTime.substring(0, 1) + endTime.substring(2));
         }
 
-//        this.artistName = "";
-        for (Artist artist : artists) {
-            this.artists.add(artist);
-//            this.artistName = this.artistName + artist.getName() + ", ";
-        }
+        this.artists.addAll(artists);
         this.artistName = this.artists.get(0);
     }
 
@@ -96,7 +92,7 @@ public class Performance {
 
     public void setArtists(ArrayList<Artist> artists) {
         this.artists = artists;
-        this.artistName = artists.get(0);//todo ook dit in een ArrayList zetten om mogelijk meerdere artiesten toe te voegen
+        this.artistName = artists.get(0);
     }
 
     public int getPopularity() {
@@ -139,8 +135,8 @@ public class Performance {
     public String toString() {
         return "Optreden: " +
                 "Podium: " + podium +
-                ", Begintijd: " + startTime +
-                ", Eindtijd: " + endTime +
+                ", Begintijd: " + startTimeGui +
+                ", Eindtijd: " + endTimeGui +
                 ", Artiest(en): " + artists +
                 ", Populariteit:" + popularity;
     }
