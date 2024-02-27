@@ -173,9 +173,8 @@ public class Agenda {
             int pStartTime = p.getStartTime();
             int pEndTime = p.getEndTime();
 
-            if (endTime > pStartTime && endTime < pEndTime || startTime > pStartTime && startTime < pEndTime) {
-                if (p.getPodium().equals(performance.getPodium()) || p.getArtist().equals(performance.getArtist())
-                        && p.getPodium().equals(performance.getPodium())) {
+            if (endTime >= pStartTime && endTime <= pEndTime || startTime >= pStartTime && startTime <= pEndTime) {
+                if (p.getPodium().equals(performance.getPodium()) || p.getArtist().equals(performance.getArtist())) {
                     return false;
                 }
             }
