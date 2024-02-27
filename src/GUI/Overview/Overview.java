@@ -107,7 +107,7 @@ public class Overview implements Refreshable {
             } else {
                 for (Performance2D performance : performanceInfoList) {
                     if (event.getX() >= performance.getX() && event.getX() <= performance.getEndX()
-                            && event.getY() >= performance.getY() + 40 && event.getY() <= performance.getY() + 140){//
+                            && event.getY() >= performance.getY() + 40 && event.getY() <= performance.getY() + 140) {//
                         this.popup.infoPopup(performance.getPerformance()).show();
                     }
                 }
@@ -125,6 +125,7 @@ public class Overview implements Refreshable {
         drawTimetable();
         drawPerformances();
     }
+
     //tekent alle performances voor de overview
     public void drawPerformances() {
         performanceInfoList.clear();
@@ -154,6 +155,7 @@ public class Overview implements Refreshable {
         }
 
     }
+
     //methode om de juiste offset te bepalen voor kwartieren etc, met 15 kan er bijvoorbeeld lastig gerekend worden
     private int getMinuteWidth(double startTime) {
         int baseTime = (int) startTime % 100;
@@ -174,6 +176,7 @@ public class Overview implements Refreshable {
         }
         return correctedTime;
     }
+
     //methode die de tijdschaal tekent
     private void drawTimetable() {
         graphics.setColor(Color.black);

@@ -30,7 +30,7 @@ public class Tableview implements Refreshable {
 
     public Tableview(GUI gui, Popup popup, String name, Agenda agenda) {
         this.gui = gui;
-        this.popup=popup;
+        this.popup = popup;
 
         data.addAll(agenda.getPerformanceList());
         this.agenda = agenda;
@@ -65,7 +65,6 @@ public class Tableview implements Refreshable {
 
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         table.getColumns().addAll(stageCol, artistCol, beginTimeCol, endTimeCol, popularityCol);
-
 
 
         Button refreshButton = new Button("Refresh");

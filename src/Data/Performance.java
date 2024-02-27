@@ -127,10 +127,6 @@ public class Performance {
         return endTimeGui.substring(3, 5);
     }
 
-    public Artist getArtistName() {
-        return artistName;
-    }
-
     @Override
     public String toString() {
         return "Optreden: " +

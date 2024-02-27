@@ -565,7 +565,7 @@ public class Popup implements Refreshable {
         stage.setWidth(400);
         stage.setHeight(400);
         stage.initStyle(StageStyle.UTILITY);
-        stage.setResizable(false);
+        stage.setResizable(true);
         return stage;
     }
 

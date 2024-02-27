@@ -1,4 +1,5 @@
 package GUI;
+
 import Data.Agenda;
 import GUI.Overview.Overview;
 import GUI.Popup.Popup;
@@ -13,6 +14,7 @@ public class GUI extends Application {
     private Overview overview;
     private Tableview tableview;
     private Popup popup;
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -23,7 +25,7 @@ public class GUI extends Application {
         primaryStage.setTitle("Festival planner");
         this.popup = new Popup(this);
         this.overview = new Overview(this, popup);
-        this.tableview = new Tableview(this,popup,"Tableview", this.agenda);
+        this.tableview = new Tableview(this, popup, "Tableview", this.agenda);
         TabPane tabPane = new TabPane(overview.getTab(), tableview.getTab());
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
@@ -34,9 +36,11 @@ public class GUI extends Application {
 
         refresh();
     }
+
     public Agenda getAgenda() {
         return agenda;
     }
+
     public void refresh() {
         overview.update();
         tableview.update();

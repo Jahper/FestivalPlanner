@@ -162,7 +162,7 @@ public class Agenda {
     }
 
     public boolean checkForOverlap(Performance performance) {
-        if (performance.getStartTime() >= performance.getEndTime()){
+        if (performance.getStartTime() >= performance.getEndTime()) {
             return false;
         }
 
@@ -180,18 +180,6 @@ public class Agenda {
             }
         }
         return true;
-    }
-
-    public void removePodium(Podium podium) {
-        this.podiumList.remove(podium);
-    }
-
-    public void removeArtist(Artist artist) {
-        this.artistList.remove(artist);
-    }
-
-    public void removePerformance(Performance performance) {
-        this.performanceList.remove(performance);
     }
 
     @Override
