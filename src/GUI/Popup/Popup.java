@@ -529,7 +529,7 @@ public class Popup implements Refreshable {
         this.stage = createStage();
 
         Label label = createLabel("Informatie over Optreden", 25);
-        Label artistLabel = createLabel("Artiest: " + performance.getArtistName(), 15);
+        Label artistLabel = createLabel("Artiest: " + performance.getArtist().getNameGui(), 15);
         Label genreLabel = createLabel("Genre: " + performance.getArtist().getGenre(), 15);
         Label stageLabel = createLabel("Podium: " + performance.getPodium(), 15);
         Label populairityLabel = createLabel("Populariteit: " + performance.getPopularity(), 15);
