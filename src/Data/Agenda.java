@@ -1,7 +1,5 @@
 package Data;
 
-import sun.misc.Perf;
-
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -199,10 +197,9 @@ public class Agenda {
 
     @Override
     public String toString() {
-        return "Agenda{" +
-                "artistList=" + artistList +
-                ", podiumList=" + podiumList +
-                ", performanceList=" + performanceList +
-                '}';
+        return "Agenda: " +
+                "Artiesten: " + artistList +
+                ", Podia: " + podiumList +
+                ", Optredens: " + performanceList;
     }
 }

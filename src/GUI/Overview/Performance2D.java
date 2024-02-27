@@ -10,6 +10,7 @@ public class Performance2D {
     private final Performance performance;
     private final Shape shape;
     private final int maxLength;
+    private final int duration;
     private final int x;
     private final int y;
     private String artists;
@@ -20,6 +21,7 @@ public class Performance2D {
         this.performance = performance;
         this.shape = shape;
         this.maxLength = (int)(maxLength / 7.5);
+        this.duration = maxLength;
         this.x = x;
         this.y = y;
         createArea();
@@ -52,7 +54,6 @@ public class Performance2D {
 
     private String trimString(String s) {
         if (s.length() > maxLength) {
-            System.out.println(s);
             return s.substring(0, maxLength) + "...";
         }
         return s;
@@ -84,5 +85,9 @@ public class Performance2D {
 
     public Performance getPerformance() {
         return performance;
+    }
+
+    public int getDuration() {
+        return duration;
     }
 }

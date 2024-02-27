@@ -32,10 +32,10 @@ public class Overview implements Refreshable {
     private final BorderPane borderPane;
     private ResizableCanvas canvas;
     private FXGraphics2D graphics;
+    private Popup popup;
     final ObservableList<Artist> artists = FXCollections.observableArrayList();
     final ObservableList<Podium> podiums = FXCollections.observableArrayList();
     final ObservableList<Performance> performances = FXCollections.observableArrayList();
-    final ArrayList<Shape> performanceRectangles = new ArrayList<>();
     final ArrayList<Performance2D> performanceInfoList = new ArrayList<>();
     private int spacing;
 
@@ -46,6 +46,7 @@ public class Overview implements Refreshable {
         Tab overview = new Tab("Overview");
         this.tab = overview;
         this.agenda = gui.getAgenda();
+        this.popup = popup;
 
         artists.addAll(agenda.getArtistList());
         podiums.addAll(agenda.getPodiumList());
@@ -101,8 +102,20 @@ public class Overview implements Refreshable {
                 Popup p = new Popup(gui);
                 p.addPopup().show();
                 p.getStage().setScene(p.addPerformance());
-            } else if (event.getButton() == MouseButton.PRIMARY) {
-                //todo
+            } else {
+                for (Performance2D performance : performanceInfoList) {
+                    System.out.println(performance.getY());
+                    System.out.println(performance.getX());
+                    System.out.println("---------");
+                    System.out.println(event.getY());
+                    System.out.println(event.getX());
+                    if (event.getX() >= performance.getX() && event.getX() <= performance.getDuration()
+                            && event.getY() >= performance.getY() + 40 && event.getY() <= performance.getY() + 140) {
+
+                        System.out.println("Yipeeee");
+                        this.popup.infoPopup(performance.getPerformance()).show();
+                    }
+                }
             }
         });
         return canvas;
@@ -119,7 +132,6 @@ public class Overview implements Refreshable {
     }
 
     public void drawPerformance() {
-        performanceRectangles.clear();
         performanceInfoList.clear();
         for (Performance performance : performances) {
             int startMinuteOffset = getMinuteWidth(performance.getStartTime());
@@ -129,7 +141,6 @@ public class Overview implements Refreshable {
             double endX = ((double) performance.getEndTime() / 100) * spacing - ((double) performance.getStartTime() / 100) * spacing + endMinuteOffset - startMinuteOffset;
 
             Shape shape = new Rectangle2D.Double(beginX, podiums.indexOf(performance.getPodium()) * 100 + 40, endX, 100);
-            performanceRectangles.add(shape);
             performanceInfoList.add(new Performance2D(performance, shape, performance.getEndTime() - performance.getStartTime(),
                     (int) beginX, podiums.indexOf(performance.getPodium()) * 100)
             );

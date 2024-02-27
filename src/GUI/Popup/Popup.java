@@ -101,7 +101,6 @@ public class Popup implements Refreshable {
         applyButton.setOnAction(event -> {
             if (!artistNameTextField.getText().isEmpty() && !artistGenreTextField.getText().isEmpty()) {
                 agenda.addArtist(new Artist(artistNameTextField.getText(), artistGenreTextField.getText()));
-                System.out.println(agenda.getArtistList());
                 artistNameTextField.clear();
                 artistGenreTextField.clear();
                 refresh(gui);
@@ -142,7 +141,6 @@ public class Popup implements Refreshable {
         applyButton.setOnAction(event -> {
             if (!podiumNameTextField.getText().isEmpty()) {
                 agenda.addPodium(new Podium(podiumNameTextField.getText()));
-                System.out.println(agenda.getPodiumList());
                 podiumNameTextField.clear();
                 refresh(gui);
             }
@@ -424,7 +422,6 @@ public class Popup implements Refreshable {
                         p.setName(podiumTextField.getText());
                     }
                 }
-                System.out.println(agenda.getPodiumList());
                 refresh(gui);
                 this.stage.close();
             }
@@ -533,7 +530,7 @@ public class Popup implements Refreshable {
 
         Label label = createLabel("Informatie over Optreden", 25);
         Label artistLabel = createLabel("Artiest: " + performance.getArtistName(), 15);
-        Label genreLabel = createLabel("Genre: " + performance.getArtists(), 15); //geen genre getter
+        Label genreLabel = createLabel("Genre: " + performance.getArtist().getGenre(), 15);
         Label stageLabel = createLabel("Podium: " + performance.getPodium(), 15);
         Label populairityLabel = createLabel("Populariteit: " + performance.getPopularity(), 15);
         Label startTimeLabel = createLabel("Begintijd: " + performance.getStartTimeGui(), 15);
