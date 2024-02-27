@@ -1,5 +1,7 @@
 package Data;
 
+import sun.misc.Perf;
+
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -156,7 +158,26 @@ public class Agenda {
     }
 
     public void addPerformance(Performance performance) {
-        this.performanceList.add(performance);
+        if (!checkForOverlap(performance)) {
+            this.performanceList.add(performance);
+        }
+    }
+
+    private boolean checkForOverlap(Performance performance) {
+        int startTime = performance.getStartTime();
+        int endTime = performance.getEndTime();
+
+        for (Performance p : performanceList) {
+            int pStartTime = p.getStartTime();
+            int pEndTime = p.getEndTime();
+
+            if (endTime > pStartTime && endTime < pEndTime || startTime > pStartTime && startTime < pEndTime){
+                if (p.getPodium().equals(performance.getPodium()) || p.getArtist().equals(performance.getArtist())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public void removePodium(Podium podium) {
