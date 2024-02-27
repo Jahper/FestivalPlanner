@@ -139,7 +139,7 @@ public class Performance {
     public String toString() {
         return "Optreden: " +
                 "Podium: " + podium +
-                ", Starttijd: " + startTime +
+                ", Begintijd: " + startTime +
                 ", Eindtijd: " + endTime +
                 ", Artiest(en): " + artists +
                 ", Populariteit:" + popularity;

@@ -36,8 +36,6 @@ public class Popup implements Refreshable {
     private Artist artistChange = new Artist("", "");
     private Podium podiumChange = new Podium("");
     private Performance performanceChange = null;
-    //todo kijken naar artiesten
-
 
     public Popup(GUI gui) {
         this.gui = gui;
@@ -58,7 +56,7 @@ public class Popup implements Refreshable {
         Label label = createLabel("Kies een optie om toe te voegen", 25);
 
         //Creating all buttons
-        Button performaceButton = createButton("Performance", 150, 75, 20);
+        Button performaceButton = createButton("Optreden", 150, 75, 20);
         Button artistButton = createButton("Artiest", 150, 75, 20);
         Button podiumButton = createButton("Podium", 150, 75, 20);
 
@@ -213,7 +211,7 @@ public class Popup implements Refreshable {
 
         Label label = createLabel("Kies een optie om te veranderen", 25);
 
-        Button performanceButton = createButton("Performance", 150, 75, 20);
+        Button performanceButton = createButton("Optreden", 150, 75, 20);
         Button artistButton = createButton("Artiest", 150, 75, 20);
         Button podiumButton = createButton("Podium", 150, 75, 20);
 
@@ -279,8 +277,8 @@ public class Popup implements Refreshable {
         ComboBox<Integer> popularityBox = new ComboBox<>(popularityList);
         popularityBox.setValue(performanceChange.getPopularity());
 
-        VBox vBox = new VBox(new Label("Podium:"), podiumBox, new Label("Artist:"), artistBox, new Label("Start time:"), startTimeSelect,
-                new Label("End time: "), endTimeSelect, new Label("Popularity: "), popularityBox
+        VBox vBox = new VBox(new Label("Podium:"), podiumBox, new Label("Artiest:"), artistBox, new Label("Begintijd:"), startTimeSelect,
+                new Label("Eindtijd: "), endTimeSelect, new Label("Populariteit: "), popularityBox
         );
 
         BorderPane borderPane = new BorderPane();
@@ -432,7 +430,7 @@ public class Popup implements Refreshable {
 
         Label label = createLabel("Kies een optie om te verwijderen", 25);
 
-        Button performanceButton = createButton("Performance", 150, 75, 20);
+        Button performanceButton = createButton("Optreden", 150, 75, 20);
         Button artistButton = createButton("Artiest", 150, 75, 20);
         Button podiumButton = createButton("Podium", 150, 75, 20);
 
@@ -525,12 +523,12 @@ public class Popup implements Refreshable {
     public Stage infoPopup(Performance performance) {
         this.stage = createStage();
 
-        Label label = createLabel("Informatie over performance", 25);
+        Label label = createLabel("Informatie over Optreden", 25);
         Label artistLabel = createLabel("Artiest: " + performance.getArtistName(), 15);
         Label genreLabel = createLabel("Genre: " + performance.getArtists(), 15); //geen genre getter
         Label stageLabel = createLabel("Podium: " + performance.getPodium(), 15);
         Label populairityLabel = createLabel("Populariteit: " + performance.getPopularity(), 15);
-        Label startTimeLabel = createLabel("Starttijd: " + performance.getStartTimeGui(), 15);
+        Label startTimeLabel = createLabel("Begintijd: " + performance.getStartTimeGui(), 15);
         Label endTimeLabel = createLabel("Eindtijd: " + performance.getEndTimeGui(), 15);
 
         VBox vBox = new VBox(artistLabel, genreLabel, stageLabel, populairityLabel, startTimeLabel, endTimeLabel);
