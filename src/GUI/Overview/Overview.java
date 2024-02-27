@@ -129,7 +129,7 @@ public class Overview implements Refreshable {
 
             Shape shape = new Rectangle2D.Double(beginX, podiums.indexOf(performance.getPodium()) * 100 + 40, endX, 100);
             performanceRectangles.add(shape);
-            performanceInfoList.add(new Performance2D(performance, shape, performance.getEndTime() / 100 * spacing - performance.getStartTime() / 100 * spacing,
+            performanceInfoList.add(new Performance2D(performance, shape, performance.getEndTime() - performance.getStartTime(),
                     (int) beginX, podiums.indexOf(performance.getPodium()) * 100)
             );
         }

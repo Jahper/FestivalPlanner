@@ -19,8 +19,7 @@ public class Performance2D {
     public Performance2D(Performance performance, Shape shape, int maxLength, int x, int y) {
         this.performance = performance;
         this.shape = shape;
-        this.maxLength = (maxLength / 10);
-        System.out.println(this.maxLength);
+        this.maxLength = (int)(maxLength / 7.5);
         this.x = x;
         this.y = y;
         createArea();
