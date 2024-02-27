@@ -43,7 +43,7 @@ public class Overview implements Refreshable {
     public Overview(GUI gui, Popup popup) {
         this.gui = gui;
 
-        Tab overview = new Tab("Overview");
+        Tab overview = new Tab("Overzicht");
         this.tab = overview;
         this.agenda = gui.getAgenda();
         this.popup = popup;
