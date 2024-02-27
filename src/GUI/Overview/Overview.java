@@ -114,6 +114,7 @@ public class Overview implements Refreshable {
         graphics.setBackground(Color.white);
         graphics.clearRect(0, 0, (int) canvas.getWidth(), (int) canvas.getHeight());
         graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
+        drawTimetable();
         drawPerformance();
     }
 
@@ -145,7 +146,7 @@ public class Overview implements Refreshable {
             graphics.drawString(performance2D.getTimeDuration(), performance2D.getX(), performance2D.getY() + 95);
             graphics.drawString(performance2D.getPopularity(), performance2D.getX(), performance2D.getY() + 125);
         }
-        drawTimetable();
+
     }
 
     private int getMinuteWidth(double startTime) {
@@ -209,13 +210,13 @@ public class Overview implements Refreshable {
 
     private Color getColor(int popularity) {
         if (popularity > 8) {
-            return Color.red;
+            return Color.YELLOW;
         } else if (popularity > 6) {
-            return Color.orange;
+            return Color.MAGENTA;
         } else if (popularity > 4) {
-            return Color.yellow;
+            return Color.RED;
         }
-        return Color.green;
+        return Color.CYAN;
     }
 
     @Override

@@ -20,6 +20,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import sun.misc.Perf;
 
 import java.util.ArrayList;
 
@@ -289,16 +290,23 @@ public class Popup implements Refreshable {
             if (podiumBox.getValue() != null && startHourBox.getValue() != null && startMinuteBox.getValue() != null &&
                     endHourBox.getValue() != null && endMinuteBox.getValue() != null && artistBox.getValue() != null &&
                     popularityBox.getValue() != null) {
-                Performance performance = performanceChange;
-                performance.setPodium(podiumBox.getValue());
-                performance.setStartTime(startHourBox.getValue(), startMinuteBox.getValue());
-                performance.setEndTime(endHourBox.getValue(), endMinuteBox.getValue());
-                ArrayList<Artist> artistList = new ArrayList<>();
-                artistList.add(artistBox.getValue());
-                performance.setArtists(new ArrayList<>(artistList));
-                performance.setPopularity(popularityBox.getValue());
-                refresh(gui);
-                this.stage.close();
+
+                Performance checkPerformance = new Performance(podiumBox.getValue(), startHourBox.getValue(),
+                        startMinuteBox.getValue(), endHourBox.getValue(), endMinuteBox.getValue(), artistBox.getValue(),
+                        popularityBox.getValue()
+                );
+                if (agenda.checkForOverlap(checkPerformance)) {
+                    Performance performance = performanceChange;
+                    performance.setPodium(podiumBox.getValue());
+                    performance.setStartTime(startHourBox.getValue(), startMinuteBox.getValue());
+                    performance.setEndTime(endHourBox.getValue(), endMinuteBox.getValue());
+                    ArrayList<Artist> artistList = new ArrayList<>();
+                    artistList.add(artistBox.getValue());
+                    performance.setArtists(new ArrayList<>(artistList));
+                    performance.setPopularity(popularityBox.getValue());
+                    refresh(gui);
+                    this.stage.close();
+                }
             }
         });
         return new Scene(borderPane);

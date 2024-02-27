@@ -158,12 +158,16 @@ public class Agenda {
     }
 
     public void addPerformance(Performance performance) {
-        if (!checkForOverlap(performance)) {
+        if (checkForOverlap(performance)) {
             this.performanceList.add(performance);
         }
     }
 
-    private boolean checkForOverlap(Performance performance) {
+    public boolean checkForOverlap(Performance performance) {
+        if (performance.getStartTime() >= performance.getEndTime()){
+            return false;
+        }
+
         int startTime = performance.getStartTime();
         int endTime = performance.getEndTime();
 
@@ -171,13 +175,14 @@ public class Agenda {
             int pStartTime = p.getStartTime();
             int pEndTime = p.getEndTime();
 
-            if (endTime > pStartTime && endTime < pEndTime || startTime > pStartTime && startTime < pEndTime){
-                if (p.getPodium().equals(performance.getPodium()) || p.getArtist().equals(performance.getArtist())) {
-                    return true;
+            if (endTime > pStartTime && endTime < pEndTime || startTime > pStartTime && startTime < pEndTime) {
+                if (p.getPodium().equals(performance.getPodium()) || p.getArtist().equals(performance.getArtist())
+                        && p.getPodium().equals(performance.getPodium())) {
+                    return false;
                 }
             }
         }
-        return false;
+        return true;
     }
 
     public void removePodium(Podium podium) {
