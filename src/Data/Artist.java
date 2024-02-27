@@ -35,7 +35,6 @@ public class Artist {
 
     @Override
     public String toString() {
-        return
-                "name= " + name + ", genre= " + genre;
+        return name + ", Genre: " + genre;
     }
 }

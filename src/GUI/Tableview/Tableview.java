@@ -11,9 +11,10 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+
+import java.util.ArrayList;
 
 public class Tableview implements Refreshable {
     private final Tab tab;
@@ -38,7 +39,7 @@ public class Tableview implements Refreshable {
         );
         TableColumn artistCol = new TableColumn("Artiest");
         artistCol.setCellValueFactory(
-                new PropertyValueFactory<Performance, String>("artistName")
+                new PropertyValueFactory<Performance, Artist>("artist")
         );
         TableColumn beginTimeCol = new TableColumn("Begintijd");
         beginTimeCol.setCellValueFactory(
