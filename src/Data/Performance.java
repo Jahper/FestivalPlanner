@@ -10,7 +10,7 @@ public class Performance {
     private String endTimeGui;
     private ArrayList<Artist> artists = new ArrayList<>();
     private int popularity;
-    private String artistName;
+    private Artist artistName;
 
     public Performance(Podium podium, String startTimeHour, String startTimeMinute, String endTimeHour, String endTimeMinute, ArrayList<Artist> artists, int popularity) {
         this.podium = podium;
@@ -20,9 +20,7 @@ public class Performance {
         this.startTimeGui = startTimeHour + ":" + startTimeMinute;
         this.endTimeGui = endTimeHour + ":" + endTimeMinute;
 
-        for (Artist artist : artists) {
-            this.artists.add(artist);
-        }
+        this.artists.addAll(artists);
     }
 
     public Performance(Podium podium, String startTime, String endTime, ArrayList<Artist> artists, int popularity) {
@@ -43,11 +41,8 @@ public class Performance {
             this.endTime = Integer.parseInt(endTime.substring(0, 1) + endTime.substring(2));
         }
 
-        this.artistName = "";
-        for (Artist artist : artists) {
-            this.artists.add(artist);
-            this.artistName = this.artistName + artist.getName() + ", ";
-        }
+        this.artists.addAll(artists);
+        this.artistName = this.artists.get(0);
     }
 
     public Performance(Podium podium, String startTimeHour, String startTimeMinute, String endTimeHour, String endTimeMinute, Artist artist, int popularity) {
@@ -58,7 +53,7 @@ public class Performance {
         this.popularity = popularity;
         this.startTimeGui = startTimeHour + ":" + startTimeMinute;
         this.endTimeGui = endTimeHour + ":" + endTimeMinute;
-        this.artistName = artist.getName();
+        this.artistName = artist;
     }
 
     public Podium getPodium() {
@@ -97,7 +92,7 @@ public class Performance {
 
     public void setArtists(ArrayList<Artist> artists) {
         this.artists = artists;
-        this.artistName = artists.get(0).getName();//todo ook dit in een ArrayList zetten om mogelijk meerdere artieste toe te voegen
+        this.artistName = artists.get(0);
     }
 
     public int getPopularity() {
@@ -132,18 +127,17 @@ public class Performance {
         return endTimeGui.substring(3, 5);
     }
 
-    public String getArtistName() {
+    public Artist getArtistName() {
         return artistName;
     }
 
     @Override
     public String toString() {
-        return "Performance{" +
-                "podium=" + podium +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                ", artists=" + artists +
-                ", popularity=" + popularity +
-                '}';
+        return "Optreden: " +
+                "Podium: " + podium +
+                ", Begintijd: " + startTimeGui +
+                ", Eindtijd: " + endTimeGui +
+                ", Artiest(en): " + artists +
+                ", Populariteit:" + popularity;
     }
 }

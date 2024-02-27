@@ -8,25 +8,15 @@ import GUI.GUI;
 import GUI.Refreshable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.SnapshotResult;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-import javax.swing.*;
-import java.sql.Ref;
-import java.util.ArrayList;
-
 public class Tableview implements Refreshable {
-    private Tab tab;
-    private Agenda agenda;
-    private TableView table = new TableView();
-    private BorderPane borderPane = new BorderPane();
+    private final Tab tab;
+    private final Agenda agenda;
     final HBox hb = new HBox();
     final ObservableList<Performance> data = FXCollections.observableArrayList();
     final ObservableList<Podium> podiums = FXCollections.observableArrayList();
@@ -34,11 +24,10 @@ public class Tableview implements Refreshable {
 
     public Tableview(String name, Agenda agenda) {
 
-        for (Performance performance : agenda.getPerformanceList()) {
-            data.add(performance);
-        }
+        data.addAll(agenda.getPerformanceList());
         this.agenda = agenda;
         Tab overview = new Tab(name);
+        TableView table = new TableView();
         table.setEditable(true);
 
 
@@ -48,7 +37,7 @@ public class Tableview implements Refreshable {
         );
         TableColumn artistCol = new TableColumn("Artiest");
         artistCol.setCellValueFactory(
-                new PropertyValueFactory<Performance, String>("artistName")
+                new PropertyValueFactory<Performance, Artist>("artist")
         );
         TableColumn beginTimeCol = new TableColumn("Begintijd");
         beginTimeCol.setCellValueFactory(
@@ -91,19 +80,15 @@ public class Tableview implements Refreshable {
         addPopularity.setPromptText("Popularity");
 
         final Label seperatorLabel = new Label(":");
-        final Label seperatorLabel1 = new Label(":");
+        final Label separatorLabel1 = new Label(":");
         final Label toLabel = new Label(" to ");
 
         final ComboBox<Podium> addPodium = new ComboBox<>();
         final ComboBox<Artist> addArtist = new ComboBox<>();
         final Button addButton = new Button("Add");
 
-        for (Podium podium : agenda.getPodiumList()) {
-            podiums.add(podium);
-        }
-        for (Artist artist : agenda.getArtistList()) {
-            artists.add(artist);
-        }
+        podiums.addAll(agenda.getPodiumList());
+        artists.addAll(agenda.getArtistList());
 
         addPodium.setItems(podiums);
         addArtist.setItems(artists);
@@ -119,12 +104,10 @@ public class Tableview implements Refreshable {
 
                 data.clear();
 
-                for (Performance peformance : agenda.getPerformanceList()) {
-                    data.add(peformance);
-                }
+                data.addAll(agenda.getPerformanceList());
 
             } catch (Exception e) {
-
+                e.printStackTrace();
             }
             addEndTime.clear();
             addPopularity.clear();
@@ -133,7 +116,7 @@ public class Tableview implements Refreshable {
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         table.getColumns().addAll(stageCol, artistCol, beginTimeCol, endTimeCol, popularityCol);
 
-        hb.getChildren().addAll(addPodium, addArtist, addBeginTimeHour, seperatorLabel, addBeginTimeMinutes, toLabel, addEndTimeHour, seperatorLabel1, addEndTimeMinutes, addPopularity, addButton);
+        hb.getChildren().addAll(addPodium, addArtist, addBeginTimeHour, seperatorLabel, addBeginTimeMinutes, toLabel, addEndTimeHour, separatorLabel1, addEndTimeMinutes, addPopularity, addButton);
         hb.setSpacing(3);
 
         final VBox vbox = new VBox();
@@ -153,17 +136,13 @@ public class Tableview implements Refreshable {
     @Override
     public void update() {
         data.clear();
-        for (Performance performance : agenda.getPerformanceList()) {
-            data.add(performance);
-        }
+        data.addAll(agenda.getPerformanceList());
+
         podiums.clear();
-        for (Podium podium : agenda.getPodiumList()) {
-            podiums.add(podium);
-        }
+        podiums.addAll(agenda.getPodiumList());
+
         artists.clear();
-        for (Artist artist : agenda.getArtistList()) {
-            artists.add(artist);
-        }
+        artists.addAll(agenda.getArtistList());
     }
 
     @Override
