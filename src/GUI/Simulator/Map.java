@@ -1,7 +1,5 @@
 package GUI.Simulator;
 
-import org.jfree.fx.ResizableCanvas;
-
 import javax.imageio.ImageIO;
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -74,16 +72,15 @@ public class Map {
         this.layers.add(layer8);
     }
 
-    public void draw(Graphics2D g2d, ResizableCanvas canvas) {
+    public void draw(Graphics2D g2d) {
         for (int[][] layer : layers) {
             ArrayList<BufferedImage> usedTileset;
             for (int y = 0; y < height; y++) {
                 for (int x = 0; x < width; x++) {
 
                     int tile = layer[y][x];
-                    if (tile <= 0 && layer == layer2) {
-                        usedTileset = woodTiles;
-                    } else if (tile <= 0) {
+
+                    if (tile <= 0) {
                         continue;
                     } else if (tile > 2817) {
                         usedTileset = woodTiles;
@@ -144,6 +141,4 @@ public class Map {
             e.printStackTrace();
         }
     }
-
-
 }
