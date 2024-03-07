@@ -219,13 +219,13 @@ public class Overview implements Refreshable {
 
     private Color getColor(int popularity) {
         if (popularity > 8) {
-            return Color.YELLOW;
+            return new Color(114,255,98);
         } else if (popularity > 6) {
-            return Color.MAGENTA;
+            return new Color(86,139,255);
         } else if (popularity > 4) {
-            return Color.RED;
+            return new Color(255,246,22);
         }
-        return Color.CYAN;
+        return  new Color(255,139,54);
     }
 
     @Override

@@ -160,6 +160,24 @@ public class Agenda {
             this.performanceList.add(performance);
         }
     }
+
+    public void removePodium(Podium podium) {
+
+        if (checkPodiumRemove(podium)) {
+            podiumList.remove(podium);
+        }
+    }
+
+    public void removeArtist(Artist artist) {
+        if (checkArtistRemove(artist)) {
+            artistList.remove(artist);
+        }
+    }
+
+    public void removePerformance(Performance performance) {
+        performanceList.remove(performance);
+    }
+
     //methode voor het controleren of er geen dubbele boeking is
     public boolean checkForOverlap(Performance performance) {
         if (performance.getStartTime() >= performance.getEndTime()) {
@@ -181,6 +199,7 @@ public class Agenda {
         }
         return true;
     }
+
     //methode voor het controleren of er geen dubbele boeking is voor de setters
     public boolean checkForOverlapSetter(Performance performance, Performance updatedPerformance) {
         if (updatedPerformance.getStartTime() >= updatedPerformance.getEndTime()) {
@@ -193,7 +212,7 @@ public class Agenda {
         for (Performance p : performanceList) {
             int pStartTime = p.getStartTime();
             int pEndTime = p.getEndTime();
-            if (p.equals(performance)){
+            if (p.equals(performance)) {
                 continue;
             }
 
@@ -205,6 +224,25 @@ public class Agenda {
         }
         return true;
     }
+
+    private boolean checkPodiumRemove(Podium podium) {
+        for (Performance performance : performanceList) {
+            if (performance.getPodium().equals(podium)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean checkArtistRemove(Artist artist) {
+        for (Performance performance : performanceList) {
+            if (performance.getArtist().equals(artist)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     @Override
     public String toString() {
