@@ -125,11 +125,6 @@ public class Performance {
 
     @Override
     public String toString() {
-        return "Optreden: " +
-                "Podium: " + podium +
-                ", Begintijd: " + startTimeGui +
-                ", Eindtijd: " + endTimeGui +
-                ", Artiest(en): " + artists +
-                ", Populariteit:" + popularity;
+        return this.getArtist() + " op " + podium + " van " + getStartTimeGui() + " tot " + getEndTimeGui() ;
     }
 }
