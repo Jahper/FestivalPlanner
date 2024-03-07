@@ -3,6 +3,7 @@ package GUI;
 import Data.Agenda;
 import GUI.Overview.Overview;
 import GUI.Popup.Popup;
+import GUI.Simulator.TiledMap;
 import GUI.Tableview.Tableview;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -14,19 +15,21 @@ public class GUI extends Application {
     private Overview overview;
     private Tableview tableview;
     private Popup popup;
+    private TiledMap tiledMap;
 
     public static void main(String[] args) {
         launch(args);
     }
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws Exception {
         agenda.load();
         primaryStage.setTitle("Festival planner");
         this.popup = new Popup(this);
         this.overview = new Overview(this, popup);
         this.tableview = new Tableview(this, popup, "Tabelweergave", this.agenda);
-        TabPane tabPane = new TabPane(overview.getTab(), tableview.getTab());
+        this.tiledMap = new TiledMap();
+        TabPane tabPane = new TabPane(overview.getTab(), tableview.getTab(), tiledMap.getTab());
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
         Scene scene = new Scene(tabPane);
