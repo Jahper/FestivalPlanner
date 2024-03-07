@@ -619,4 +619,5 @@ public class Popup implements Refreshable {
         performances.clear();
         performances.addAll(agenda.getPerformanceList());
     }
+    //TEST
 }
