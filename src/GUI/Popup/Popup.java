@@ -86,6 +86,8 @@ public class Popup implements Refreshable {
     private Scene addArtist() {
         Label artistNameLabel = new Label("Naam");
         Label artistGenreLabel = new Label("Genre");
+        Label errorLabel = new Label("De ingevoerde text kan geen '_' bevatten");
+        errorLabel.setStyle("-fx-text-fill: red;");
 
         TextField artistNameTextField = new TextField();
         TextField artistGenreTextField = new TextField();
@@ -99,10 +101,14 @@ public class Popup implements Refreshable {
         HBox hBox = new HBox(applyButton, terugButton, exitButton);
 
         applyButton.setOnAction(event -> {
-            if (!artistNameTextField.getText().isEmpty() && !artistGenreTextField.getText().isEmpty()) {
+            if (artistNameTextField.getText().contains("_") || artistGenreTextField.getText().contains("_")){
+                vBox.getChildren().add(errorLabel);
+            }
+            else if (!artistNameTextField.getText().isEmpty() && !artistGenreTextField.getText().isEmpty()) {
                 agenda.addArtist(new Artist(artistNameTextField.getText(), artistGenreTextField.getText()));
                 artistNameTextField.clear();
                 artistGenreTextField.clear();
+                vBox.getChildren().remove(errorLabel);
                 refresh(gui);
             }
         });
@@ -123,6 +129,8 @@ public class Popup implements Refreshable {
 
     private Scene addPodium() {
         Label podiumNameLabel = new Label("Naam");
+        Label errorLabel = new Label("De ingevoerde text kan geen '_' bevatten");
+        errorLabel.setStyle("-fx-text-fill: red;");
 
         TextField podiumNameTextField = new TextField();
 
@@ -139,9 +147,13 @@ public class Popup implements Refreshable {
         borderPane.setBottom(buttonHbox);
 
         applyButton.setOnAction(event -> {
-            if (!podiumNameTextField.getText().isEmpty()) {
+            if (podiumNameTextField.getText().contains("_")){
+                vBox.getChildren().add(errorLabel);
+            }
+            else if (!podiumNameTextField.getText().isEmpty()) {
                 agenda.addPodium(new Podium(podiumNameTextField.getText()));
                 podiumNameTextField.clear();
+                vBox.getChildren().remove(errorLabel);
                 refresh(gui);
             }
         });
@@ -201,6 +213,7 @@ public class Popup implements Refreshable {
             this.stage.close();
             addPopup().show();
         });
+
         exitButton.setOnAction(event -> this.stage.close());
         return new Scene(borderPane);
     }
@@ -529,18 +542,26 @@ public class Popup implements Refreshable {
         this.stage = createStage();
 
         Label label = createLabel("Informatie over Optreden", 25);
-        Label artistLabel = createLabel("Artiest: " + performance.getArtist().getNameGui(), 15);
-        Label genreLabel = createLabel("Genre: " + performance.getArtist().getGenre(), 15);
-        Label stageLabel = createLabel("Podium: " + performance.getPodium(), 15);
-        Label populairityLabel = createLabel("Populariteit: " + performance.getPopularity(), 15);
-        Label startTimeLabel = createLabel("Begintijd: " + performance.getStartTimeGui(), 15);
-        Label endTimeLabel = createLabel("Eindtijd: " + performance.getEndTimeGui(), 15);
+        Label artistLabel = createLabel("Artiest: " + performance.getArtist().getNameGui(), 18);
+        Label genreLabel = createLabel("Genre: " + performance.getArtist().getGenre(), 18);
+        Label stageLabel = createLabel("Podium: " + performance.getPodium(), 18);
+        Label populairityLabel = createLabel("Populariteit: " + performance.getPopularity(), 18);
+        Label startTimeLabel = createLabel("Begintijd: " + performance.getStartTimeGui(), 18);
+        Label endTimeLabel = createLabel("Eindtijd: " + performance.getEndTimeGui(), 18);
+
+        Button exitButton = new Button("Afsluiten");
 
         VBox vBox = new VBox(artistLabel, genreLabel, stageLabel, populairityLabel, startTimeLabel, endTimeLabel);
+        vBox.setSpacing(10);
 
         BorderPane borderPane = new BorderPane();
         borderPane.setTop(label);
         borderPane.setCenter(vBox);
+        borderPane.setBottom(exitButton);
+
+        exitButton.setOnAction(event -> {
+            this.stage.close();
+        });
 
         Scene scene = new Scene(borderPane);
         stage.setScene(scene);
@@ -565,7 +586,7 @@ public class Popup implements Refreshable {
         stage.setWidth(400);
         stage.setHeight(400);
         stage.initStyle(StageStyle.UTILITY);
-        stage.setResizable(true);
+        stage.setResizable(false);
         return stage;
     }
 
@@ -618,6 +639,11 @@ public class Popup implements Refreshable {
         podiums.addAll(agenda.getPodiumList());
         performances.clear();
         performances.addAll(agenda.getPerformanceList());
+        hourList.clear();
+        hourList.addAll(getHourList());
+        minuteList.clear();
+        minuteList.addAll(getMinuteList());
+        popularityList.clear();
+        popularityList.addAll(getPopularityList());
     }
-    //TEST
 }
