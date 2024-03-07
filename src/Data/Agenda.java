@@ -148,7 +148,9 @@ public class Agenda {
     }
 
     public void addPodium(Podium podium) {
-        this.podiumList.add(podium);
+        if (podiumList.size() < 9) {
+            this.podiumList.add(podium);
+        }
     }
 
     public void addArtist(Artist artist) {

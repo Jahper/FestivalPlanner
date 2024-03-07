@@ -33,9 +33,6 @@ public class Overview implements Refreshable {
     private ResizableCanvas canvas;
     private FXGraphics2D graphics;
     private final Popup popup;
-    final ObservableList<Artist> artists = FXCollections.observableArrayList();
-    final ObservableList<Podium> podiums = FXCollections.observableArrayList();
-    final ObservableList<Performance> performances = FXCollections.observableArrayList();
     final ArrayList<Performance2D> performanceInfoList = new ArrayList<>();
     private int spacing;
 
@@ -47,10 +44,6 @@ public class Overview implements Refreshable {
         this.tab = overview;
         this.agenda = gui.getAgenda();
         this.popup = popup;
-
-        artists.addAll(agenda.getArtistList());
-        podiums.addAll(agenda.getPodiumList());
-        performances.addAll(agenda.getPerformanceList());
 
         this.borderPane = new BorderPane();
 
@@ -129,16 +122,16 @@ public class Overview implements Refreshable {
     //tekent alle performances voor de overview
     public void drawPerformances() {
         performanceInfoList.clear();
-        for (Performance performance : performances) {
+        for (Performance performance : gui.getAgenda().getPerformanceList()) {
             int startMinuteOffset = getMinuteWidth(performance.getStartTime());
             int endMinuteOffset = getMinuteWidth(performance.getEndTime());
 
             double beginX = ((double) performance.getStartTime() / 100) * spacing + startMinuteOffset;
             double endX = ((double) performance.getEndTime() / 100) * spacing - ((double) performance.getStartTime() / 100) * spacing + endMinuteOffset - startMinuteOffset;
 
-            Shape shape = new Rectangle2D.Double(beginX, podiums.indexOf(performance.getPodium()) * 100 + 40, endX, 100);
+            Shape shape = new Rectangle2D.Double(beginX, gui.getAgenda().getPodiumList().indexOf(performance.getPodium()) * 100 + 40, endX, 100);
             performanceInfoList.add(new Performance2D(performance, shape, performance.getEndTime() - performance.getStartTime(),
-                    (int) beginX, podiums.indexOf(performance.getPodium()) * 100, (int) endX)
+                    (int) beginX, gui.getAgenda().getPodiumList().indexOf(performance.getPodium()) * 100, (int) endX)
             );
         }
         graphics.setColor(Color.BLACK);
@@ -203,7 +196,7 @@ public class Overview implements Refreshable {
         VBox podiumVBox = new VBox();
         podiumVBox.setMaxWidth(150);
         podiumVBox.setMinWidth(150);
-        podiumVBox.setSpacing(spacing * 0.7);
+        podiumVBox.setSpacing(spacing);
         podiumVBox.setMaxHeight(canvas.getHeight());
         for (Podium podium : podiums) {
             Label l = new Label(podium.toString());
@@ -219,26 +212,17 @@ public class Overview implements Refreshable {
 
     private Color getColor(int popularity) {
         if (popularity > 8) {
-            return new Color(114,255,98);
+            return new Color(171, 234, 167);
         } else if (popularity > 6) {
-            return new Color(86,139,255);
+            return new Color(115, 185, 243);
         } else if (popularity > 4) {
-            return new Color(255,246,22);
+            return new Color(241, 230, 128, 255);
         }
-        return  new Color(255,139,54);
+        return  new Color(238, 165, 118);
     }
 
     @Override
     public void update() {
-        performances.clear();
-        performances.addAll(agenda.getPerformanceList());
-
-        artists.clear();
-        artists.addAll(agenda.getArtistList());
-
-        podiums.clear();
-        podiums.addAll(agenda.getPodiumList());
-
         borderPane.setLeft(getPodiums());
         draw();
     }

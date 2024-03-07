@@ -22,17 +22,10 @@ public class Tableview implements Refreshable {
     private final GUI gui;
     private final Popup popup;
 
-
-    final HBox hb = new HBox();
-    final ObservableList<Performance> data = FXCollections.observableArrayList();
-    final ObservableList<Podium> podiums = FXCollections.observableArrayList();
-    final ObservableList<Artist> artists = FXCollections.observableArrayList();
-
     public Tableview(GUI gui, Popup popup, String name, Agenda agenda) {
         this.gui = gui;
         this.popup = popup;
 
-        data.addAll(agenda.getPerformanceList());
         this.agenda = agenda;
         Tab overview = new Tab(name);
         TableView table = new TableView();
@@ -60,7 +53,7 @@ public class Tableview implements Refreshable {
         popularityCol.setCellValueFactory(
                 new PropertyValueFactory<Performance, Integer>("Popularity")
         );
-        table.setItems(data);
+        table.setItems(gui.getPerformances());
 
 
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -113,18 +106,9 @@ public class Tableview implements Refreshable {
 
     @Override
     public void update() {
-        data.clear();
-        data.addAll(agenda.getPerformanceList());
-
-        podiums.clear();
-        podiums.addAll(agenda.getPodiumList());
-
-        artists.clear();
-        artists.addAll(agenda.getArtistList());
     }
 
     @Override
     public void refresh(GUI gui) {
-        gui.refresh();
     }
 }

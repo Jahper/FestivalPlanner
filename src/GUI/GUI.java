@@ -1,17 +1,25 @@
 package GUI;
 
 import Data.Agenda;
+import Data.Artist;
+import Data.Performance;
+import Data.Podium;
 import GUI.Overview.Overview;
 import GUI.Popup.Popup;
 import GUI.Simulator.TiledMap;
 import GUI.Tableview.Tableview;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
 
 public class GUI extends Application {
     private final Agenda agenda = new Agenda();
+    final ObservableList<Artist> artists = FXCollections.observableArrayList();
+    final ObservableList<Podium> podiums = FXCollections.observableArrayList();
+    final ObservableList<Performance> performances = FXCollections.observableArrayList();
     private Overview overview;
     private Tableview tableview;
     private Popup popup;
@@ -29,6 +37,11 @@ public class GUI extends Application {
         this.overview = new Overview(this, popup);
         this.tableview = new Tableview(this, popup, "Tabelweergave", this.agenda);
         this.tiledMap = new TiledMap();
+
+        artists.addAll(agenda.getArtistList());
+        podiums.addAll(agenda.getPodiumList());
+        performances.addAll(agenda.getPerformanceList());
+
         TabPane tabPane = new TabPane(overview.getTab(), tableview.getTab(), tiledMap.getTab());
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
@@ -45,8 +58,31 @@ public class GUI extends Application {
     }
 
     public void refresh() {
+        update();
         overview.update();
         tableview.update();
         popup.update();
+    }
+    public void update(){
+        performances.clear();
+        performances.addAll(agenda.getPerformanceList());
+
+        artists.clear();
+        artists.addAll(agenda.getArtistList());
+
+        podiums.clear();
+        podiums.addAll(agenda.getPodiumList());
+    }
+
+    public ObservableList<Artist> getArtists() {
+        return artists;
+    }
+
+    public ObservableList<Podium> getPodiums() {
+        return podiums;
+    }
+
+    public ObservableList<Performance> getPerformances() {
+        return performances;
     }
 }
