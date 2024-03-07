@@ -28,9 +28,6 @@ public class Popup implements Refreshable {
     private final Agenda agenda;
     private final GUI gui;
     private Stage stage;
-    final ObservableList<Artist> artists = FXCollections.observableArrayList();
-    final ObservableList<Podium> podiums = FXCollections.observableArrayList();
-    final ObservableList<Performance> performances = FXCollections.observableArrayList();
     final ObservableList<String> hourList = FXCollections.observableArrayList();
     final ObservableList<String> minuteList = FXCollections.observableArrayList();
     final ObservableList<Integer> popularityList = FXCollections.observableArrayList();
@@ -41,9 +38,6 @@ public class Popup implements Refreshable {
     public Popup(GUI gui) {
         this.gui = gui;
         this.agenda = this.gui.getAgenda();
-        artists.addAll(agenda.getArtistList());
-        podiums.addAll(agenda.getPodiumList());
-        performances.addAll(agenda.getPerformanceList());
         hourList.addAll(getHourList());
         minuteList.addAll(getMinuteList());
         popularityList.addAll(getPopularityList());
@@ -174,8 +168,8 @@ public class Popup implements Refreshable {
 
         HBox buttonHbox = new HBox(applyButton, terugButton, exitButton);
 
-        ComboBox<Podium> podiumBox = new ComboBox<>(podiums);
-        ComboBox<Artist> artistBox = new ComboBox<>(artists);
+        ComboBox<Podium> podiumBox = new ComboBox<>(gui.getPodiums());
+        ComboBox<Artist> artistBox = new ComboBox<>(gui.getArtists());
 
         ComboBox<String> startHourBox = new ComboBox<>(hourList);
         ComboBox<String> startMinuteBox = new ComboBox<>(minuteList);
@@ -245,7 +239,7 @@ public class Popup implements Refreshable {
     }
 
     private Scene changePerformance() {
-        ComboBox<Performance> performanceBox = new ComboBox<>(performances);
+        ComboBox<Performance> performanceBox = new ComboBox<>(gui.getPerformances());
         Button nextButton = new Button("Volgende");
         VBox selectPerformance = new VBox(new Label("Selecteer een optreden:"), performanceBox, nextButton);
 
@@ -266,10 +260,10 @@ public class Popup implements Refreshable {
     private Scene changePerformanceSave() {
         Button applyButton = new Button("Opslaan");
 
-        ComboBox<Podium> podiumBox = new ComboBox<>(podiums);
+        ComboBox<Podium> podiumBox = new ComboBox<>(gui.getPodiums());
         podiumBox.setValue(performanceChange.getPodium());
 
-        ComboBox<Artist> artistBox = new ComboBox<>(artists);
+        ComboBox<Artist> artistBox = new ComboBox<>(gui.getArtists());
         artistBox.setValue(performanceChange.getArtist());
 
         ComboBox<String> startHourBox = new ComboBox<>(hourList);
@@ -326,7 +320,7 @@ public class Popup implements Refreshable {
     private Scene changeArtist() {
         Label label = createLabel("Artiest veranderen", 25);
 
-        ComboBox<Artist> artistComboBox = new ComboBox<>(artists);
+        ComboBox<Artist> artistComboBox = new ComboBox<>(gui.getArtists());
         artistComboBox.setMinSize(200, 50);
 
         Button changeButton = new Button("Veranderen");
@@ -371,7 +365,7 @@ public class Popup implements Refreshable {
 
         changeButton.setOnAction(event -> {
             if (artistTextField.getText() != null && genreTextField.getText() != null) {
-                for (Artist a : artists) {
+                for (Artist a : gui.getArtists()) {
                     if (this.artistChange.equals(a)) {
                         a.setName(artistTextField.getText());
                         a.setGenre(genreTextField.getText());
@@ -388,7 +382,7 @@ public class Popup implements Refreshable {
     private Scene changePodium() {
         Label label = createLabel("Podium veranderen", 25);
 
-        ComboBox<Podium> podiumComboBox = new ComboBox<>(podiums);
+        ComboBox<Podium> podiumComboBox = new ComboBox<>(gui.getPodiums());
         podiumComboBox.setMinSize(200, 50);
 
         Button changeButton = new Button("Veranderen");
@@ -430,7 +424,7 @@ public class Popup implements Refreshable {
 
         changeButton.setOnAction(event -> {
             if (podiumTextField.getText() != null) {
-                for (Podium p : podiums) {
+                for (Podium p : gui.getPodiums()) {
                     if (this.podiumChange.equals(p)) {
                         p.setName(podiumTextField.getText());
                     }
@@ -474,7 +468,7 @@ public class Popup implements Refreshable {
 
         Button deleteButton = new Button("Verwijderen");
 
-        ComboBox<Performance> performanceComboBox = new ComboBox<>(performances);
+        ComboBox<Performance> performanceComboBox = new ComboBox<>(gui.getPerformances());
         performanceComboBox.setMinSize(200, 50);
 
         BorderPane borderPane = new BorderPane();
@@ -483,8 +477,8 @@ public class Popup implements Refreshable {
         borderPane.setBottom(deleteButton);
 
         deleteButton.setOnAction(event -> {
-            agenda.getPerformanceList().remove(performanceComboBox.getValue());
-            performances.remove(performanceComboBox.getValue());
+            agenda.removePerformance(performanceComboBox.getValue());
+            gui.getPerformances().remove(performanceComboBox.getValue());
             refresh(gui);
             this.stage.close();
         });
@@ -497,7 +491,7 @@ public class Popup implements Refreshable {
 
         Button deleteButton = new Button("Verwijderen");
 
-        ComboBox<Podium> podiumComboBox = new ComboBox<>(podiums);
+        ComboBox<Podium> podiumComboBox = new ComboBox<>(gui.getPodiums());
         podiumComboBox.setMinSize(200, 50);
 
         BorderPane borderPane = new BorderPane();
@@ -507,7 +501,7 @@ public class Popup implements Refreshable {
 
         deleteButton.setOnAction(event -> {
             agenda.getPodiumList().remove(podiumComboBox.getValue());
-            podiums.remove(podiumComboBox.getValue());
+            gui.getPodiums().remove(podiumComboBox.getValue());
             refresh(gui);
             this.stage.close();
         });
@@ -520,7 +514,7 @@ public class Popup implements Refreshable {
 
         Button deleteButton = new Button("Verwijderen");
 
-        ComboBox<Artist> artistComboBox = new ComboBox<>(artists);
+        ComboBox<Artist> artistComboBox = new ComboBox<>(gui.getArtists());
         artistComboBox.setMinSize(200, 50);
 
         BorderPane borderPane = new BorderPane();
@@ -530,7 +524,7 @@ public class Popup implements Refreshable {
 
         deleteButton.setOnAction(event -> {
             agenda.getArtistList().remove(artistComboBox.getValue());
-            artists.remove(artistComboBox.getValue());
+            gui.getArtists().remove(artistComboBox.getValue());
             refresh(gui);
             this.stage.close();
         });
@@ -633,12 +627,6 @@ public class Popup implements Refreshable {
 
     @Override
     public void update() {
-        artists.clear();
-        artists.addAll(agenda.getArtistList());
-        podiums.clear();
-        podiums.addAll(agenda.getPodiumList());
-        performances.clear();
-        performances.addAll(agenda.getPerformanceList());
         hourList.clear();
         hourList.addAll(getHourList());
         minuteList.clear();
