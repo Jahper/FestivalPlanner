@@ -19,15 +19,15 @@ public class Map {
     private ArrayList<BufferedImage> victorianMarketTiles = new ArrayList<>();
     private ArrayList<BufferedImage> victorianStreetsTiles = new ArrayList<>();
     private ArrayList<BufferedImage> woodTiles = new ArrayList<>();
-    private int[][] layer1;
-    private int[][] layer2;
-    private int[][] layer3;
-    private int[][] layer4;
-    private int[][] layer5;
-    private int[][] layer6;
-    private int[][] layer7;
-    private int[][] layer8;
-    private ArrayList<int[][]> layers;
+    private int layer1;
+    private int layer2;
+    private int layer3;
+    private int layer4;
+    private int layer5;
+    private int layer6;
+    private int layer7;
+    private int layer8;
+    private ArrayList<Integer> layers;
 
     public Map(String filename) {
         JsonReader reader = null;
@@ -43,24 +43,24 @@ public class Map {
         loadTilesets(root);
 
         for (int i = 0; i < layers.size(); i++) {
-            int[][] layer = layers.get(i);
+            int layer = layers.get(i);
             for (int y = 0; y < height; y++) {
                 for (int x = 0; x < width; x++) {
-                    layer[y][x] = root.getJsonArray("layers").getJsonObject(i).getJsonArray("data").getJsonArray(y).getInt(x);
+                    layer = root.getJsonArray("layers").getJsonObject(i).getJsonArray("data").getInt(x + y);
                 }
             }
         }
     }
 
     private void addLayers() {
-        layer1 = new int[height][width];
-        layer2 = new int[height][width];
-        layer3 = new int[height][width];
-        layer4 = new int[height][width];
-        layer5 = new int[height][width];
-        layer6 = new int[height][width];
-        layer7 = new int[height][width];
-        layer8 = new int[height][width];
+//        layer1 = new int[height][width];
+//        layer2 = new int[height][width];
+//        layer3 = new int[height][width];
+//        layer4 = new int[height][width];
+//        layer5 = new int[height][width];
+//        layer6 = new int[height][width];
+//        layer7 = new int[height][width];
+//        layer8 = new int[height][width];
 
         this.layers.add(layer1);
         this.layers.add(layer2);
@@ -73,12 +73,12 @@ public class Map {
     }
 
     public void draw(Graphics2D g2d) {
-        for (int[][] layer : layers) {
+        for (int layer : layers) {
             ArrayList<BufferedImage> usedTileset;
             for (int y = 0; y < height; y++) {
                 for (int x = 0; x < width; x++) {
 
-                    int tile = layer[y][x];
+                    int tile = x + y;
 
                     if (tile <= 0) {
                         continue;

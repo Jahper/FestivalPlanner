@@ -29,7 +29,7 @@ public class TiledMap {
 
 
     public void init() {
-        map = new Map("/GUI/Simulator/Festival_Planner_Lite_Version.json");
+        map = new Map("/Data/(old).json");
     }
 
 
