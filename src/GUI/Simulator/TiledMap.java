@@ -29,7 +29,7 @@ public class TiledMap {
 
 
     public void init() {
-        map = new Map("/Data/(old).json");
+        map = new Map("Festival Planner Lite Version.json");
     }
 
 
@@ -38,15 +38,10 @@ public class TiledMap {
 
         g.clearRect(0, 0, (int) canvas.getWidth(), (int) canvas.getHeight());
         g.setTransform(camera.getTransform((int) canvas.getWidth(), (int) canvas.getHeight()));
-        AffineTransform tx = new AffineTransform();
-//        double zoom = canvas.getWidth() / 6000;
-//        tx.scale(zoom, zoom);
-//        g.setTransform(tx);
         map.draw(g);
     }
 
     public void update(double deltaTime) {
-
 
     }
 
