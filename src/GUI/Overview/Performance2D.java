@@ -25,7 +25,6 @@ public class Performance2D {
         this.performance = performance;
         this.shape = shape;
         this.maxLength = (maxLength / 15) * 2;
-        System.out.println(maxLength);
         this.x = x;
         this.y = y;
         this.endX = endX + x;
