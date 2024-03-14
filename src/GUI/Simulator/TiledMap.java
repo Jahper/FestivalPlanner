@@ -25,7 +25,7 @@ public class TiledMap {
         canvas = new ResizableCanvas(g -> draw(g), mainPane);
         mainPane.setCenter(canvas);
         FXGraphics2D g2d = new FXGraphics2D(canvas.getGraphicsContext2D());
-        FXGraphics2D g2d2 = new FXGraphics2D(canvas.getGraphicsContext2D());
+//        FXGraphics2D g2d2 = new FXGraphics2D(canvas.getGraphicsContext2D());
 
         new AnimationTimer() {
             long last = -1;
@@ -35,7 +35,7 @@ public class TiledMap {
                     last = now;
                 update((now - last) / 1000000000.0);
                 last = now;
-                drawNpc(g2d2);
+                draw(g2d);
 //                draw(g2d);
             }
         }.start();
@@ -76,10 +76,10 @@ public class TiledMap {
         tx.scale(zoom, zoom);
         g.setTransform(tx);
 
-//        g.setTransform(new AffineTransform());
-//        for (NPC visitor : npcs) {
-//            visitor.draw(g);
-//        }
+        g.setTransform(new AffineTransform());
+        for (NPC visitor : npcs) {
+            visitor.draw(g);
+        }
     }
 
     public void drawNpc(Graphics2D g){

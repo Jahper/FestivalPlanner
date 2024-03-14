@@ -15,6 +15,7 @@ public class NPC
     private double angle;
     private double speed;
     private BufferedImage[] image;
+    private  BufferedImage testImage;
 
     private Point2D targetPosition;
 
@@ -28,6 +29,8 @@ public class NPC
             try {
                 BufferedImage image1 =ImageIO.read(getClass().getResourceAsStream("NPC sprites.png"));
                 image = new BufferedImage[3];
+
+                testImage = image1.getSubimage(0,190,34,34);
 
                 for (int i = 0; i < 3; i++) {
                     image[i] = image1.getSubimage(0,34 * i,34,34);
@@ -83,15 +86,20 @@ public class NPC
 
         AffineTransform tx = new AffineTransform();
 
-        int frame = ((((int)(position.getX() / 50)) % image.length) + (((int)( position.getY() / 50) % image.length)) / 2);
-        System.out.println(frame);
+//        int frame = ((((int)(position.getX() / 50)) % image.length) + (((int)( position.getY() / 50) % image.length)) / 2);
+//        System.out.println(frame);
+//
+//        tx.translate(position.getX() - image[frame].getWidth()/2, position.getY() - image[frame].getHeight() / 2);
+////        tx.scale(.5,.25);
+//        tx.rotate(angle, image[frame].getWidth()/2, image[frame].getHeight()/2);
+//
+//
+//        g2d.drawImage(image[frame], tx, null);
 
-        tx.translate(position.getX() - image[frame].getWidth()/2, position.getY() - image[frame].getHeight() / 2);
-//        tx.scale(.5,.25);
-        tx.rotate(angle, image[frame].getWidth()/2, image[frame].getHeight()/2);
+        tx.translate(position.getX() - testImage.getWidth()/2,position.getY() - testImage.getHeight() /2);
+        tx.rotate(angle, testImage.getWidth()/2, testImage.getHeight()/2);
 
-
-        g2d.drawImage(image[frame], tx, null);
+        g2d.drawImage(testImage,tx,null);
 
         g2d.setColor(Color.RED);
         g2d.fill(new Ellipse2D.Double(position.getX()-16, position.getY()-24, 1, 1));
