@@ -20,6 +20,7 @@ public class Map {
     private ArrayList<BufferedImage> victorianStreetsTiles = new ArrayList<>();
     private ArrayList<BufferedImage> woodTiles = new ArrayList<>();
     private ArrayList<int[]> layers;
+    ArrayList<BufferedImage> layerImages = new ArrayList<>();
 
     public Map(String filename) {
         JsonReader reader = null;
@@ -46,42 +47,52 @@ public class Map {
     private void addLayers() {
 
     }
+    BufferedImage cacheImage = null;
 
     public void draw(Graphics2D g2d) {
-        for (int[] layer : layers) {
-            ArrayList<BufferedImage> usedTileset;
-            for (int i = 0; i < height * width; i++) {
+        //ophalen uit json en in klasse zetten
+        if (cacheImage == null) {
+            cacheImage = new BufferedImage(width * 32, height * 32, BufferedImage.TYPE_4BYTE_ABGR);
+            Graphics2D graphics = cacheImage.createGraphics();
+            for (int[] layer : layers) {
+                ArrayList<BufferedImage> usedTileset;
+                for (int i = 0; i < height * width; i++) {
 
-                int tile = layer[i];
+                    int tile = layer[i];
 
-                if (tile <= 0) {
-                    continue;
-                } else if (tile > 2817) {
-                    usedTileset = woodTiles;
-                    tile -= 2817;
-                } else if (tile > 1537) {
-                    usedTileset = victorianStreetsTiles;
-                    tile -= 1537;
-                } else {
-                    usedTileset = victorianMarketTiles;
+                    if (tile <= 0) {
+                        continue;
+                    } else if (tile > 2817) {
+                        usedTileset = woodTiles;
+                        tile -= 2817;
+                    } else if (tile > 1537) {
+                        usedTileset = victorianStreetsTiles;
+                        tile -= 1537;
+                    } else {
+                        usedTileset = victorianMarketTiles;
+                        tile -= 1;
+                    }
+
+                    int x = i % 100;
+
+                    int y = 0;
+                    y = (i - x) / 100;
+                    System.out.println("x: " + x);
+                    System.out.println("y: " + y);
+                    graphics.drawImage(
+                            usedTileset.get(tile),
+                            AffineTransform.getTranslateInstance(x * tileWidth, y * tileHeight),
+                            null
+                    );
                 }
-
-                int x = i % 100;
-
-                int y = 0;
-                y = (i - x) / 100;
-                System.out.println("x: " + x);
-                System.out.println("y: " + y);
-                g2d.drawImage(
-                        usedTileset.get(tile),
-                        AffineTransform.getTranslateInstance(x * tileWidth, y * tileHeight),
-                        null
-                );
             }
+        } else {
+            g2d.drawImage(cacheImage, null, null);
         }
     }
 
     private void loadTilesets(JsonObject root) {
+        //todo in for loop zetten en in lijst.
         try {
             BufferedImage tilemap = ImageIO.read(getClass().getResourceAsStream(root.getJsonArray("tilesets").getJsonObject(0).getString("name") + ".png"));
 
