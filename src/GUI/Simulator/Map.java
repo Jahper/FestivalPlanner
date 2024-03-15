@@ -19,9 +19,7 @@ public class Map {
     private ArrayList<BufferedImage> victorianMarketTiles = new ArrayList<>();
     private ArrayList<BufferedImage> victorianStreetsTiles = new ArrayList<>();
     private ArrayList<BufferedImage> woodTiles = new ArrayList<>();
-    private ArrayList<Layer> layers;
-    ArrayList<BufferedImage> layerImages = new ArrayList<>();
-    ArrayList<Tileset> tilesets = new ArrayList<>();
+    private ArrayList<int[]> layers = new ArrayList<>();
 
     public Map(String filename) {
         JsonReader reader = null;
@@ -31,21 +29,28 @@ public class Map {
         this.width = root.getInt("width");
         this.height = root.getInt("height");
 
-        this.layers = new ArrayList<>();
 
+        loadTilesets(root);//todo meegeven voor layer
 
-        loadTilesets(root);
+        int height = root.getInt("width");
+        int width = root.getInt("height");
 
-        addLayers(root);
+        for (int i = 0; i < root.getJsonArray("layers").size(); i++) {
+            int layer[] = new int[height * width];
+            for (int j = 0; j < 100 * 100; j++) {
+                layer[j] = root.getJsonArray("layers").getJsonObject(i).getJsonArray("data").getInt(j);
+            }
+            layers.add(layer);
+        }
 
-        //adding all layers
+//        addLayers(root);
 
     }
 
     private void addLayers(JsonObject root) {
-        for (int i = 0; i < root.getJsonArray("layers").size(); i++) {
-            layers.add(new Layer(root, i, tilesets));
-        }
+//        for (int i = 0; i < root.getJsonArray("layers").size(); i++) {
+//            layers.add(new Layer(root, i, tilesets));
+//        }
     }
 
     BufferedImage cacheImage = null;
@@ -56,75 +61,50 @@ public class Map {
             cacheImage = new BufferedImage(width * 32, height * 32, BufferedImage.TYPE_4BYTE_ABGR);
             Graphics2D graphics = cacheImage.createGraphics();
 
-            ArrayList<Integer> startIDs = new ArrayList<>();
-
-            for (Tileset tileset : tilesets) {
-                startIDs.add(tileset.getFirstID());
-            }
-
-            for (Layer layer : layers) {
+            for (int[] layer : layers) {
                 ArrayList<BufferedImage> usedTileset;
                 for (int i = 0; i < height * width; i++) {
-//                    Tileset tileset = layer.getTileset();
-//                    Tileset tileset = null;
-                    int tile = layer.getLayer()[i];
 
-//                    if (tile <= 0) {
-//                        continue;
-//                    }
-//                    for (int j = 0; j < startIDs.size(); j++) {
-//                        int id = startIDs.get(j);
-//
-////                        if (tile <= 0) {
-////                            continue;
-////                        }
-//
-//                        if (tile > id) {
-//                            tile -= id;
-//                            tileset = tilesets.get(startIDs.indexOf(id));
-//                            break;
-//                        }
-//                    }
+                    int tile = layer[i];
 
                     if (tile <= 0) {
                         continue;
                     } else if (tile > 2817) {
                         usedTileset = woodTiles;
-                    tile -= 2817;
+                        tile -= 2817;
                     } else if (tile > 1537) {
-                        usedTileset = victorianMarketTiles;
-                    tile -= 1537;
-                    } else {
                         usedTileset = victorianStreetsTiles;
-                    tile -= 1;
+                        tile -= 1537;
+                    } else {
+                        usedTileset = victorianMarketTiles;
+                        tile -= 1;
                     }
+
                     int x = i % 100;
 
-                    int y;
-                    y = (i - x) / 100;
+                    int y = (i - x) / 100;
 
-                    Tileset t = layer.getTileset();
-
-
-                    BufferedImage image = usedTileset.get(tile);
-                    graphics.drawImage(image,
+                    graphics.drawImage(usedTileset.get(tile),
                             AffineTransform.getTranslateInstance(x * tileWidth, y * tileHeight),
                             null
                     );
                 }
             }
+
         } else {
             g2d.drawImage(cacheImage, null, null);
         }
     }
 
-    private void loadTilesets(JsonObject root) {
+    private ArrayList<ArrayList<BufferedImage>> loadTilesets(JsonObject root) {
         //todo in for loop zetten en in lijst.
-        for (int i = 0; i < root.getJsonArray("tilesets").size(); i++) {
-            String imageName = root.getJsonArray("tilesets").getJsonObject(i).getString("name");
-            int beginID = root.getJsonArray("tilesets").getJsonObject(i).getInt("firstgid");
-            tilesets.add(new Tileset(imageName, beginID));
-        }
+//        for (int i = 0; i < root.getJsonArray("tilesets").size(); i++) {
+//            String imageName = root.getJsonArray("tilesets").getJsonObject(i).getString("name");
+//            int beginID = root.getJsonArray("tilesets").getJsonObject(i).getInt("firstgid");
+//            tilesets.add(new Tileset(imageName, beginID));
+//        }
+        ArrayList<ArrayList<BufferedImage>> tilesets = new ArrayList<>();
+
         try {
             BufferedImage tilemap = ImageIO.read(getClass().getResourceAsStream(root.getJsonArray("tilesets").getJsonObject(0).getString("name") + ".png"));
 
@@ -133,6 +113,7 @@ public class Map {
                     victorianMarketTiles.add(tilemap.getSubimage(x, y, tileWidth, tileHeight));
                 }
             }
+            tilesets.add(victorianMarketTiles);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -145,6 +126,7 @@ public class Map {
                     victorianStreetsTiles.add(tilemap.getSubimage(x, y, tileWidth, tileHeight));
                 }
             }
+            tilesets.add(victorianStreetsTiles);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -157,8 +139,10 @@ public class Map {
                     woodTiles.add(tilemap.getSubimage(x, y, tileWidth, tileHeight));
                 }
             }
+            tilesets.add(woodTiles);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return tilesets;
     }
 }

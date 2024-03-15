@@ -1,82 +1,65 @@
 package GUI.Simulator;
 
-import javax.json.JsonObject;
+import org.jfree.fx.FXGraphics2D;
+
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class Layer {
-    private int[] layer;
-    private JsonObject root;
-    private ArrayList<Tileset> tilesets = new ArrayList<>();
-    private Tileset tileset;
-    private int i;
+    private ArrayList<Tile> tiles;
+    private int[] tileData;
+    private ArrayList<ArrayList<BufferedImage>> tilesets;//todo
+    private ArrayList<BufferedImage> usedTileSet = new ArrayList<>();
     private int correction;
 
-    public Layer(JsonObject root, int i, ArrayList<Tileset> tileset) {
-        this.root = root;
-        this.i = i;
+    public Layer(int[] tileData, ArrayList<ArrayList<BufferedImage>> tileset) {
+        this.tileData = tileData;
         this.tilesets = tileset;
-        createLayer();
+
+        getTiles();
     }
 
-    private void createLayer() {
-        int height = root.getInt("width");
-        int width = root.getInt("height");
-        int[] layer = new int[height * width];
-        for (int j = 0; j < 100 * 100; j++) {
-            layer[j] = root.getJsonArray("layers").getJsonObject(i).getJsonArray("data").getInt(j);
+    private void getTiles() {
+        setTileSet();
+
+        for (int i = 0; i < tileData.length; i++) {
+            int tile = tileData[i];
+
+            int x = i % 100;
+
+            int y = (i - x) / 100;
+
+            tiles.add(new Tile(x,y, usedTileSet.get(tile - correction)));
+
         }
-        this.layer = layer;
-
-//        ArrayList<Integer> startIDs = new ArrayList<>();
-//
-//        for (Tileset tileset : tilesets) {
-//            startIDs.add(tileset.getFirstID());
-//        }
-//        System.out.println(startIDs);
-//        for (int i = 0; i < height * width; i++) {
-//
-//            int tile = layer[i];
-////            if (tile <= 0) {
-////                continue;
-////            } else if (tile > 2817) {
-////                tileset = tilesets.get(2);
-//////                    tile -= 2817;
-////            } else if (tile > 1537) {
-////                tileset = tilesets.get(1);
-//////                    tile -= 1537;
-////            } else {
-////                tileset = tilesets.get(0);
-//////                    tile -= 1;
-////            }
-////
-//            //                System.out.println(id);
-//
-//
-////                if (startIDs.indexOf(id) == startIDs.size() - 1) {
-////                    tileset = tilesets.get(startIDs.size() - 1);
-////                    this.correction = id;
-//////                    System.out.println(id);
-////                    break;
-////                } else if (tile >= id && tile < startIDs.get(j + 1)) {
-////                    tileset = tilesets.get(j);
-//////                    System.out.println(tile - id);
-//////                    System.out.println(tile + " : " + id);
-////                    this.correction = id;
-////                    break;
-////                }
-//
-//        }
     }
 
-    public int[] getLayer() {
-        return layer;
+    private void setTileSet() {
+        this.correction = 1;
+        this.usedTileSet = tilesets.get(0);
+
+        for (int i = 0; i < tileData.length; i++) {
+
+            int tile = tileData[i];
+
+            if (tile <= 0) {
+                continue;
+            } else if (tile > 2817) {
+                this.correction = 2817;
+                this.usedTileSet = tilesets.get(1);
+                break;
+            } else if (tile > 1537) {
+                this.correction = 1537;
+                this.usedTileSet = tilesets.get(2);
+                break;
+            }
+        }
     }
 
-    public Tileset getTileset() {
-        return tileset;
-    }
-
-    public int getCorrection() {
-        return correction;
+    public void draw(FXGraphics2D g2d) {
+        for (Tile tile : tiles) {
+            tile.draw(g2d);
+        }
     }
 }
