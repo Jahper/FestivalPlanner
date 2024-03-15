@@ -1,19 +1,17 @@
 package GUI.Simulator;
 
-import org.jfree.fx.FXGraphics2D;
 
-import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
+import java.awt.*;
 import java.util.ArrayList;
 
 public class Layer {
-    private ArrayList<Tile> tiles;
+    private ArrayList<Tile> tiles = new ArrayList<>();
     private int[] tileData;
-    private ArrayList<ArrayList<BufferedImage>> tilesets;//todo
-    private ArrayList<BufferedImage> usedTileSet = new ArrayList<>();
+    private ArrayList<Tileset> tilesets;
+    private Tileset usedTileSet;
     private int correction;
 
-    public Layer(int[] tileData, ArrayList<ArrayList<BufferedImage>> tileset) {
+    public Layer(int[] tileData, ArrayList<Tileset> tileset) {
         this.tileData = tileData;
         this.tilesets = tileset;
 
@@ -21,43 +19,41 @@ public class Layer {
     }
 
     private void getTiles() {
-        setTileSet();
+        setTileSet(0);
 
         for (int i = 0; i < tileData.length; i++) {
             int tile = tileData[i];
+
+            setTileSet(tile);
+
+            if (tile <= 0) {
+                continue;
+            }
 
             int x = i % 100;
 
             int y = (i - x) / 100;
 
-            tiles.add(new Tile(x,y, usedTileSet.get(tile - correction)));
-
+            tiles.add(new Tile(x, y, usedTileSet.getTileset().get((tile - correction))));
         }
     }
 
-    private void setTileSet() {
-        this.correction = 1;
-        this.usedTileSet = tilesets.get(0);
+    private void setTileSet(int tile) {
+        if (tile <= 0) {
+            return;
+        }
 
-        for (int i = 0; i < tileData.length; i++) {
-
-            int tile = tileData[i];
-
-            if (tile <= 0) {
-                continue;
-            } else if (tile > 2817) {
-                this.correction = 2817;
-                this.usedTileSet = tilesets.get(1);
-                break;
-            } else if (tile > 1537) {
-                this.correction = 1537;
-                this.usedTileSet = tilesets.get(2);
-                break;
+        for (Tileset tileset : tilesets) {
+            if (tileset.usesTileset(tile)) {
+                this.usedTileSet = tileset;
+                this.correction = tileset.getOffset();
+                return;
             }
         }
     }
 
-    public void draw(FXGraphics2D g2d) {
+
+    public void draw(Graphics2D g2d) {
         for (Tile tile : tiles) {
             tile.draw(g2d);
         }

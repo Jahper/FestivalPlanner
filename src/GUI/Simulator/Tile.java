@@ -1,8 +1,7 @@
 package GUI.Simulator;
 
 
-import org.jfree.fx.FXGraphics2D;
-
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
@@ -29,7 +28,7 @@ public class Tile {
         return image;
     }
 
-    public void draw(FXGraphics2D g2d){
+    public void draw(Graphics2D g2d) {
         g2d.drawImage(image, AffineTransform.getTranslateInstance(x * 32, y * 32), null);
     }
 }
