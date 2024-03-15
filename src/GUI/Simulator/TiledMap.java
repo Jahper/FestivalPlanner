@@ -29,13 +29,12 @@ public class TiledMap {
 
 
     public void init() {
-        map = new Map("Festival Planner Lite Version.json");
+        map = new Map("Festival Planner Normal Version.json");
     }
 
 
-    public void draw(Graphics2D g) {
+    public void draw(FXGraphics2D g) {
         g.setTransform(new AffineTransform());
-
         g.clearRect(0, 0, (int) canvas.getWidth(), (int) canvas.getHeight());
         g.setTransform(camera.getTransform((int) canvas.getWidth(), (int) canvas.getHeight()));
         map.draw(g);
