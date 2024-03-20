@@ -1121,125 +1121,125 @@
          "name":"Spectators",
          "objects":[
                 {
-                 "height":222.666666666667,
+                 "height":253,
                  "id":12,
                  "name":"Toilets Left",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":432,
-                 "x":1077.33333333333,
-                 "y":1301.33333333333
+                 "width":414,
+                 "x":1089,
+                 "y":1280
                 }, 
                 {
-                 "height":240,
+                 "height":256,
                  "id":13,
                  "name":"Toilets Right",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":480,
-                 "x":1677.33333333333,
-                 "y":1278.66666666667
+                 "x":1664,
+                 "y":1280
                 }, 
                 {
-                 "height":589.333333333333,
+                 "height":589,
                  "id":14,
                  "name":"Foodcourt Left",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":432,
-                 "x":1070.66666666667,
-                 "y":1714.66666666667
+                 "x":1070,
+                 "y":1714
                 }, 
                 {
-                 "height":593.333333333333,
+                 "height":593,
                  "id":15,
                  "name":"Foodcourt Right",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":510,
-                 "x":1652.66666666667,
-                 "y":1710.66666666667
+                 "x":1652,
+                 "y":1710
                 }, 
                 {
-                 "height":442.666666666667,
+                 "height":479,
                  "id":18,
                  "name":"Podium 1 Spec",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":256,
-                 "x":430.666666666667,
-                 "y":561.333333333333
+                 "width":255,
+                 "x":448,
+                 "y":544
                 }, 
                 {
-                 "height":449.333333333333,
+                 "height":479,
                  "id":19,
                  "name":"Podium 2 Spec",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":244,
-                 "x":414.666666666667,
-                 "y":2194.66666666667
+                 "width":255,
+                 "x":416,
+                 "y":2176
                 }, 
                 {
-                 "height":244,
+                 "height":255,
                  "id":20,
                  "name":"Podium 3 Spec",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":454.666666666667,
-                 "x":714.666666666667,
-                 "y":2613.33333333333
+                 "width":479,
+                 "x":704,
+                 "y":2592
                 }, 
                 {
-                 "height":238.666666666667,
+                 "height":255,
                  "id":21,
                  "name":"Podium 4 Spec",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":457.333333333333,
-                 "x":1990.66666666667,
-                 "y":2606.66666666667
+                 "width":479,
+                 "x":1984,
+                 "y":2592
                 }, 
                 {
-                 "height":442.666666666667,
+                 "height":479,
                  "id":22,
                  "name":"Podium 5 Spec",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":257.333333333333,
-                 "x":2536,
-                 "y":2189.33333333333
+                 "width":255,
+                 "x":2527,
+                 "y":2176
                 }, 
                 {
-                 "height":456,
+                 "height":479,
                  "id":23,
                  "name":"Podium 6 Spec",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":253.333333333333,
-                 "x":2509.33333333333,
-                 "y":553.333333333333
+                 "width":255,
+                 "x":2496,
+                 "y":544
                 }, 
                 {
-                 "height":334.666666666667,
+                 "height":351,
                  "id":24,
                  "name":"Main Podium Spec",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":632,
-                 "x":1305.33333333333,
-                 "y":478.666666666667
+                 "width":671,
+                 "x":1280,
+                 "y":480
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1335,7 +1335,7 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":17,
+ "nextlayerid":19,
  "nextobjectid":25,
  "orientation":"orthogonal",
  "renderorder":"right-down",
@@ -1367,7 +1367,7 @@
          "tilecount":1280,
          "tileheight":32,
          "tilewidth":32
-        },
+        }, 
         {
          "columns":16,
          "firstgid":2817,
