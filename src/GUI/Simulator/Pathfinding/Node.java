@@ -1,20 +1,29 @@
 package GUI.Simulator.Pathfinding;
 
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 public class Node {
     int x;
     int y;
     int distance = -1;
-    ArrayList<Node> neighboringNodes = new ArrayList<>();
+    boolean collision = false;
+    ArrayList<Node> surroundingNodes = new ArrayList<>();
 
     public Node(int x, int y) {
         this.x = x;
         this.y = y;
     }
-    public ArrayList<Node> getNeighboringNodes(){
-        return neighboringNodes;
+
+    public void addSurroundingNode(Node node) {
+        surroundingNodes.add(node);
+    }
+
+    public ArrayList<Node> getSurroundingNodes() {
+        return surroundingNodes;
+    }
+
+    public int getDistance() {
+        return distance;
     }
 
     public int getX() {
@@ -25,9 +34,15 @@ public class Node {
         return y;
     }
 
-    public void addNeighboringNode(Node node){
-        neighboringNodes.add(node);
+    public boolean isCollision() {
+        return collision;
     }
 
+    public void setDistance(int distance) {
+        this.distance = distance;
+    }
 
+    public void setCollision(boolean collision) {
+        this.collision = collision;
+    }
 }

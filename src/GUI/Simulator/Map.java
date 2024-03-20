@@ -19,7 +19,7 @@ public class Map {
     private ArrayList<Tileset> allTilesets = new ArrayList<>();
     private ArrayList<Target> spectatorTargets = new ArrayList<>();
     private ArrayList<Target> artistTargets = new ArrayList<>();
-    private Layer paths;
+    private int[] paths;
 
     public Map(String filename) {
         JsonReader reader = null;
@@ -38,19 +38,18 @@ public class Map {
         for (int i = 0; i < root.getJsonArray("layers").size(); i++) {
             //todo ipv skippen van objecten deze oa gebruiken voor de targets
             String checkForObject = root.getJsonArray("layers").getJsonObject(i).getString("name");
-            //String checkForName = ;
             if (checkForObject.equals("Spectators")) {
                 JsonArray objects = root.getJsonArray("layers").getJsonObject(i).getJsonArray("objects");
 
                 for (int j = 0; j < objects.size(); j++) {
-                    String name =objects.getJsonObject(j).getString("name");
+                    String name = objects.getJsonObject(j).getString("name");
                     int id = objects.getJsonObject(j).getInt("id");
                     int height = objects.getJsonObject(j).getInt("height");
                     int width = objects.getJsonObject(j).getInt("width");
                     int x = objects.getJsonObject(j).getInt("x");
                     int y = objects.getJsonObject(j).getInt("y");
 
-                    spectatorTargets.add(new Target(name,id,height,width,x,y));
+                    spectatorTargets.add(new Target(name, id, height, width, x, y, paths));
 
 
                 }
@@ -62,20 +61,18 @@ public class Map {
                 JsonArray objects = root.getJsonArray("layers").getJsonObject(i).getJsonArray("objects");
 
                 for (int j = 0; j < objects.size(); j++) {
-                    String name =objects.getJsonObject(j).getString("name");
+                    String name = objects.getJsonObject(j).getString("name");
                     int id = objects.getJsonObject(j).getInt("id");
                     int height = objects.getJsonObject(j).getInt("height");
                     int width = objects.getJsonObject(j).getInt("width");
                     int x = objects.getJsonObject(j).getInt("x");
                     int y = objects.getJsonObject(j).getInt("y");
 
-                    artistTargets.add(new Target(name,id,height,width,x,y));
+                    artistTargets.add(new Target(name, id, height, width, x, y, paths));
                 }
 
                 continue;
             }
-
-
 
 
             int layer[] = new int[height * width];
@@ -84,10 +81,10 @@ public class Map {
             }
             allLayers.add(new Layer(layer, allTilesets));
             if (checkForObject.equals("Pathing")) {
-                paths = new Layer(layer, allTilesets);
+                paths = layer;
             }
         }
-        System.out.println(spectatorTargets.get(1));
+//        System.out.println(spectatorTargets.get(1));
 
     }
 
@@ -104,10 +101,14 @@ public class Map {
 
 
         } else {
-//            g2d.drawImage(cacheImage, null, null);
+            g2d.drawImage(cacheImage, null, null);
 //            paths.draw0(g2d, 20, 20);
         }
 
+//        for (Target spectatorTarget : spectatorTargets) {
+//            spectatorTarget.draw(g2d);
+//        }
+        spectatorTargets.get(5).draw(g2d);
     }
 
     private void loadTilesets(JsonObject root) {
