@@ -82,10 +82,6 @@ public class Target {
         while (iterator.hasNext()) {
             Node next = toCheck.poll();
 
-            if (next.isCollision()) {
-                continue;
-            }
-
             int x = next.getX() / 32;
             int y = next.getY() / 32;
 
@@ -95,6 +91,17 @@ public class Target {
             Node right = checkForOutOfBounds(x + 1, y);
             Node bottom = checkForOutOfBounds(x, y - 1);
             Node left = checkForOutOfBounds(x - 1, y);
+
+
+            next.addSurroundingNode(top);
+            next.addSurroundingNode(right);
+            next.addSurroundingNode(bottom);
+            next.addSurroundingNode(left);
+
+            if (next.isCollision()) {
+                continue;
+            }
+
 
             if (!checked.contains(top) && top != null) {
                 top.setDistance(distance + 1);
@@ -117,8 +124,6 @@ public class Target {
                 checked.add(left);
             }
         }
-
-
     }
 
     private Node checkForOutOfBounds(int x, int y) {
@@ -140,6 +145,9 @@ public class Target {
         }
     }
 
+    public Graph getGraph() {
+        return graph;
+    }
 
     public String getName() {
         return this.name;

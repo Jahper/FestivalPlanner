@@ -1,6 +1,6 @@
 package GUI.Simulator;
 
-import GUI.NPC.NPC;
+import GUI.Simulator.NPC.NPC;
 import javafx.animation.AnimationTimer;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.BorderPane;
@@ -19,6 +19,7 @@ public class TiledMap {
     private FXGraphics2D g2d;
     private Camera camera;
     private ArrayList<NPC> npcs;
+    private ArrayList<Target> targets;
 
     public TiledMap() throws Exception {
         init();
@@ -43,31 +44,35 @@ public class TiledMap {
         }.start();
 
         draw(g2d);
-
-        canvas.setOnMouseMoved(event -> {
-            for (NPC visitor : npcs) {
-                visitor.setTargetPosition(new Point2D.Double(event.getX(), event.getY()));
-            }
-        });
+//fixme
+//        canvas.setOnMouseMoved(event -> {
+//            for (NPC visitor : npcs) {
+//                visitor.setTargetPosition(new Point2D.Double(event.getX(), event.getY()));
+//            }
+//        });
     }
 
 
     public void init() {
+        map = new Map("files/Festival Planner Normal Version V.2.json");
+
+        targets = map.getSpectatorTargets();
+
         npcs = new ArrayList<>();
 
-        while(npcs.size() < 20) {
-            Point2D newPosition = new Point2D.Double(Math.random()*1000, Math.random()*1000);
+//        while(npcs.size() < 20) {
+//            Point2D newPosition = new Point2D.Double(Math.random()*1000, Math.random()*1000);
+            Point2D newPosition = new Point2D.Double(500, 700);
             boolean hasCollision = false;
             for (NPC visitor : npcs) {
                 if(visitor.getPosition().distance(newPosition) < 64)
                     hasCollision = true;
             }
-            if(!hasCollision)
-                npcs.add(new NPC(newPosition, 0));
+            if(!hasCollision) {
+                npcs.add(new NPC(newPosition, 0, targets.get(5)));
+            }
         }
-
-        map = new Map("Festival Planner Normal Version V.2.json");
-    }
+//    }
 
 
     public void draw(FXGraphics2D g) {
@@ -81,7 +86,7 @@ public class TiledMap {
         }
     }
 
-    public void drawNpc(Graphics2D g){
+    public void drawNpc(FXGraphics2D g){
 //        g.clearRect(0, 0, (int) canvas.getWidth(), (int) canvas.getHeight());
 
         AffineTransform tx = new AffineTransform();

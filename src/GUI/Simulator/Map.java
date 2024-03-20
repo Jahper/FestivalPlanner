@@ -90,7 +90,7 @@ public class Map {
             g2d.drawImage(cacheImage, null, null);
         }
 
-        //fixme test sout
+        //fixme test draw
         spectatorTargets.get(5).draw(g2d);
     }
 
@@ -98,5 +98,9 @@ public class Map {
         for (int i = 0; i < root.getJsonArray("tilesets").size(); i++) {
             allTileSets.add(new Tileset(root, i));
         }
+    }
+
+    public ArrayList<Target> getSpectatorTargets() {
+        return spectatorTargets;
     }
 }
