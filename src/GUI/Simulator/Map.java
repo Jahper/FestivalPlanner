@@ -14,6 +14,7 @@ public class Map {
     private int height;
     private ArrayList<Layer> allLayers = new ArrayList<>();
     private ArrayList<Tileset> allTilesets = new ArrayList<>();
+    private Layer paths;
 
     public Map(String filename) {
         JsonReader reader = null;
@@ -35,11 +36,14 @@ public class Map {
             if (checkForObject.equals("Spectators") || checkForObject.equals("Podium")) {
                 continue;
             }
+
             int layer[] = new int[height * width];
             for (int j = 0; j < 100 * 100; j++) {
                 layer[j] = root.getJsonArray("layers").getJsonObject(i).getJsonArray("data").getInt(j);
             }
             allLayers.add(new Layer(layer, allTilesets));
+            if (checkForObject.equals("Pathing")){
+            paths = new Layer(layer,allTilesets);}
         }
     }
 
@@ -54,9 +58,12 @@ public class Map {
                 layer.draw(graphics);
             }
 
+
         } else {
             g2d.drawImage(cacheImage, null, null);
+            paths.draw0(g2d, 20,20);
         }
+
     }
 
     private void loadTilesets(JsonObject root) {
