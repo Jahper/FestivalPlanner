@@ -5,7 +5,6 @@ import javafx.scene.layout.BorderPane;
 import org.jfree.fx.FXGraphics2D;
 import org.jfree.fx.ResizableCanvas;
 
-import java.awt.*;
 import java.awt.geom.AffineTransform;
 
 public class TiledMap {
