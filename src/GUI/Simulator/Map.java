@@ -19,6 +19,7 @@ public class Map {
     private ArrayList<Tileset> allTilesets = new ArrayList<>();
     private ArrayList<Target> spectatorTargets = new ArrayList<>();
     private ArrayList<Target> artistTargets = new ArrayList<>();
+    private Layer paths;
 
     public Map(String filename) {
         JsonReader reader = null;
@@ -76,11 +77,14 @@ public class Map {
 
 
 
+
             int layer[] = new int[height * width];
             for (int j = 0; j < 100 * 100; j++) {
                 layer[j] = root.getJsonArray("layers").getJsonObject(i).getJsonArray("data").getInt(j);
             }
             allLayers.add(new Layer(layer, allTilesets));
+            if (checkForObject.equals("Pathing")){
+            paths = new Layer(layer,allTilesets);}
         }
         System.out.println(spectatorTargets.get(1));
 
@@ -97,9 +101,12 @@ public class Map {
                 layer.draw(graphics);
             }
 
+
         } else {
             g2d.drawImage(cacheImage, null, null);
+            paths.draw0(g2d, 20,20);
         }
+
     }
 
     private void loadTilesets(JsonObject root) {
