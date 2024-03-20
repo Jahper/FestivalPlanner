@@ -7,7 +7,6 @@ import javafx.scene.layout.BorderPane;
 import org.jfree.fx.FXGraphics2D;
 import org.jfree.fx.ResizableCanvas;
 
-import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -54,7 +53,6 @@ public class TiledMap {
 
 
     public void init() {
-        map = new Map("Festival Planner Normal Version.json");
         npcs = new ArrayList<>();
 
         while(npcs.size() < 20) {
@@ -68,6 +66,7 @@ public class TiledMap {
                 npcs.add(new NPC(newPosition, 0));
         }
 
+        map = new Map("Festival Planner Normal Version V.2.json");
     }
 
 

@@ -1,6 +1,5 @@
 package GUI.Simulator;
 
-
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -51,7 +50,6 @@ public class Layer {
             }
         }
     }
-
 
     public void draw(Graphics2D g2d) {
         for (Tile tile : tiles) {
