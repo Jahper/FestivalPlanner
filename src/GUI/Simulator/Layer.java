@@ -60,7 +60,7 @@ public class Layer {
             tile.draw(g2d);
         }
     }
-
+//fixme
     public void draw0(Graphics2D graphics2D, int targetX, int targetY) {
         Queue<Tile> toCheck = new Queue<>();
         ArrayList<Tile> checked = new ArrayList<>();

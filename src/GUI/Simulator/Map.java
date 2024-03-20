@@ -42,8 +42,9 @@ public class Map {
                 layer[j] = root.getJsonArray("layers").getJsonObject(i).getJsonArray("data").getInt(j);
             }
             allLayers.add(new Layer(layer, allTilesets));
-            if (checkForObject.equals("Pathing")){
-            paths = new Layer(layer,allTilesets);}
+            if (checkForObject.equals("Pathing")) {
+                paths = new Layer(layer, allTilesets);
+            }
         }
     }
 
@@ -60,8 +61,8 @@ public class Map {
 
 
         } else {
-            g2d.drawImage(cacheImage, null, null);
-            paths.draw0(g2d, 20,20);
+//            g2d.drawImage(cacheImage, null, null);
+//            paths.draw0(g2d, 20, 20);
         }
 
     }
