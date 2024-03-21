@@ -2,9 +2,12 @@ package GUI.Simulator;
 
 import GUI.Simulator.NPC.NPC;
 import javafx.animation.AnimationTimer;
+import javafx.geometry.Insets;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import org.jfree.fx.FXGraphics2D;
 import org.jfree.fx.ResizableCanvas;
@@ -27,16 +30,40 @@ public class Simulator {
     private int hours = 0;
 //    private String clock = "test";
     private Label label = new Label("");
+    private HBox hBox = new HBox();
+    private Slider slider = new Slider();
+
+    private double sliderValue=0;
+
+   // Slider slider = new Slider(0.0,100,0.0);
 
 
     public Simulator() throws Exception {
         init();
+
+
+        slider.setMin(0);
+        slider.setMax(24);
+        slider.setValue(sliderValue);
+        slider.setMinWidth(1500);
+        slider.setShowTickLabels(true);
+        slider.setShowTickMarks(true);
+        slider.setBlockIncrement(23);
+
+
         mainPane = new BorderPane();
         canvas = new ResizableCanvas(g -> draw(g), mainPane);
         mainPane.setCenter(canvas);
 
         label.setFont(new Font(20));
-        mainPane.setTop(label);
+
+        hBox.setPadding(new Insets(10));
+        hBox.setSpacing(10);
+
+        hBox.getChildren().add(label);
+        hBox.getChildren().add(slider);
+
+        mainPane.setBottom(hBox);
 
 
 
@@ -135,6 +162,8 @@ public class Simulator {
             }
         }
 
+
+        slider.setValue(hours+((double) minutes /60));
     }
 
 
