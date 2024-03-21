@@ -25,7 +25,7 @@ public class NPC {
         this.position = position;
         this.angle = angle;
         this.target = target;
-        this.speed = 0.5;
+        this.speed = 0.0;
 
         try {
             BufferedImage image1 = ImageIO.read(getClass().getResourceAsStream("NPC sprites.png"));
@@ -99,7 +99,7 @@ public class NPC {
                 }
 
             }
-        System.out.println(direction);
+//        System.out.println(direction);
             switch (direction) {
                 case 0:
                     this.targetPosition = new Point2D.Double(this.position.getX(), -9999999);
