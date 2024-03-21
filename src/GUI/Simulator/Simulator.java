@@ -22,10 +22,10 @@ public class Simulator {
     private Camera camera;
     private ArrayList<NPC> npcs;
     private ArrayList<Target> targets;
+    private ArrayList<Target> entranceAndExitTargets;
     private int seconds = 0;
     private int minutes = 0;
     private int hours = 0;
-//    private String clock = "test";
     private Label label = new Label("");
 
 
@@ -38,13 +38,9 @@ public class Simulator {
         label.setFont(new Font(20));
         mainPane.setTop(label);
 
-
-
         this.g2d = new FXGraphics2D(canvas.getGraphicsContext2D());
         this.camera = new Camera(canvas, g -> draw(g), g2d);
         g2d.clearRect(0, 0, (int) canvas.getWidth(), (int) canvas.getHeight());
-
-
 
         new AnimationTimer() {
             long last = -1;
@@ -64,21 +60,25 @@ public class Simulator {
 
 
     public void init() {
-        map = new Map("files/Festival Planner Normal Version V.2.json");
+        map = new Map("files/Festival Planner Normal Version V.3.json");
 
         targets = map.getSpectatorTargets();
 
-        npcs = new ArrayList<>();
+        entranceAndExitTargets = map.getEntranceAndExitTargets();
 
+        npcs = new ArrayList<>();
         Point2D newPosition = new Point2D.Double(500, 700);
         boolean hasCollision = false;
         for (NPC visitor : npcs) {
-            if (visitor.getPosition().distance(newPosition) < 64)
+            if (visitor.getPosition().distance(newPosition) < 64) {
                 hasCollision = true;
+            }
         }
         if (!hasCollision) {
-            npcs.add(new NPC(newPosition, 0, targets.get(9)));
+            npcs.add(new NPC(newPosition, 0, entranceAndExitTargets.get(0)));
         }
+
+
     }
 
     public void draw(FXGraphics2D g) {
@@ -109,16 +109,28 @@ public class Simulator {
             visitor.update(this.npcs);
         }
 
+        //fixme
+        Point2D newPosition = new Point2D.Double(500, 700);
+        boolean hasCollision = false;
+        for (NPC visitor : npcs) {
+            if (visitor.getPosition().distance(newPosition) < 64) {
+                hasCollision = true;
+            }
+        }
+        if (!hasCollision) {
+            npcs.add(new NPC(newPosition, 0, entranceAndExitTargets.get(0)));
+        }
 
-        if (deltaTime > 0.01){
-            seconds+= 5;
-            if (seconds> 60){
+
+        if (deltaTime > 0.01) {
+            seconds += 5;
+            if (seconds > 60) {
                 minutes++;
                 seconds = 0;
-                if (minutes > 59){
+                if (minutes > 59) {
                     hours++;
                     minutes = 0;
-                    if (hours > 23){
+                    if (hours > 23) {
                         hours = 0;
 
                     }
@@ -129,7 +141,7 @@ public class Simulator {
             } else if (hours < 10) {
                 label.setText("0" + hours + " : " + minutes);
             } else if (minutes < 10) {
-            label.setText(hours + " : 0" + minutes);
+                label.setText(hours + " : 0" + minutes);
             } else {
                 label.setText(hours + " : " + minutes);
             }

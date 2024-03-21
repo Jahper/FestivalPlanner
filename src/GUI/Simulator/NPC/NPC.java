@@ -79,17 +79,22 @@ public class NPC {
         } else {
             stopDancing();
         }
-        Node nearest = node.getNearestNode();
-        if (!(node.getX() == nearest.getX())) {
-            this.targetPosition = new Point2D.Double(node.getX() + nearest.getX(), node.getY());
-            if (node.getX() > nearest.getX()) {
-                this.targetPosition = new Point2D.Double(nearest.getX() - node.getX(), node.getY());
+        if (!node.isCollision()) {
+            Node nearest = node.getNearestNode();
+            if (!(node.getX() == nearest.getX())) {
+                this.targetPosition = new Point2D.Double(node.getX() + nearest.getX(), node.getY());
+                if (node.getX() > nearest.getX()) {
+                    this.targetPosition = new Point2D.Double(nearest.getX() - node.getX(), node.getY());
+                }
+            } else if (!(node.getY() == nearest.getY())) {
+                this.targetPosition = new Point2D.Double(node.getX(), nearest.getY() + node.getY());
+                if (node.getY() > nearest.getY()) {
+                    this.targetPosition = new Point2D.Double(node.getX(), nearest.getY() - node.getY());
+                }
             }
-        } else if (!(node.getY() == nearest.getY())) {
-            this.targetPosition = new Point2D.Double(node.getX(), nearest.getY() + node.getY());
-            if (node.getY() > nearest.getY()) {
-                this.targetPosition = new Point2D.Double(node.getX(), nearest.getY() - node.getY());
-            }
+        } else {
+            //todo met collision niet door gras laten lopen
+            this.angle += 0.2;
         }
 
         double newAngle = Math.atan2(this.targetPosition.getY() - this.position.getY(), this.targetPosition.getX() - this.position.getX());
