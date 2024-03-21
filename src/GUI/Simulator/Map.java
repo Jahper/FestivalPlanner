@@ -33,7 +33,6 @@ public class Map {
 
     private void addLayers(JsonObject root) {
         for (int i = 0; i < root.getJsonArray("layers").size(); i++) {
-            //todo ipv skippen van objecten deze oa gebruiken voor de targets
             String checkForObject = root.getJsonArray("layers").getJsonObject(i).getString("name");
             if (checkForObject.equals("Spectators")) {
                 JsonArray objects = root.getJsonArray("layers").getJsonObject(i).getJsonArray("objects");
@@ -82,7 +81,6 @@ public class Map {
         if (cacheImage == null) {
             cacheImage = new BufferedImage(width * 32, height * 32, BufferedImage.TYPE_4BYTE_ABGR);
             Graphics2D graphics = cacheImage.createGraphics();
-
             for (Layer layer : allLayers) {
                 layer.draw(graphics);
             }
@@ -90,13 +88,17 @@ public class Map {
             g2d.drawImage(cacheImage, null, null);
         }
 
-        //fixme test sout
-        spectatorTargets.get(5).draw(g2d);
+        //fixme test draw
+        spectatorTargets.get(9).draw(g2d);
     }
 
     private void loadTilesets(JsonObject root) {
         for (int i = 0; i < root.getJsonArray("tilesets").size(); i++) {
             allTileSets.add(new Tileset(root, i));
         }
+    }
+
+    public ArrayList<Target> getSpectatorTargets() {
+        return spectatorTargets;
     }
 }

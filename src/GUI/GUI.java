@@ -6,7 +6,7 @@ import Data.Performance;
 import Data.Podium;
 import GUI.Overview.Overview;
 import GUI.Popup.Popup;
-import GUI.Simulator.TiledMap;
+import GUI.Simulator.Simulator;
 import GUI.Tableview.Tableview;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -23,7 +23,7 @@ public class GUI extends Application {
     private Overview overview;
     private Tableview tableview;
     private Popup popup;
-    private TiledMap tiledMap;
+    private Simulator simulator;
 
     public static void main(String[] args) {
         launch(args);
@@ -36,13 +36,13 @@ public class GUI extends Application {
         this.popup = new Popup(this);
         this.overview = new Overview(this, popup);
         this.tableview = new Tableview(this, popup, "Tabelweergave", this.agenda);
-        this.tiledMap = new TiledMap();
+        this.simulator = new Simulator();
 
         artists.addAll(agenda.getArtistList());
         podiums.addAll(agenda.getPodiumList());
         performances.addAll(agenda.getPerformanceList());
 
-        TabPane tabPane = new TabPane(overview.getTab(), tableview.getTab(), tiledMap.getTab());
+        TabPane tabPane = new TabPane(overview.getTab(), tableview.getTab(), simulator.getTab());
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
         Scene scene = new Scene(tabPane);

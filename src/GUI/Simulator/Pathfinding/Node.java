@@ -1,27 +1,21 @@
 package GUI.Simulator.Pathfinding;
 
-import java.util.ArrayList;
-
 public class Node {
-    int x;
-    int y;
-    int distance = -1;
-    boolean collision = false;
-    ArrayList<Node> surroundingNodes = new ArrayList<>();
+    private int x;
+    private int y;
+    private int distance = -1;
+    private boolean collision = false;
+    private Node nearestNode;
+
 
     public Node(int x, int y) {
         this.x = x;
         this.y = y;
     }
 
-    public void addSurroundingNode(Node node) {
-        surroundingNodes.add(node);
+    public void addNearestNode(Node node) {
+        this.nearestNode = node;
     }
-
-    public ArrayList<Node> getSurroundingNodes() {
-        return surroundingNodes;
-    }
-
     public int getDistance() {
         return distance;
     }
@@ -44,5 +38,9 @@ public class Node {
 
     public void setCollision(boolean collision) {
         this.collision = collision;
+    }
+
+    public Node getNearestNode() {
+        return nearestNode;
     }
 }

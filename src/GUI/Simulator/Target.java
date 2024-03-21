@@ -78,23 +78,25 @@ public class Target {
             }
         }
         Iterator iterator = toCheck.iterator();
-
+        Comparator<Node> comparator = new NodeComparator();
         while (iterator.hasNext()) {
             Node next = toCheck.poll();
-
-            if (next.isCollision()) {
-                continue;
-            }
 
             int x = next.getX() / 32;
             int y = next.getY() / 32;
 
             int distance = next.getDistance();
 
+            if (next.isCollision()) {
+                continue;
+            }
+
             Node top = checkForOutOfBounds(x, y + 1);
             Node right = checkForOutOfBounds(x + 1, y);
             Node bottom = checkForOutOfBounds(x, y - 1);
             Node left = checkForOutOfBounds(x - 1, y);
+
+            List<Node> neighbours = addNeighbours(top, right, bottom, left);
 
             if (!checked.contains(top) && top != null) {
                 top.setDistance(distance + 1);
@@ -116,15 +118,39 @@ public class Target {
                 toCheck.add(left);
                 checked.add(left);
             }
+
+            neighbours.sort(comparator);
+
+            if (!neighbours.isEmpty()) {
+                next.addNearestNode(neighbours.get(0));
+            }
         }
+    }
 
-
+    private List<Node> addNeighbours(Node top, Node right, Node bottom, Node left) {
+        List<Node> neighbours = new ArrayList<>();
+        if (top != null) {
+            neighbours.add(top);
+        }
+        if (right != null) {
+            neighbours.add(right);
+        }
+        if (bottom != null) {
+            neighbours.add(bottom);
+        }
+        if (left != null) {
+            neighbours.add(left);
+        }
+        return neighbours;
     }
 
     private Node checkForOutOfBounds(int x, int y) {
         Node node;
         try {
             node = graph.getNodes()[x][y];
+            if (node.getDistance() == -1) {
+                throw new ArrayIndexOutOfBoundsException();
+            }
         } catch (ArrayIndexOutOfBoundsException e) {
             return null;
         }
@@ -140,6 +166,9 @@ public class Target {
         }
     }
 
+    public Graph getGraph() {
+        return graph;
+    }
 
     public String getName() {
         return this.name;
@@ -168,5 +197,17 @@ public class Target {
     @Override
     public String toString() {
         return "name: " + this.getName() + " id: " + this.id + " height: " + this.height + " whidth: " + this.width + " x: " + this.x + " y: " + this.y;
+    }
+
+    public class NodeComparator implements Comparator<Node> {
+        @Override
+        public int compare(Node o1, Node o2) {
+            if (o2 == null) {
+                return 1;
+            } else if (o1 == null) {
+                return -1;
+            }
+            return o1.getDistance() - o2.getDistance();
+        }
     }
 }

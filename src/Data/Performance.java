@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Performance {
     private Podium podium;
     private int startTime;
-    private String startTimeGui;
+    private String  startTimeGui;
     private int endTime;
     private String endTimeGui;
     private ArrayList<Artist> artists = new ArrayList<>();
