@@ -17,8 +17,6 @@ public class NPC {
     private Target target;
     private double speed;
     private BufferedImage[] image;
-//    private BufferedImage testImage; fixme
-
     private Point2D targetPosition;
 
     public NPC(Point2D position, double angle, Target target) {
@@ -31,7 +29,6 @@ public class NPC {
             BufferedImage image1 = ImageIO.read(getClass().getResourceAsStream("NPC sprites.png"));
             image = new BufferedImage[3];
 
-
             for (int i = 0; i < 3; i++) {
                 image[i] = image1.getSubimage((34 * i) + 15, 14, 34, 34);
             }
@@ -39,9 +36,6 @@ public class NPC {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
-//        this.targetPosition = new Point2D.Double(Math.random() * 1000, Math.random() * 1000);fixme
         this.targetPosition = position;
     }
 
@@ -69,21 +63,23 @@ public class NPC {
             }
         }
 
-
         double newAngle = Math.atan2(this.targetPosition.getY() - this.position.getY(), this.targetPosition.getX() - this.position.getX());
-
         double angleDifference = angle - newAngle;
-        while (angleDifference > Math.PI)
-            angleDifference -= 2 * Math.PI;
-        while (angleDifference < -Math.PI)
-            angleDifference += 2 * Math.PI;
 
-        if (angleDifference < -0.1)
+        while (angleDifference > Math.PI) {
+            angleDifference -= 2 * Math.PI;
+        }
+        while (angleDifference < -Math.PI) {
+            angleDifference += 2 * Math.PI;
+        }
+
+        if (angleDifference < -0.1) {
             angle += 0.1;
-        else if (angleDifference > 0.1)
+        } else if (angleDifference > 0.1) {
             angle -= 0.1;
-        else
+        } else {
             angle = newAngle;
+        }
 
         Point2D newPosition = new Point2D.Double(
                 this.position.getX() + speed * Math.cos(angle),
@@ -93,31 +89,18 @@ public class NPC {
         boolean hasCollision = false;
 
         for (NPC visitor : npcs) {
-            if (visitor != this)
-                if (visitor.position.distance(newPosition) <= 32)
+            if (visitor != this) {
+                if (visitor.position.distance(newPosition) <= 32) {
                     hasCollision = true;
+                }
+            }
         }
 
-        if (!hasCollision)
+        if (!hasCollision) {
             this.position = newPosition;
-        else
+        } else {
             this.angle += 0.2;
-
-
-
-
-//            if (nearest.getX() > node.getX()) {
-//                this.targetPosition = new Point2D.Double(nearest.getX() + node.getX(), node.getY());
-//            } else if (nearest.getX() < node.getX()) {
-//                this.targetPosition = new Point2D.Double(nearest.getX(), node.getY());
-//            } else if (nearest.getY() > node.getY()) {
-//                this.targetPosition = new Point2D.Double(nearest.getX(), node.getY());
-//            } else if (nearest.getY() < node.getY()) {
-//                this.targetPosition = new Point2D.Double(node.getX(), nearest.getY() + node.getY());
-//            }
-//        }
-
-//        System.out.println(targetPosition);
+        }
     }
 
 
@@ -127,15 +110,10 @@ public class NPC {
 
         int frame = (int) ((position.getX() + position.getY()) / 50) % 3;
         tx.translate(position.getX() - image[frame].getWidth() / 2, position.getY() - image[frame].getHeight() / 2);
-//        tx.scale(.5,.25);
         tx.rotate(angle, image[frame].getWidth() / 2, image[frame].getHeight() / 2);
 
-
         g2d.drawImage(image[frame], tx, null);
-
         g2d.setColor(Color.BLACK);
-//        g2d.fill(new Ellipse2D.Double(position.getX()-16, position.getY()-24, 1, 1)); fixme
-
     }
 
     public void setTarget(Target target) {

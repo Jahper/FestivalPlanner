@@ -1,13 +1,10 @@
 package GUI.Simulator.Pathfinding;
 
-import java.util.ArrayList;
-
 public class Node {
     private int x;
     private int y;
     private int distance = -1;
     private boolean collision = false;
-    private ArrayList<Node> surroundingNodes = new ArrayList<>();
     private Node nearestNode;
 
 
@@ -19,15 +16,6 @@ public class Node {
     public void addNearestNode(Node node) {
         this.nearestNode = node;
     }
-
-    public void addSurroundingNode(Node node) {
-        surroundingNodes.add(node);
-    }
-
-    public ArrayList<Node> getSurroundingNodes() {
-        return surroundingNodes;
-    }
-
     public int getDistance() {
         return distance;
     }

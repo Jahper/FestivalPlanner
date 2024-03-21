@@ -33,7 +33,6 @@ public class Map {
 
     private void addLayers(JsonObject root) {
         for (int i = 0; i < root.getJsonArray("layers").size(); i++) {
-            //todo ipv skippen van objecten deze oa gebruiken voor de targets
             String checkForObject = root.getJsonArray("layers").getJsonObject(i).getString("name");
             if (checkForObject.equals("Spectators")) {
                 JsonArray objects = root.getJsonArray("layers").getJsonObject(i).getJsonArray("objects");

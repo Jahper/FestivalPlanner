@@ -4,7 +4,6 @@ import GUI.Simulator.Pathfinding.Graph;
 import GUI.Simulator.Pathfinding.Node;
 import org.jfree.fx.FXGraphics2D;
 
-import java.security.PublicKey;
 import java.util.*;
 
 public class Target {
@@ -97,48 +96,33 @@ public class Target {
             Node bottom = checkForOutOfBounds(x, y - 1);
             Node left = checkForOutOfBounds(x - 1, y);
 
-
-//            next.addSurroundingNode(top);
-//            next.addSurroundingNode(right);
-//            next.addSurroundingNode(bottom);
-//            next.addSurroundingNode(left);
-//            neighbours.add(top);
-
             List<Node> neighbours = addNeighbours(top, right, bottom, left);
 
             if (!checked.contains(top) && top != null) {
                 top.setDistance(distance + 1);
                 toCheck.add(top);
                 checked.add(top);
-
             }
             if (!checked.contains(right) && right != null) {
                 right.setDistance(distance + 1);
                 toCheck.add(right);
                 checked.add(right);
-
             }
             if (!checked.contains(bottom) && bottom != null) {
                 bottom.setDistance(distance + 1);
                 toCheck.add(bottom);
                 checked.add(bottom);
-
             }
             if (!checked.contains(left) && left != null) {
                 left.setDistance(distance + 1);
                 toCheck.add(left);
                 checked.add(left);
-
             }
+
             neighbours.sort(comparator);
 
             if (!neighbours.isEmpty()) {
                 next.addNearestNode(neighbours.get(0));
-//                for (Node neighbour : neighbours) {
-//                    System.out.println(neighbour.getDistance());
-//                }
-//
-//                System.out.println("nearest: " + neighbours.get(0).getX());
             }
         }
     }
