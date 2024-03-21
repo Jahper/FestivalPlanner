@@ -46,6 +46,30 @@ public class NPC {
     }
 
     public void update(ArrayList<NPC> npcs) {
+        //target route
+        int x = (int) position.getX() / 32;
+        int y = (int) position.getY() / 32;
+
+        Node node = target.getGraph().getNodes()[x][y];
+        if (node.getDistance() == 0) {
+            targetPosition = new Point2D.Double(position.getX(), position.getY());
+            //todo laten dansen fzo
+            return;
+        }
+        Node nearest = node.getNearestNode();
+        if (!(node.getX() == nearest.getX())) {
+            this.targetPosition = new Point2D.Double(node.getX() + nearest.getX(), node.getY());
+            if (node.getX() > nearest.getX()) {
+                this.targetPosition = new Point2D.Double(nearest.getX() - node.getX(), node.getY());
+            }
+        } else if (!(node.getY() == nearest.getY())) {
+            this.targetPosition = new Point2D.Double(node.getX(), nearest.getY() + node.getY());
+            if (node.getY() > nearest.getY()) {
+                this.targetPosition = new Point2D.Double(node.getX(), nearest.getY() - node.getY());
+            }
+        }
+
+
         double newAngle = Math.atan2(this.targetPosition.getY() - this.position.getY(), this.targetPosition.getX() - this.position.getX());
 
         double angleDifference = angle - newAngle;
@@ -79,25 +103,7 @@ public class NPC {
         else
             this.angle += 0.2;
 
-        //target route
-        int x = (int) position.getX() / 32;
-        int y = (int) position.getY() / 32;
 
-        Node node = target.getGraph().getNodes()[x][y];
-        if (node.getDistance() == 0) {
-            targetPosition = new Point2D.Double(position.getX(), position.getY());
-            return;
-        }
-        Node nearest = node.getNearestNode();
-        if (!(node.getX() == nearest.getX())) {
-            this.targetPosition = new Point2D.Double(node.getX() + nearest.getX(), node.getY());
-            System.out.println(node.getX() + nearest.getX());
-                if (node.getX() > nearest.getX()) {
-                    this.targetPosition = new Point2D.Double(nearest.getX() - node.getX(), node.getY());
-                }
-        } else if (!(node.getY() == nearest.getY())) {
-            this.targetPosition = new Point2D.Double(node.getX(), nearest.getY() + node.getY());
-        }
 
 
 //            if (nearest.getX() > node.getX()) {

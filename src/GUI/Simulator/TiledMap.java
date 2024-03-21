@@ -32,24 +32,18 @@ public class TiledMap {
 
         new AnimationTimer() {
             long last = -1;
+
             @Override
             public void handle(long now) {
-                if(last == -1)
+                if (last == -1)
                     last = now;
                 update((now - last) / 1000000000.0);
                 last = now;
                 draw(g2d);
-//                draw(g2d);
             }
         }.start();
 
         draw(g2d);
-//fixme
-//        canvas.setOnMouseMoved(event -> {
-//            for (NPC visitor : npcs) {
-//                visitor.setTargetPosition(new Point2D.Double(event.getX(), event.getY()));
-//            }
-//        });
     }
 
 
@@ -60,20 +54,16 @@ public class TiledMap {
 
         npcs = new ArrayList<>();
 
-//        while(npcs.size() < 20) {
-//            Point2D newPosition = new Point2D.Double(Math.random()*1000, Math.random()*1000);
-            Point2D newPosition = new Point2D.Double(500, 700);
-            boolean hasCollision = false;
-            for (NPC visitor : npcs) {
-                if(visitor.getPosition().distance(newPosition) < 64)
-                    hasCollision = true;
-            }
-            if(!hasCollision) {
-                npcs.add(new NPC(newPosition, 0, targets.get(5)));
-            }
+        Point2D newPosition = new Point2D.Double(500, 700);
+        boolean hasCollision = false;
+        for (NPC visitor : npcs) {
+            if (visitor.getPosition().distance(newPosition) < 64)
+                hasCollision = true;
         }
-//    }
-
+        if (!hasCollision) {
+            npcs.add(new NPC(newPosition, 0, targets.get(9)));
+        }
+    }
 
     public void draw(FXGraphics2D g) {
         g.setTransform(new AffineTransform());
@@ -86,12 +76,10 @@ public class TiledMap {
         }
     }
 
-    public void drawNpc(FXGraphics2D g){
-//        g.clearRect(0, 0, (int) canvas.getWidth(), (int) canvas.getHeight());
-
+    public void drawNpc(FXGraphics2D g) {
         AffineTransform tx = new AffineTransform();
         double zoom = canvas.getWidth() / 3000;
-        tx.scale(.53 , 1);
+        tx.scale(.53, 1);
         g.setTransform(tx);
 
         for (NPC visitor : npcs) {

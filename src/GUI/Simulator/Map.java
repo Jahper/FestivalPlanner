@@ -82,18 +82,15 @@ public class Map {
         if (cacheImage == null) {
             cacheImage = new BufferedImage(width * 32, height * 32, BufferedImage.TYPE_4BYTE_ABGR);
             Graphics2D graphics = cacheImage.createGraphics();
-
-//            for (Layer layer : allLayers) {
-//                layer.draw(graphics);
-//            }
-            allLayers.get(0).draw(graphics);
-            allLayers.get(1).draw(graphics);
+            for (Layer layer : allLayers) {
+                layer.draw(graphics);
+            }
         } else {
             g2d.drawImage(cacheImage, null, null);
         }
 
         //fixme test draw
-        spectatorTargets.get(5).draw(g2d);
+        spectatorTargets.get(9).draw(g2d);
     }
 
     private void loadTilesets(JsonObject root) {
