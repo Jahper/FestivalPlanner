@@ -10,14 +10,17 @@ import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class NPC {
     private Point2D position;
     private double angle;
+    private Boolean isDancing;
     private Target target;
     private double speed;
-    private BufferedImage[] image;
-//    private BufferedImage testImage; fixme
+    private BufferedImage[] imageWalking;
+    private BufferedImage[] imageDancing;
+    private BufferedImage[] finalImage;
 
     private Point2D targetPosition;
 
@@ -26,22 +29,37 @@ public class NPC {
         this.angle = angle;
         this.target = target;
         this.speed = 0.5;
+        this.isDancing = false;
+
+        Random r = new Random();
 
         try {
             BufferedImage image1 = ImageIO.read(getClass().getResourceAsStream("NPC sprites.png"));
-            image = new BufferedImage[3];
+            imageWalking = new BufferedImage[3];
+            imageDancing = new  BufferedImage[3];
 
+            if (r.nextInt(2) == 1){
+                for (int i = 0; i < 3; i++) {
+                    imageWalking[i] = image1.getSubimage((34 * i) + 15, 14, 34, 34);
+                }
 
-            for (int i = 0; i < 3; i++) {
-                image[i] = image1.getSubimage((34 * i) + 15, 14, 34, 34);
+                for (int i = 0; i < 3; i++) {
+                    imageDancing[i] = image1.getSubimage((34 * (i+3))+15,14,34,34);
+                }
+            } else {
+                for (int i = 0; i < 3; i++) {
+                    imageWalking[i] = image1.getSubimage((34 * i) + 15, 61,34,34);
+                }
+                for (int i = 0; i < 3; i++) {
+                    imageDancing[i] = image1.getSubimage((34 * (i +3))+15, 61, 34,34);
+                }
             }
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        this.finalImage= this.imageWalking;
 
-
-//        this.targetPosition = new Point2D.Double(Math.random() * 1000, Math.random() * 1000);fixme
         this.targetPosition = position;
     }
 
@@ -118,21 +136,23 @@ public class NPC {
 //        System.out.println(direction);
     }
 
-
+public void startDancing(){
+        this.finalImage = this.imageDancing;
+}
+public void stopDancing(){
+        this.finalImage = this.imageWalking;
+}
     public void draw(Graphics2D g2d) {
 
         AffineTransform tx = new AffineTransform();
 
-        int frame = (int) ((position.getX() + position.getY()) / 50) % 3;
-        tx.translate(position.getX() - image[frame].getWidth() / 2, position.getY() - image[frame].getHeight() / 2);
-//        tx.scale(.5,.25);
-        tx.rotate(angle, image[frame].getWidth() / 2, image[frame].getHeight() / 2);
+            int frame = (int) ((position.getX() + position.getY()) / 50) % 3;
+            tx.translate(position.getX() - finalImage[frame].getWidth() / 2, position.getY() - finalImage[frame].getHeight() / 2);
+            tx.rotate(angle, finalImage[frame].getWidth() / 2, finalImage[frame].getHeight() / 2);
 
-
-        g2d.drawImage(image[frame], tx, null);
+            g2d.drawImage(imageWalking[frame], tx, null);
 
         g2d.setColor(Color.BLACK);
-//        g2d.fill(new Ellipse2D.Double(position.getX()-16, position.getY()-24, 1, 1)); fixme
 
     }
 
