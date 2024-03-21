@@ -23,6 +23,8 @@ public class NPC {
     private BufferedImage[] finalImage;
 
     private Point2D targetPosition;
+    //todo volgorde van loop sprites aanpassen voor animatie
+    //todo dansen laten werken
 
     public NPC(Point2D position, double angle, Target target) {
         this.position = position;
@@ -36,29 +38,29 @@ public class NPC {
         try {
             BufferedImage image1 = ImageIO.read(getClass().getResourceAsStream("NPC sprites.png"));
             imageWalking = new BufferedImage[3];
-            imageDancing = new  BufferedImage[3];
+            imageDancing = new BufferedImage[3];
 
-            if (r.nextInt(2) == 1){
+            if (r.nextInt(2) == 1) {
                 for (int i = 0; i < 3; i++) {
                     imageWalking[i] = image1.getSubimage((34 * i) + 15, 14, 34, 34);
                 }
 
                 for (int i = 0; i < 3; i++) {
-                    imageDancing[i] = image1.getSubimage((34 * (i+3))+15,14,34,34);
+                    imageDancing[i] = image1.getSubimage((34 * (i + 3)) + 15, 14, 34, 34);
                 }
             } else {
                 for (int i = 0; i < 3; i++) {
-                    imageWalking[i] = image1.getSubimage((34 * i) + 15, 61,34,34);
+                    imageWalking[i] = image1.getSubimage((34 * i) + 15, 61, 34, 34);
                 }
                 for (int i = 0; i < 3; i++) {
-                    imageDancing[i] = image1.getSubimage((34 * (i +3))+15, 61, 34,34);
+                    imageDancing[i] = image1.getSubimage((34 * (i + 3)) + 15, 61, 34, 34);
                 }
             }
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        this.finalImage= this.imageWalking;
+        this.finalImage = this.imageWalking;
 
         this.targetPosition = position;
     }
@@ -72,7 +74,10 @@ public class NPC {
         if (node.getDistance() == 0) {
             targetPosition = new Point2D.Double(position.getX(), position.getY());
             //todo laten dansen fzo
+            startDancing();
             return;
+        } else {
+            stopDancing();
         }
         Node nearest = node.getNearestNode();
         if (!(node.getX() == nearest.getX())) {
@@ -127,23 +132,26 @@ public class NPC {
         }
     }
 
-public void startDancing(){
+    public void startDancing() {
         this.finalImage = this.imageDancing;
-}
-public void stopDancing(){
+    }
+
+    public void stopDancing() {
         this.finalImage = this.imageWalking;
-}
+    }
+
     public void draw(Graphics2D g2d) {
 
         AffineTransform tx = new AffineTransform();
 
-            int frame = (int) ((position.getX() + position.getY()) / 50) % 3;
-            tx.translate(position.getX() - finalImage[frame].getWidth() / 2, position.getY() - finalImage[frame].getHeight() / 2);
-            tx.rotate(angle, finalImage[frame].getWidth() / 2, finalImage[frame].getHeight() / 2);
+        int frame = (int) ((position.getX() + position.getY()) / 50) % 3;
+        tx.translate(position.getX() - finalImage[frame].getWidth() / 2, position.getY() - finalImage[frame].getHeight() / 2);
+        tx.rotate(angle, finalImage[frame].getWidth() / 2, finalImage[frame].getHeight() / 2);
 
-            g2d.drawImage(imageWalking[frame], tx, null);
+        g2d.drawImage(imageWalking[frame], tx, null);
 
         g2d.setColor(Color.BLACK);
+    }
 
     public void setTarget(Target target) {
         this.target = target;

@@ -1,24 +1,19 @@
 package GUI.Simulator;
 
-import Data.Agenda;
-import Data.Performance;
 import GUI.Simulator.NPC.NPC;
 import javafx.animation.AnimationTimer;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import org.jfree.fx.FXGraphics2D;
 import org.jfree.fx.ResizableCanvas;
 
-import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
-public class TiledMap {
+public class Simulator {
 
     private Map map;
     private ResizableCanvas canvas;
@@ -34,7 +29,7 @@ public class TiledMap {
     private Label label = new Label("");
 
 
-    public TiledMap() throws Exception {
+    public Simulator() throws Exception {
         init();
         mainPane = new BorderPane();
         canvas = new ResizableCanvas(g -> draw(g), mainPane);
