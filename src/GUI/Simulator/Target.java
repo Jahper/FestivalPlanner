@@ -4,6 +4,7 @@ import GUI.Simulator.Pathfinding.Graph;
 import GUI.Simulator.Pathfinding.Node;
 import org.jfree.fx.FXGraphics2D;
 
+import java.security.PublicKey;
 import java.util.*;
 
 public class Target {
@@ -78,7 +79,7 @@ public class Target {
             }
         }
         Iterator iterator = toCheck.iterator();
-
+        Comparator<Node> comparator = new NodeComparator();
         while (iterator.hasNext()) {
             Node next = toCheck.poll();
 
@@ -87,49 +88,85 @@ public class Target {
 
             int distance = next.getDistance();
 
+            if (next.isCollision()) {
+                continue;
+            }
+
             Node top = checkForOutOfBounds(x, y + 1);
             Node right = checkForOutOfBounds(x + 1, y);
             Node bottom = checkForOutOfBounds(x, y - 1);
             Node left = checkForOutOfBounds(x - 1, y);
 
 
-            next.addSurroundingNode(top);
-            next.addSurroundingNode(right);
-            next.addSurroundingNode(bottom);
-            next.addSurroundingNode(left);
+//            next.addSurroundingNode(top);
+//            next.addSurroundingNode(right);
+//            next.addSurroundingNode(bottom);
+//            next.addSurroundingNode(left);
+//            neighbours.add(top);
 
-            if (next.isCollision()) {
-                continue;
-            }
-
+            List<Node> neighbours = addNeighbours(top, right, bottom, left);
 
             if (!checked.contains(top) && top != null) {
                 top.setDistance(distance + 1);
                 toCheck.add(top);
                 checked.add(top);
+
             }
             if (!checked.contains(right) && right != null) {
                 right.setDistance(distance + 1);
                 toCheck.add(right);
                 checked.add(right);
+
             }
             if (!checked.contains(bottom) && bottom != null) {
                 bottom.setDistance(distance + 1);
                 toCheck.add(bottom);
                 checked.add(bottom);
+
             }
             if (!checked.contains(left) && left != null) {
                 left.setDistance(distance + 1);
                 toCheck.add(left);
                 checked.add(left);
+
+            }
+            neighbours.sort(comparator);
+
+            if (!neighbours.isEmpty()) {
+                next.addNearestNode(neighbours.get(0));
+//                for (Node neighbour : neighbours) {
+//                    System.out.println(neighbour.getDistance());
+//                }
+//
+//                System.out.println("nearest: " + neighbours.get(0).getX());
             }
         }
+    }
+
+    private List<Node> addNeighbours(Node top, Node right, Node bottom, Node left) {
+        List<Node> neighbours = new ArrayList<>();
+        if (top != null) {
+            neighbours.add(top);
+        }
+        if (right != null) {
+            neighbours.add(right);
+        }
+        if (bottom != null) {
+            neighbours.add(bottom);
+        }
+        if (left != null) {
+            neighbours.add(left);
+        }
+        return neighbours;
     }
 
     private Node checkForOutOfBounds(int x, int y) {
         Node node;
         try {
             node = graph.getNodes()[x][y];
+            if (node.getDistance() == -1) {
+                throw new ArrayIndexOutOfBoundsException();
+            }
         } catch (ArrayIndexOutOfBoundsException e) {
             return null;
         }
@@ -176,5 +213,17 @@ public class Target {
     @Override
     public String toString() {
         return "name: " + this.getName() + " id: " + this.id + " height: " + this.height + " whidth: " + this.width + " x: " + this.x + " y: " + this.y;
+    }
+
+    public class NodeComparator implements Comparator<Node> {
+        @Override
+        public int compare(Node o1, Node o2) {
+            if (o2 == null) {
+                return 1;
+            } else if (o1 == null) {
+                return -1;
+            }
+            return o1.getDistance() - o2.getDistance();
+        }
     }
 }

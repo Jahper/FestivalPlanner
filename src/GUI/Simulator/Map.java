@@ -83,9 +83,11 @@ public class Map {
             cacheImage = new BufferedImage(width * 32, height * 32, BufferedImage.TYPE_4BYTE_ABGR);
             Graphics2D graphics = cacheImage.createGraphics();
 
-            for (Layer layer : allLayers) {
-                layer.draw(graphics);
-            }
+//            for (Layer layer : allLayers) {
+//                layer.draw(graphics);
+//            }
+            allLayers.get(0).draw(graphics);
+            allLayers.get(1).draw(graphics);
         } else {
             g2d.drawImage(cacheImage, null, null);
         }

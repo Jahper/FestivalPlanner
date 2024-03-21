@@ -25,7 +25,7 @@ public class NPC {
         this.position = position;
         this.angle = angle;
         this.target = target;
-        this.speed = 0.5;
+        this.speed = 2;
 
         try {
             BufferedImage image1 = ImageIO.read(getClass().getResourceAsStream("NPC sprites.png"));
@@ -84,38 +84,34 @@ public class NPC {
         int y = (int) position.getY() / 32;
 
         Node node = target.getGraph().getNodes()[x][y];
-        ArrayList<Node> surroundingNodes = node.getSurroundingNodes();
-        int direction = 0;
-        //fixme
-//        if (!surroundingNodes.isEmpty()) {
-            Node targetNode = surroundingNodes.get(0);
-            for (Node surroundingNode : surroundingNodes) {
-                if (surroundingNode.getDistance() == -1) {
-                    continue;
+        if (node.getDistance() == 0) {
+            targetPosition = new Point2D.Double(position.getX(), position.getY());
+            return;
+        }
+        Node nearest = node.getNearestNode();
+        if (!(node.getX() == nearest.getX())) {
+            this.targetPosition = new Point2D.Double(node.getX() + nearest.getX(), node.getY());
+            System.out.println(node.getX() + nearest.getX());
+                if (node.getX() > nearest.getX()) {
+                    this.targetPosition = new Point2D.Double(nearest.getX() - node.getX(), node.getY());
                 }
-                if (targetNode.getDistance() > surroundingNode.getDistance()) {
-                    targetNode = surroundingNode;
-                    direction = surroundingNodes.indexOf(surroundingNode);
-                }
+        } else if (!(node.getY() == nearest.getY())) {
+            this.targetPosition = new Point2D.Double(node.getX(), nearest.getY() + node.getY());
+        }
 
-            }
-        System.out.println(direction);
-            switch (direction) {
-                case 0:
-                    this.targetPosition = new Point2D.Double(this.position.getX(), -9999999);
-                    break;
-                case 1:
-                    this.targetPosition = new Point2D.Double(-9999999, this.position.getY());
-                    break;
-                case 2:
-                    this.targetPosition = new Point2D.Double(this.position.getX(), 9999999);
-                    break;
-                case 3:
-                    this.targetPosition = new Point2D.Double(9999999, this.position.getY());
-                    break;
-            }
+
+//            if (nearest.getX() > node.getX()) {
+//                this.targetPosition = new Point2D.Double(nearest.getX() + node.getX(), node.getY());
+//            } else if (nearest.getX() < node.getX()) {
+//                this.targetPosition = new Point2D.Double(nearest.getX(), node.getY());
+//            } else if (nearest.getY() > node.getY()) {
+//                this.targetPosition = new Point2D.Double(nearest.getX(), node.getY());
+//            } else if (nearest.getY() < node.getY()) {
+//                this.targetPosition = new Point2D.Double(node.getX(), nearest.getY() + node.getY());
+//            }
 //        }
-//        System.out.println(direction);
+
+//        System.out.println(targetPosition);
     }
 
 
@@ -134,6 +130,10 @@ public class NPC {
         g2d.setColor(Color.BLACK);
 //        g2d.fill(new Ellipse2D.Double(position.getX()-16, position.getY()-24, 1, 1)); fixme
 
+    }
+
+    public void setTarget(Target target) {
+        this.target = target;
     }
 
     public void setTargetPosition(Point2D targetPosition) {
