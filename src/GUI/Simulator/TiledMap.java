@@ -1,14 +1,21 @@
 package GUI.Simulator;
 
+import Data.Agenda;
+import Data.Performance;
 import GUI.Simulator.NPC.NPC;
 import javafx.animation.AnimationTimer;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Font;
 import org.jfree.fx.FXGraphics2D;
 import org.jfree.fx.ResizableCanvas;
 
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 public class TiledMap {
@@ -20,15 +27,29 @@ public class TiledMap {
     private Camera camera;
     private ArrayList<NPC> npcs;
     private ArrayList<Target> targets;
+    private int seconds = 0;
+    private int minutes = 0;
+    private int hours = 0;
+//    private String clock = "test";
+    private Label label = new Label("");
+
 
     public TiledMap() throws Exception {
         init();
         mainPane = new BorderPane();
         canvas = new ResizableCanvas(g -> draw(g), mainPane);
         mainPane.setCenter(canvas);
+
+        label.setFont(new Font(20));
+        mainPane.setTop(label);
+
+
+
         this.g2d = new FXGraphics2D(canvas.getGraphicsContext2D());
         this.camera = new Camera(canvas, g -> draw(g), g2d);
         g2d.clearRect(0, 0, (int) canvas.getWidth(), (int) canvas.getHeight());
+
+
 
         new AnimationTimer() {
             long last = -1;
@@ -74,6 +95,7 @@ public class TiledMap {
         for (NPC visitor : npcs) {
             visitor.draw(g);
         }
+
     }
 
     public void drawNpc(FXGraphics2D g) {
@@ -91,13 +113,39 @@ public class TiledMap {
         for (NPC visitor : npcs) {
             visitor.update(this.npcs);
         }
+
+
+        if (deltaTime > 0.01){
+            seconds+= 5;
+            if (seconds> 60){
+                minutes++;
+                seconds = 0;
+                if (minutes > 59){
+                    hours++;
+                    minutes = 0;
+                    if (hours > 23){
+                        hours = 0;
+
+                    }
+                }
+            }
+            if (hours < 10 && minutes < 10) {
+                label.setText("0" + hours + " : 0" + minutes);
+            } else if (hours < 10) {
+                label.setText("0" + hours + " : " + minutes);
+            } else if (minutes < 10) {
+            label.setText(hours + " : 0" + minutes);
+            } else {
+                label.setText(hours + " : " + minutes);
+            }
+        }
+
     }
+
 
     public Tab getTab() {
         Tab t = new Tab("Simulatie");
-        BorderPane b = new BorderPane();
-        b.setCenter(this.canvas);
-        t.setContent(b);
+        t.setContent(mainPane);
         return t;
     }
 }
