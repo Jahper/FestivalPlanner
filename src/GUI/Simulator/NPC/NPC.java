@@ -21,13 +21,14 @@ public class NPC {
     private BufferedImage[] imageWalking;
     private BufferedImage[] imageDancing;
     private BufferedImage[] finalImage;
-
     private Point2D targetPosition;
+    private Point2D lastPosition;
     //todo volgorde van loop sprites aanpassen voor animatie
     //todo dansen laten werken
 
     public NPC(Point2D position, double angle, Target target) {
         this.position = position;
+        this.lastPosition = position;
         this.angle = angle;
         this.target = target;
         this.isDancing = false;
@@ -70,9 +71,12 @@ public class NPC {
         int x = (int) position.getX() / 32;
         int y = (int) position.getY() / 32;
 
+        boolean hasCollision = false;
+
         Node node = target.getGraph().getNodes()[x][y];
         if (node.getDistance() == 0) {
             targetPosition = new Point2D.Double(position.getX(), position.getY());
+            lastPosition = targetPosition;
             //todo laten dansen fzo
             startDancing();
             return;
@@ -83,18 +87,23 @@ public class NPC {
             Node nearest = node.getNearestNode();
             if (!(node.getX() == nearest.getX())) {
                 this.targetPosition = new Point2D.Double(node.getX() + nearest.getX(), node.getY());
+                this.lastPosition = targetPosition;
                 if (node.getX() > nearest.getX()) {
                     this.targetPosition = new Point2D.Double(nearest.getX() - node.getX(), node.getY());
+                    this.lastPosition = targetPosition;
                 }
             } else if (!(node.getY() == nearest.getY())) {
                 this.targetPosition = new Point2D.Double(node.getX(), nearest.getY() + node.getY());
+                this.lastPosition = targetPosition;
                 if (node.getY() > nearest.getY()) {
                     this.targetPosition = new Point2D.Double(node.getX(), nearest.getY() - node.getY());
+                    this.lastPosition = targetPosition;
                 }
             }
         } else {
-            //todo met collision niet door gras laten lopen
-            this.angle += 0.2;
+            //todo als hij tegen de wand loopt, terug op pad laten lopen
+            this.targetPosition = lastPosition;
+            hasCollision = true;
         }
 
         double newAngle = Math.atan2(this.targetPosition.getY() - this.position.getY(), this.targetPosition.getX() - this.position.getX());
@@ -120,7 +129,7 @@ public class NPC {
                 this.position.getY() + speed * Math.sin(angle)
         );
 
-        boolean hasCollision = false;
+
 
         for (NPC visitor : npcs) {
             if (visitor != this) {

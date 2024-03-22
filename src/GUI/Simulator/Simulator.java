@@ -70,7 +70,7 @@ public class Simulator {
         Point2D newPosition = new Point2D.Double(500, 700);
         boolean hasCollision = false;
         for (NPC visitor : npcs) {
-            if (visitor.getPosition().distance(newPosition) < 64) {
+            if (visitor.getPosition().distance(newPosition) < 32) {
                 hasCollision = true;
             }
         }
@@ -146,7 +146,7 @@ public class Simulator {
                 label.setText(hours + " : " + minutes);
             }
         }
-
+        System.out.println(npcs.size());
     }
 
 
