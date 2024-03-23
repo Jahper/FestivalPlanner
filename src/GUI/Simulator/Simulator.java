@@ -60,7 +60,7 @@ public class Simulator {
 
 
     public void init() {
-        map = new Map("files/Festival Planner Normal Version V.2.json");
+        map = new Map("files/Festival Planner Normal Version V.4.json");
 
         targets = map.getSpectatorTargets();
 
@@ -75,7 +75,7 @@ public class Simulator {
             }
         }
         if (!hasCollision) {
-            npcs.add(new NPC(newPosition, 0, targets.get(0)));
+            npcs.add(new NPC(newPosition, 0, entranceAndExitTargets.get(0)));
         }
 
 
@@ -118,7 +118,7 @@ public class Simulator {
             }
         }
         if (!hasCollision) {
-//            npcs.add(new NPC(newPosition, 0, targets.get(0)));
+            npcs.add(new NPC(newPosition, 0, targets.get(5)));
         }
 
 

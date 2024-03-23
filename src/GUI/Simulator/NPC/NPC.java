@@ -72,11 +72,12 @@ public class NPC {
         int y = (int) position.getY() / 32;
 
         boolean hasCollision = false;
+        boolean collisionWithBorder = false;
 
         Node node = target.getGraph().getNodes()[x][y];
         if (node.getDistance() == 0) {
             targetPosition = new Point2D.Double(position.getX(), position.getY());
-            lastPosition = targetPosition;
+            lastPosition = new Point2D.Double(node.getX(), node.getY());
             //todo laten dansen fzo
             startDancing();
             return;
@@ -87,24 +88,28 @@ public class NPC {
             Node nearest = node.getNearestNode();
             if (!(node.getX() == nearest.getX())) {
                 this.targetPosition = new Point2D.Double(node.getX() + nearest.getX(), node.getY());
-                this.lastPosition = targetPosition;
+                lastPosition = new Point2D.Double(node.getX(), node.getY());
                 if (node.getX() > nearest.getX()) {
                     this.targetPosition = new Point2D.Double(nearest.getX() - node.getX(), node.getY());
-                    this.lastPosition = targetPosition;
+                    lastPosition = new Point2D.Double(node.getX(), node.getY());
                 }
             } else if (!(node.getY() == nearest.getY())) {
                 this.targetPosition = new Point2D.Double(node.getX(), nearest.getY() + node.getY());
-                this.lastPosition = targetPosition;
+                lastPosition = new Point2D.Double(node.getX(), node.getY());
                 if (node.getY() > nearest.getY()) {
                     this.targetPosition = new Point2D.Double(node.getX(), nearest.getY() - node.getY());
-                    this.lastPosition = targetPosition;
+                    lastPosition = new Point2D.Double(node.getX(), node.getY());
                 }
             }
         } else {
             //todo als hij tegen de wand loopt, terug op pad laten lopen
+            //todo ook pathfinding toepassen wanneer de weg kwijt is
             this.targetPosition = lastPosition;
+            collisionWithBorder = true;
             hasCollision = true;
         }
+
+
 
         double newAngle = Math.atan2(this.targetPosition.getY() - this.position.getY(), this.targetPosition.getX() - this.position.getX());
         double angleDifference = angle - newAngle;
@@ -141,6 +146,10 @@ public class NPC {
 
         if (!hasCollision) {
             this.position = newPosition;
+        } else if (collisionWithBorder && hasCollision) {
+            this.angle += 0.2;
+        } else if (collisionWithBorder) {
+            this.position = lastPosition;
         } else {
             this.angle += 0.2;
         }
