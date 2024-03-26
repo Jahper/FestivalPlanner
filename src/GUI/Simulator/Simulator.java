@@ -1,7 +1,5 @@
 package GUI.Simulator;
 
-import Data.Agenda;
-import Data.Performance;
 import GUI.Simulator.NPC.NPC;
 import javafx.animation.AnimationTimer;
 import javafx.scene.control.Label;
@@ -29,15 +27,13 @@ public class Simulator {
     private int minutes = 0;
     private int hours = 0;
     private Label label = new Label("");
-    private Agenda agenda;
 
 
-    public Simulator(Agenda agenda) throws Exception {
+    public Simulator() throws Exception {
         init();
         mainPane = new BorderPane();
         canvas = new ResizableCanvas(g -> draw(g), mainPane);
         mainPane.setCenter(canvas);
-        this.agenda = agenda;
 
         label.setFont(new Font(20));
         mainPane.setTop(label);
@@ -122,10 +118,7 @@ public class Simulator {
             }
         }
         if (!hasCollision) {
-            if (npcs.size() < 11) {
-                npcs.add(new NPC(newPosition, 0, targets.get(5)));
-            }
-
+            npcs.add(new NPC(newPosition, 0, targets.get(5)));
         }
 
 
@@ -153,13 +146,7 @@ public class Simulator {
                 label.setText(hours + " : " + minutes);
             }
         }
-        setNpcTarget();
         System.out.println(npcs.size());
-    }
-
-    public void setNpcTarget() {
-        ArrayList<Performance> targets = this.agenda.getLivePerformances(hours, minutes);
-        this.npcs.get(0).setTarget(this.targets.get(3));
     }
 
 

@@ -4,10 +4,9 @@ import GUI.Simulator.Pathfinding.Graph;
 import GUI.Simulator.Pathfinding.Node;
 import org.jfree.fx.FXGraphics2D;
 
-import java.io.Serializable;
 import java.util.*;
 
-public class Target implements Serializable {
+public class Target {
     private String name;
     private int id;
     private double height;

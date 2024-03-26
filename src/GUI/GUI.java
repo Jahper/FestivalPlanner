@@ -36,7 +36,7 @@ public class GUI extends Application {
         this.popup = new Popup(this);
         this.overview = new Overview(this, popup);
         this.tableview = new Tableview(this, popup, "Tabelweergave", this.agenda);
-        this.simulator = new Simulator(this.agenda);
+        this.simulator = new Simulator();
 
         artists.addAll(agenda.getArtistList());
         podiums.addAll(agenda.getPodiumList());
