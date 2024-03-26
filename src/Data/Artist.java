@@ -1,6 +1,8 @@
 package Data;
 
-public class Artist {
+import java.io.Serializable;
+
+public class Artist implements Serializable {
     private String name;
     private String genre;
 

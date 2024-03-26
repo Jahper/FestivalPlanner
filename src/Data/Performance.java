@@ -1,8 +1,10 @@
 package Data;
 
+import java.awt.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Performance {
+public class Performance implements Serializable {
     private Podium podium;
     private int startTime;
     private String  startTimeGui;
@@ -121,6 +123,14 @@ public class Performance {
 
     public String getEndTimeMinute() {
         return endTimeGui.substring(3, 5);
+    }
+
+    public boolean isLive(int hour, int minutes) {
+        int time = Integer.parseInt(hour + "" + minutes);
+        if (time >= startTime && time <= endTime) {
+            return true;
+        }
+        return false;
     }
 
     @Override
