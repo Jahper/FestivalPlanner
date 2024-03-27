@@ -171,7 +171,7 @@ public class NPC {
         tx.translate(position.getX() - finalImage[frame].getWidth() / 2, position.getY() - finalImage[frame].getHeight() / 2);
         tx.rotate(angle, finalImage[frame].getWidth() / 2, finalImage[frame].getHeight() / 2);
 
-        g2d.drawImage(imageWalking[frame], tx, null);
+        g2d.drawImage(finalImage[frame], tx, null);
 
         g2d.setColor(Color.BLACK);
     }
