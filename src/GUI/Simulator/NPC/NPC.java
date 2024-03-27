@@ -31,7 +31,7 @@ public class NPC {
         this.lastPosition = position;
         this.angle = angle;
         this.target = target;
-        this.isDancing = false;
+        this.isDancing = true;
         this.speed = 2;
 
         Random r = new Random();
@@ -61,8 +61,8 @@ public class NPC {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        this.finalImage = this.imageWalking;
 
+        stopDancing();
         this.targetPosition = position;
     }
 
@@ -109,15 +109,6 @@ public class NPC {
             hasCollision = true;
         }
 
-        if (isDancing){
-            finalImage = imageDancing;
-            System.out.println("joehoe");
-        } else {
-            finalImage = imageWalking;
-        }
-
-
-
         double newAngle = Math.atan2(this.targetPosition.getY() - this.position.getY(), this.targetPosition.getX() - this.position.getX());
         double angleDifference = angle - newAngle;
 
@@ -163,19 +154,19 @@ public class NPC {
     }
 
     public void startDancing() {
-        isDancing = true;
+        finalImage = imageDancing;
         System.out.println("dancing");
     }
 
     public void stopDancing() {
-        isDancing=false;
+        finalImage = imageWalking;
     }
 
     public void draw(Graphics2D g2d) {
 
         AffineTransform tx = new AffineTransform();
 
-        int frame = (int) ((position.getX() + position.getY()) / 50) % 4;
+        int frame = (int) ((position.getX() + position.getY()) / 50) % finalImage.length;
         tx.translate(position.getX() - finalImage[frame].getWidth() / 2, position.getY() - finalImage[frame].getHeight() / 2);
         tx.rotate(angle, finalImage[frame].getWidth() / 2, finalImage[frame].getHeight() / 2);
 

@@ -118,9 +118,7 @@ public class Simulator {
             }
         }
         if (!hasCollision) {
-             NPC npc = new NPC(newPosition, 0, targets.get(5));
-             npc.startDancing();
-            npcs.add(npc);
+            npcs.add(new NPC(newPosition, 0, targets.get(5)));
 
         }
 
