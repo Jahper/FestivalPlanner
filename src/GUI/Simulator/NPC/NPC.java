@@ -23,6 +23,7 @@ public class NPC {
     private BufferedImage[] finalImage;
     private Point2D targetPosition;
     private Point2D lastPosition;
+    private double scale;
     private boolean isArtist;
     //todo volgorde van loop sprites aanpassen voor animatie
     //todo dansen laten werken
@@ -34,6 +35,7 @@ public class NPC {
         this.target = target;
         this.isDancing = true;
         this.speed = 2;
+        this.scale =.7;
         this.isArtist = isArtist;
 
 
@@ -48,21 +50,8 @@ public class NPC {
                 Random r = new Random();
                 if (r.nextInt(2) == 1) {
                     loadCharacter(image1,14);
-//                    for (int i = 0; i < 4; i++) {
-//                        imageWalking[i] = image1.getSubimage((34 * i) + 15, 14, 34, 34);
-//                    }
-//
-//                    for (int i = 0; i < 3; i++) {
-//                        imageDancing[i] = image1.getSubimage((34 * (i + 4)) + 15, 14, 34, 34);
-//                    }
                 } else {
                     loadCharacter(image1,61);
-//                    for (int i = 0; i < 4; i++) {
-//                        imageWalking[i] = image1.getSubimage((34 * i) + 15, 61, 34, 34);
-//                    }
-//                    for (int i = 0; i < 3; i++) {
-//                        imageDancing[i] = image1.getSubimage((34 * (i + 4)) + 15, 61, 34, 34);
-//                    }
                 }
             }
 
@@ -144,7 +133,7 @@ public class NPC {
 
         for (NPC visitor : npcs) {
             if (visitor != this) {
-                if (visitor.position.distance(newPosition) <= 32) {
+                if (visitor.position.distance(newPosition) <= 32 * scale) {
                     hasCollision = true;
                 }
             }
@@ -187,7 +176,8 @@ public class NPC {
         int frame = (int) ((position.getX() + position.getY()) / 50) % finalImage.length;
         tx.translate(position.getX() - finalImage[frame].getWidth() / 2, position.getY() - finalImage[frame].getHeight() / 2);
         tx.rotate(angle, finalImage[frame].getWidth() / 2, finalImage[frame].getHeight() / 2);
-
+        //todo scale
+//        tx.scale(.7,.7);
         g2d.drawImage(finalImage[frame], tx, null);
 
         g2d.setColor(Color.BLACK);
