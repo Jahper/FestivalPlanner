@@ -15,6 +15,7 @@ import java.util.Random;
 public class NPC {
     private Point2D position;
     private double angle;
+    private boolean isBusy;
     private Boolean isDancing;
     private Target target;
     private double speed;
@@ -66,7 +67,7 @@ public class NPC {
         this.targetPosition = position;
     }
 
-    public void update(ArrayList<NPC> npcs) {
+    public void update(ArrayList<NPC> npcs, int hour, int minutes) {
         //target route
         int x = (int) position.getX() / 32;
         int y = (int) position.getY() / 32;
@@ -177,6 +178,7 @@ public class NPC {
     }
 
     public void setTarget(Target target) {
+        this.isBusy = true;
         this.target = target;
     }
 
@@ -186,5 +188,9 @@ public class NPC {
 
     public Point2D getPosition() {
         return this.position;
+    }
+
+    public boolean isBusy() {
+        return isBusy;
     }
 }

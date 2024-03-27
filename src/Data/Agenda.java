@@ -1,5 +1,6 @@
 package Data;
 
+import javax.sound.midi.Soundbank;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -244,6 +245,18 @@ public class Agenda {
         }
         return true;
     }
+
+    public ArrayList<Performance> getLivePerformances(String hour, String minutes) {
+        ArrayList<Performance> performances = new ArrayList<>();
+        performances.clear();
+        for (Performance performance : this.performanceList) {
+            if (performance.isLive(hour, minutes)) {
+                performances.add(performance);
+            }
+        }
+        return performances;
+    }
+
 
 
     @Override

@@ -1,5 +1,8 @@
 package GUI.Simulator;
 
+import Data.Agenda;
+import Data.Performance;
+import Data.Podium;
 import GUI.Simulator.NPC.NPC;
 import javafx.animation.AnimationTimer;
 import javafx.scene.control.Label;
@@ -12,6 +15,8 @@ import org.jfree.fx.ResizableCanvas;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 
 public class Simulator {
 
@@ -27,10 +32,20 @@ public class Simulator {
     private int minutes = 0;
     private int hours = 0;
     private Label label = new Label("");
+    private Agenda agenda;
+    private HashMap<Podium, Target> podia;
 
 
-    public Simulator() throws Exception {
+    public Simulator(Agenda agenda) throws Exception {
+        this.agenda = agenda;
+        podia = new HashMap<>();
+
         init();
+
+        for (Podium podium : this.agenda.getPodiumList()) {
+            System.out.println(podium);
+        }
+
         mainPane = new BorderPane();
         canvas = new ResizableCanvas(g -> draw(g), mainPane);
         mainPane.setCenter(canvas);
@@ -61,8 +76,11 @@ public class Simulator {
 
     public void init() {
         map = new Map("files/Festival Planner Normal Version V.4.json");
-
+        ArrayList<Podium> podiums = agenda.getPodiumList();
         targets = map.getSpectatorTargets();
+        for (int i = 0; i < podiums.size(); i++){
+            podia.put(podiums.get(i), targets.get(i + 4));
+        }
 
         entranceAndExitTargets = map.getEntranceAndExitTargets();
 
@@ -106,7 +124,7 @@ public class Simulator {
 
     public void update(double deltaTime) {
         for (NPC visitor : npcs) {
-            visitor.update(this.npcs);
+            visitor.update(this.npcs, hours, minutes);
         }
 
         //fixme
@@ -118,7 +136,9 @@ public class Simulator {
             }
         }
         if (!hasCollision) {
-            npcs.add(new NPC(newPosition, 0, targets.get(5)));
+            if (npcs.size() < 5) {
+                npcs.add(new NPC(newPosition, 0, targets.get(5)));
+            }
         }
 
 
@@ -146,7 +166,50 @@ public class Simulator {
                 label.setText(hours + " : " + minutes);
             }
         }
-        System.out.println(npcs.size());
+        setNpcTarget();
+//        System.out.println(npcs.size());
+    }
+
+    public void setNpcTarget() {
+        String minutes = String.valueOf(this.minutes);
+        if (minutes.length() < 2) {
+            minutes = "0" + minutes;
+        }
+        ArrayList<Performance> performances = this.agenda.getLivePerformances(String.valueOf(hours), minutes);
+//        ArrayList<NPC> notBusyList = new ArrayList<>();
+//        Collections.sort(performances);
+//        for (NPC npc : npcs) {
+//            if (!npc.isBusy()) {
+//                notBusyList.add(npc);
+//            }
+//        }
+//
+//        for (int i = 0; i < notBusyList.size(); i++) {
+//            if (performances.isEmpty()) {
+//                notBusyList.get(i).setTarget(targets.get(2), hours, minutes, true);
+//            } else {
+//                if (i < notBusyList.size() / 10) {
+//                    notBusyList.get(i).setTarget(targets.get(2), hours, minutes, true);
+//                } else if (i < notBusyList.size() / performances.size()) {
+//                    notBusyList.get(i).setTarget(podia.get(performances.get(0).getPodium()), hours, minutes, false);
+//                } else {
+//                    notBusyList.get(i).setTarget(podia.get(performances.get(1).getPodium()), hours, minutes, false);
+//                }
+//            }
+//        }
+
+//        for (Performance performance: performances){
+        if (performances.isEmpty()) {
+            for (NPC npc : npcs) {
+                npc.setTarget(targets.get(2));
+            }
+            System.out.println(targets.get(2));
+        } else {
+            for (NPC npc : npcs) {
+                npc.setTarget(podia.get(performances.get(0).getPodium()));
+            }
+        System.out.println(podia.get(performances.get(0).getPodium()));
+        }
     }
 
 
