@@ -23,38 +23,46 @@ public class NPC {
     private BufferedImage[] finalImage;
     private Point2D targetPosition;
     private Point2D lastPosition;
+    private boolean isArtist;
     //todo volgorde van loop sprites aanpassen voor animatie
     //todo dansen laten werken
 
-    public NPC(Point2D position, double angle, Target target) {
+    public NPC(Point2D position, double angle, Target target, boolean isArtist) {
         this.position = position;
         this.lastPosition = position;
         this.angle = angle;
         this.target = target;
         this.isDancing = true;
         this.speed = 2;
+        this.isArtist = isArtist;
 
-        Random r = new Random();
 
         try {
             BufferedImage image1 = ImageIO.read(getClass().getResourceAsStream("NPC sprites.png"));
             imageWalking = new BufferedImage[4];
             imageDancing = new BufferedImage[3];
 
-            if (r.nextInt(2) == 1) {
-                for (int i = 0; i < 4; i++) {
-                    imageWalking[i] = image1.getSubimage((34 * i) + 15, 14, 34, 34);
-                }
-
-                for (int i = 0; i < 3; i++) {
-                    imageDancing[i] = image1.getSubimage((34 * (i + 4)) + 15, 14, 34, 34);
-                }
+            if (isArtist){
+                loadCharacter(image1, 108);
             } else {
-                for (int i = 0; i < 4; i++) {
-                    imageWalking[i] = image1.getSubimage((34 * i) + 15, 61, 34, 34);
-                }
-                for (int i = 0; i < 3; i++) {
-                    imageDancing[i] = image1.getSubimage((34 * (i + 4)) + 15, 61, 34, 34);
+                Random r = new Random();
+                if (r.nextInt(2) == 1) {
+                    loadCharacter(image1,14);
+//                    for (int i = 0; i < 4; i++) {
+//                        imageWalking[i] = image1.getSubimage((34 * i) + 15, 14, 34, 34);
+//                    }
+//
+//                    for (int i = 0; i < 3; i++) {
+//                        imageDancing[i] = image1.getSubimage((34 * (i + 4)) + 15, 14, 34, 34);
+//                    }
+                } else {
+                    loadCharacter(image1,61);
+//                    for (int i = 0; i < 4; i++) {
+//                        imageWalking[i] = image1.getSubimage((34 * i) + 15, 61, 34, 34);
+//                    }
+//                    for (int i = 0; i < 3; i++) {
+//                        imageDancing[i] = image1.getSubimage((34 * (i + 4)) + 15, 61, 34, 34);
+//                    }
                 }
             }
 
@@ -78,7 +86,7 @@ public class NPC {
         if (node.getDistance() == 0) {
             targetPosition = new Point2D.Double(position.getX(), position.getY());
             lastPosition = new Point2D.Double(node.getX(), node.getY());
-            //todo laten dansen fzo
+
             startDancing();
             return;
         } else {
@@ -150,6 +158,16 @@ public class NPC {
             this.position = lastPosition;
         } else {
             this.angle += 0.2;
+        }
+    }
+
+    private void loadCharacter(BufferedImage image1, int y){
+        for (int i = 0; i < 4; i++) {
+            imageWalking[i] = image1.getSubimage((34 * i) + 15, y, 34, 34);
+        }
+
+        for (int i = 0; i < 3; i++) {
+            imageDancing[i] = image1.getSubimage((34 * (i + 4)) + 15, y, 34, 34);
         }
     }
 

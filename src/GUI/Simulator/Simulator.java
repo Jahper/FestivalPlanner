@@ -75,7 +75,7 @@ public class Simulator {
             }
         }
         if (!hasCollision) {
-            npcs.add(new NPC(newPosition, 0, entranceAndExitTargets.get(0)));
+            npcs.add(new NPC(newPosition, 0, entranceAndExitTargets.get(0), false));
         }
 
 
@@ -118,7 +118,7 @@ public class Simulator {
             }
         }
         if (!hasCollision) {
-            npcs.add(new NPC(newPosition, 0, targets.get(5)));
+            npcs.add(new NPC(newPosition, 0, targets.get(5) ,false));
 
         }
 
