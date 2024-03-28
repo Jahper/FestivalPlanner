@@ -24,6 +24,9 @@ public class NPC {
     private BufferedImage[] finalImage;
     private Point2D targetPosition;
     private Point2D lastPosition;
+    private boolean hasCollision = false;
+    private boolean hasCollisionWithBorder = false;
+    private Node lastNode;
     //todo volgorde van loop sprites aanpassen voor animatie
     //todo dansen laten werken
 
@@ -72,46 +75,42 @@ public class NPC {
         int x = (int) position.getX() / 32;
         int y = (int) position.getY() / 32;
 
-        boolean hasCollision = false;
-        boolean collisionWithBorder = false;
+        hasCollision = false;
+        hasCollisionWithBorder = false;
 
         Node node = target.getGraph().getNodes()[x][y];
+        stopDancing();
         if (node.getDistance() == 0) {
-            targetPosition = new Point2D.Double(position.getX(), position.getY());
+            targetPosition = position;
             lastPosition = new Point2D.Double(node.getX(), node.getY());
             //todo laten dansen fzo
             startDancing();
-            return;
-        } else {
-            stopDancing();
-        }
-        if (!node.isCollision()) {
-            Node nearest = node.getNearestNode();
-            if (!(node.getX() == nearest.getX())) {
-                this.targetPosition = new Point2D.Double(node.getX() + nearest.getX(), node.getY());
-                lastPosition = new Point2D.Double(node.getX(), node.getY());
-                if (node.getX() > nearest.getX()) {
-                    this.targetPosition = new Point2D.Double(nearest.getX() - node.getX(), node.getY());
-                    lastPosition = new Point2D.Double(node.getX(), node.getY());
-                }
-            } else if (!(node.getY() == nearest.getY())) {
-                this.targetPosition = new Point2D.Double(node.getX(), nearest.getY() + node.getY());
-                lastPosition = new Point2D.Double(node.getX(), node.getY());
-                if (node.getY() > nearest.getY()) {
-                    this.targetPosition = new Point2D.Double(node.getX(), nearest.getY() - node.getY());
-                    lastPosition = new Point2D.Double(node.getX(), node.getY());
-                }
-            }
+            lastNode = node;
+        } else if (!node.isCollision()) {
+            createTargetPosition(node);
+            lastNode = node;
         } else {
             //todo als hij tegen de wand loopt, terug op pad laten lopen
             //todo ook pathfinding toepassen wanneer de weg kwijt is
-            this.targetPosition = lastPosition;
-            collisionWithBorder = true;
+//            this.targetPosition = lastPosition;
+            createTargetPosition(lastNode);
+            hasCollisionWithBorder = true;
             hasCollision = true;
         }
 
 
+        Point2D newPosition = updatePosition(npcs);
 
+        if (!hasCollision) {
+            this.position = newPosition;
+        } else if (hasCollisionWithBorder) {
+            this.targetPosition = lastPosition;
+        } else {
+            this.angle += 0.2;
+        }
+    }
+
+    private Point2D updatePosition(ArrayList<NPC> npcs) {
         double newAngle = Math.atan2(this.targetPosition.getY() - this.position.getY(), this.targetPosition.getX() - this.position.getX());
         double angleDifference = angle - newAngle;
 
@@ -136,7 +135,6 @@ public class NPC {
         );
 
 
-
         for (NPC visitor : npcs) {
             if (visitor != this) {
                 if (visitor.position.distance(newPosition) <= 32) {
@@ -144,15 +142,25 @@ public class NPC {
                 }
             }
         }
+        return newPosition;
+    }
 
-        if (!hasCollision) {
-            this.position = newPosition;
-        } else if (collisionWithBorder && hasCollision) {
-            this.angle += 0.2;
-        } else if (collisionWithBorder) {
-            this.position = lastPosition;
-        } else {
-            this.angle += 0.2;
+    private void createTargetPosition(Node node) {
+        Node nearest = node.getNearestNode();
+        if (!(node.getX() == nearest.getX())) {
+            this.targetPosition = new Point2D.Double(node.getX() + nearest.getX(), node.getY());
+            lastPosition = new Point2D.Double(node.getX(), node.getY());
+            if (node.getX() > nearest.getX()) {
+                this.targetPosition = new Point2D.Double(nearest.getX() - node.getX(), node.getY());
+                lastPosition = new Point2D.Double(node.getX(), node.getY());
+            }
+        } else if (!(node.getY() == nearest.getY())) {
+            this.targetPosition = new Point2D.Double(node.getX(), nearest.getY() + node.getY());
+            lastPosition = new Point2D.Double(node.getX(), node.getY());
+            if (node.getY() > nearest.getY()) {
+                this.targetPosition = new Point2D.Double(node.getX(), nearest.getY() - node.getY());
+                lastPosition = new Point2D.Double(node.getX(), node.getY());
+            }
         }
     }
 
