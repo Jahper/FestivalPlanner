@@ -17,6 +17,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Random;
 
 public class Simulator {
 
@@ -41,10 +42,6 @@ public class Simulator {
         podia = new HashMap<>();
 
         init();
-
-        for (Podium podium : this.agenda.getPodiumList()) {
-            System.out.println(podium);
-        }
 
         mainPane = new BorderPane();
         canvas = new ResizableCanvas(g -> draw(g), mainPane);
@@ -170,6 +167,8 @@ public class Simulator {
 //        System.out.println(npcs.size());
     }
 
+    private Random r = new Random();
+
     public void setNpcTarget() {
         String minutes = String.valueOf(this.minutes);
         if (minutes.length() < 2) {
@@ -201,12 +200,12 @@ public class Simulator {
 //        for (Performance performance: performances){
         if (performances.isEmpty()) {
             for (NPC npc : npcs) {
-                npc.setTarget(targets.get(2));
+                npc.setTarget(targets.get(r.nextInt(4)));
             }
             System.out.println(targets.get(2));
         } else {
             for (NPC npc : npcs) {
-                npc.setTarget(podia.get(performances.get(0).getPodium()));
+                npc.setTarget(podia.get(performances.get(0).getPodium()), String.valueOf(hours), minutes);
             }
         System.out.println(podia.get(performances.get(0).getPodium()));
         }

@@ -177,8 +177,12 @@ public class NPC {
         g2d.setColor(Color.BLACK);
     }
 
-    public void setTarget(Target target) {
+    public void setTarget(Target target,String hour, String minutes) {
         this.isBusy = true;
+        this.target = target;
+    }
+
+    public void setTarget(Target target) {
         this.target = target;
     }
 
