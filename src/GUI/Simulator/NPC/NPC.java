@@ -25,8 +25,6 @@ public class NPC {
     private Point2D targetPosition;
     private Point2D lastPosition;
     private boolean hasCollision = false;
-    private boolean hasCollisionWithBorder = false;
-    private Node lastNode;
     //todo volgorde van loop sprites aanpassen voor animatie
     //todo dansen laten werken
 
@@ -76,26 +74,23 @@ public class NPC {
         int y = (int) position.getY() / 32;
 
         hasCollision = false;
-        hasCollisionWithBorder = false;
+        boolean hasCollisionWithBorder = false;
 
         Node node = target.getGraph().getNodes()[x][y];
         stopDancing();
         if (node.getDistance() == 0) {
             targetPosition = position;
-            lastPosition = new Point2D.Double(node.getX(), node.getY());
+            lastPosition = position;
             //todo laten dansen fzo
             startDancing();
-            lastNode = node;
         } else if (!node.isCollision()) {
             createTargetPosition(node);
-            lastNode = node;
         } else {
             //todo als hij tegen de wand loopt, terug op pad laten lopen
             //todo ook pathfinding toepassen wanneer de weg kwijt is
 //            this.targetPosition = lastPosition;
-            createTargetPosition(lastNode);
+//            createTargetPosition(lastNode);
             hasCollisionWithBorder = true;
-            hasCollision = true;
         }
 
 
@@ -105,8 +100,9 @@ public class NPC {
             this.position = newPosition;
         } else if (hasCollisionWithBorder) {
             this.targetPosition = lastPosition;
+            angle += 0.2;
         } else {
-            this.angle += 0.2;
+            angle += 0.2;
         }
     }
 
@@ -152,16 +148,15 @@ public class NPC {
             lastPosition = new Point2D.Double(node.getX(), node.getY());
             if (node.getX() > nearest.getX()) {
                 this.targetPosition = new Point2D.Double(nearest.getX() - node.getX(), node.getY());
-                lastPosition = new Point2D.Double(node.getX(), node.getY());
             }
         } else if (!(node.getY() == nearest.getY())) {
             this.targetPosition = new Point2D.Double(node.getX(), nearest.getY() + node.getY());
             lastPosition = new Point2D.Double(node.getX(), node.getY());
             if (node.getY() > nearest.getY()) {
                 this.targetPosition = new Point2D.Double(node.getX(), nearest.getY() - node.getY());
-                lastPosition = new Point2D.Double(node.getX(), node.getY());
             }
         }
+        lastPosition = position;
     }
 
     public void startDancing() {
@@ -185,7 +180,7 @@ public class NPC {
         g2d.setColor(Color.BLACK);
     }
 
-    public void setTarget(Target target,String hour, String minutes) {
+    public void setTarget(Target target, String hour, String minutes) {
         this.isBusy = true;
         this.target = target;
     }
