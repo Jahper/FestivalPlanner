@@ -90,7 +90,7 @@ public class Simulator {
             }
         }
         if (!hasCollision) {
-            npcs.add(new NPC(newPosition, 0, targets.get(0), false));
+            npcs.add(new NPC(newPosition, 0, targets.get(r.nextInt(4)), false));
         }
 
 
@@ -138,8 +138,8 @@ public class Simulator {
             }
         }
         if (!hasCollision) {
-            if (npcs.size() < 5) {//fixme
-                npcs.add(new NPC(newPosition, 0, targets.get(5), false));
+            if (npcs.size() < 51) {//fixme
+                npcs.add(new NPC(newPosition, 0, targets.get(r.nextInt(4)), false));
             }
         }
 
@@ -179,32 +179,47 @@ public class Simulator {
         if (minutes.length() < 2) {
             minutes = "0" + minutes;
         }
-        ArrayList<Performance> performances = this.agenda.getLivePerformances(String.valueOf(hours), minutes);
+        ArrayList<Performance> livePerformances = this.agenda.getLivePerformances(String.valueOf(hours), minutes);
         ArrayList<NPC> notBusyList = new ArrayList<>();
-//        for (NPC npc : npcs) {
-//            if (!npc.isBusy()) {
-//                notBusyList.add(npc);
-//            }
-//        }
-//        if (performances.isEmpty()) {
-//            for (NPC npc : npcs) {
-//                npc.setTarget(targets.get(r.nextInt(4)));
-//            }
-//        } else {
-//            if (notBusyList.isEmpty()) {
-//                int deeldinges = notBusyList.size() / performances.size();
-//                for (int i = 0; i < performances.size(); i++) {
-//                    performances.get(i);
-//                    for (int j = 0; j < notBusyList.size(); i++) {
-//                        notBusyList.get(j + (i * deeldinges)).setTarget(podia.get(performances.get(i).getPodium()));
-//                    }
-//                }
-//            }
-//        for (NPC npc : npcs) { fixme
-//            npc.setTarget(podia.get(performances.get(0).getPodium()));
-//        }
-//        System.out.println(podia.get(performances.get(0).getPodium()));
+        for (NPC npc : npcs) {
+            if (!npc.isBusy()) {
+                notBusyList.add(npc);
+            }
+        }
 
+        int count;
+        if (livePerformances.isEmpty()) {
+            for (NPC npc : npcs) {
+                npc.setTarget(targets.get(r.nextInt(4)));
+            }
+        } else {
+            for (Performance performance : livePerformances) {
+                count = performance.getAttendanceList();
+                while (count < performance.getPopularity() * 2) {
+                    if (notBusyList.isEmpty()) {
+                        return;
+                    }
+                    int npc = r.nextInt(notBusyList.size());
+
+                    notBusyList.get(npc).setTarget(podia.get(performance.getPodium()), String.valueOf(hours + 1), minutes);
+                    performance.addNpc(notBusyList.get(npc));
+
+                    notBusyList.remove(npc);
+                    count++;
+                }
+            }
+            for (NPC npc : notBusyList) {
+                npc.setTarget(targets.get(r.nextInt(4)));
+            }
+        }
+//        for (NPC npc : npcs) {
+//            npc.setTarget(targets.get(4));
+//        }
+//        if (!performances.isEmpty()) {
+//            for (NPC npc : npcs) {
+//                npc.setTarget(podia.get(performances.get(0).getPodium()));
+//            }
+//        }
     }
 
 

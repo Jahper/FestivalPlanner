@@ -1,5 +1,7 @@
 package Data;
 
+import GUI.Simulator.NPC.NPC;
+
 import java.util.ArrayList;
 
 public class Performance implements Comparable<Performance> {
@@ -9,6 +11,7 @@ public class Performance implements Comparable<Performance> {
     private int endTime;
     private String endTimeGui;
     private ArrayList<Artist> artists = new ArrayList<>();
+    private ArrayList<NPC> npcList = new ArrayList<>();
     private int popularity;
 
     public Performance(Podium podium, String startTimeHour, String startTimeMinute, String endTimeHour, String endTimeMinute, ArrayList<Artist> artists, int popularity) {
@@ -128,10 +131,32 @@ public class Performance implements Comparable<Performance> {
         if (time >= startTime && time <= endTime) {
             return true;
         }
+
+        ArrayList<NPC> tempList = new ArrayList<>();
+        for (NPC npc : npcList) {
+            npc.setIsBusy(false);
+            tempList.add(npc);
+        }
+        for (NPC npc : tempList) {
+            npcList.remove(npc);
+        }
         return false;
     }
 
+    public void addNpc(NPC npc) {
+        this.npcList.add(npc);
+    }
 
+    public int getAttendanceList() {
+        ArrayList<NPC> tempList = new ArrayList<>();
+        for (NPC npc : npcList) {
+            if (npc.isBusy()) {
+                tempList.add(npc);
+            }
+        }
+        npcList = tempList;
+        return this.npcList.size();
+    }
 
 
     @Override

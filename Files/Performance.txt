@@ -1,4 +1,9 @@
-Stage 2_16:00_20:30_Korte Frans/_7
-Stage 1_18:00_23:45_Ronnie niet Flex/_4
-Stage 1_00:00_2:00_Duits Frans/_2
-Stage 2_03:15_09:00_Ronnie niet Flex/_6
+Stage 1_01:00_05:00_Duits Frans/_3
+Stage 2_01:00_05:00_Ronnie niet Flex/_3
+Stage 4_01:00_05:00_Korte Frans/_3
+Stage 2_06:00_10:00_bob de bouwer/_3
+Stage 3_06:00_10:00_Duits Frans/_3
+Stage 5_06:00_10:00_Korte Frans/_3
+Stage 6_11:00_15:00_sjonie wegwijs/_3
+Stage 7_11:00_15:00_japper de papper/_3
+Stage 1_11:00_15:00_winnie de poh/_3

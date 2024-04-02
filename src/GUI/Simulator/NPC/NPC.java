@@ -16,6 +16,7 @@ public class NPC {
     private Point2D position;
     private double angle;
     private boolean isBusy;
+    private boolean isResting;
     private Boolean isDancing;
     private Target target;
     private double speed;
@@ -39,6 +40,7 @@ public class NPC {
         this.isDancing = true;
         this.speed = 2;
         this.isBusy = false;
+        this.isResting = true;
         this.scale =.7;
         this.isArtist = isArtist;
 
@@ -104,10 +106,10 @@ public class NPC {
             angle += 0.2;
         }
         // test code
-        int time = Integer.parseInt(hour + minutes);
-        if (this.endTime > time) {
-            this.isBusy = false;
-        }
+//        int time = Integer.parseInt(hour + minutes);
+//        if (this.endTime <= time) {
+//            this.isBusy = false;
+//        }
     }
 
     private Point2D updatePosition(ArrayList<NPC> npcs) {
@@ -175,7 +177,6 @@ public class NPC {
 
     public void startDancing() {
         finalImage = imageDancing;
-        System.out.println("dancing");
     }
 
     public void stopDancing() {
@@ -198,14 +199,15 @@ public class NPC {
 
     public void setTarget(Target target, String hour, String minutes) {
         this.isBusy = true;
+        this.isResting = false;
         this.target = target;
         this.endTime = Integer.parseInt(hour + minutes);
     }
 
     public void setTarget(Target target) {
-        if (!this.isBusy) {
+        if (!this.isResting && !isBusy) {
             this.target = target;
-            this.isBusy = false;
+            this.isResting = true;
         }
     }
 
@@ -219,5 +221,9 @@ public class NPC {
 
     public boolean isBusy() {
         return isBusy;
+    }
+
+    public void setIsBusy(boolean isBusy) {
+        this.isBusy = isBusy;
     }
 }
