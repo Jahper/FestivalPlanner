@@ -63,7 +63,9 @@ public class Simulator {
         });
         emergencyButton = new Button("Noodgeval");
         emergencyButton.setOnAction(event -> {
-
+            for (NPC npc : npcs) {
+                npc.setTarget(entranceAndExitTargets.get(0));//todo dichtstbijzijnde toevoegen
+            }
         });
 
 
