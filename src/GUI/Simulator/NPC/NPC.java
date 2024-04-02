@@ -212,6 +212,10 @@ public class NPC {
         }
     }
 
+    public void setSpeed(double speed) {
+        this.speed = speed;
+    }
+
     public void setTargetPosition(Point2D targetPosition) {
         this.targetPosition = targetPosition;
     }

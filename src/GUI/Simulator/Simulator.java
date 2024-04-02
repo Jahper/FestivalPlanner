@@ -69,7 +69,7 @@ public class Simulator {
         label1 = new Label("Tijdlijn: ");
         timeLine = new Slider(0.0, 24.0, 1.0);
         timeLine.setValue(sliderValue);
-        timeLine.setMinWidth(100.0);
+        timeLine.setMinWidth(240.0);
         timeLine.setBlockIncrement(1.0);
 
 
@@ -211,7 +211,7 @@ public class Simulator {
         } else {
             label.setText(hours + " : " + minutes);
         }
-        sliderValue = hours + (minutes / 60);
+        sliderValue = hours +minutes/60.0;
         timeLine.setValue(sliderValue);
     }
 
