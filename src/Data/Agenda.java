@@ -6,12 +6,12 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Agenda {
-    private ArrayList<Artist> artistList;
-    private ArrayList<Podium> podiumList;
-    private ArrayList<Performance> performanceList;
-    private File artistFile;
-    private File podiumFile;
-    private File performanceFile;
+    private final ArrayList<Artist> artistList;
+    private final ArrayList<Podium> podiumList;
+    private final ArrayList<Performance> performanceList;
+    private final File artistFile;
+    private final File podiumFile;
+    private final File performanceFile;
 
     public Agenda() {
         this.artistList = new ArrayList<>();
@@ -23,7 +23,7 @@ public class Agenda {
     }
 
     public void save() {
-        String fileName = this.artistFile.getName();
+        String fileName = this.artistFile.getPath();
 
         try (PrintWriter print = new PrintWriter(fileName)) {
             for (Artist artist : this.artistList) {
@@ -35,7 +35,7 @@ public class Agenda {
             e.printStackTrace();
         }
 
-        fileName = podiumFile.getName();
+        fileName = podiumFile.getPath();
 
         try (PrintWriter print = new PrintWriter(fileName)) {
             for (Podium podium : podiumList) {
@@ -45,7 +45,7 @@ public class Agenda {
             e.printStackTrace();
         }
 
-        fileName = performanceFile.getName();
+        fileName = performanceFile.getPath();
 
         try (PrintWriter print = new PrintWriter(fileName)) {
             for (Performance performance : performanceList) {
@@ -90,7 +90,7 @@ public class Agenda {
             while (scanner.hasNext()) {
                 this.podiumList.add(new Podium(scanner.nextLine()));
             }
-        }catch (Exception exception) {
+        } catch (Exception exception) {
             exception.printStackTrace();
         }
 
@@ -148,33 +148,109 @@ public class Agenda {
     }
 
     public void addPodium(Podium podium) {
-        this.podiumList.add(podium);
+        if (podiumList.size() < 7) {
+            this.podiumList.add(podium);
+        }
     }
 
     public void addArtist(Artist artist) {
         this.artistList.add(artist);
     }
-    public void addPerformance(Performance performance){
-        this.performanceList.add(performance);
+
+    public void addPerformance(Performance performance) {
+        if (checkForOverlap(performance)) {
+            this.performanceList.add(performance);
+        }
     }
 
     public void removePodium(Podium podium) {
-        this.podiumList.remove(podium);
+
+        if (checkPodiumRemove(podium)) {
+            podiumList.remove(podium);
+        }
     }
 
     public void removeArtist(Artist artist) {
-        this.artistList.remove(artist);
+        if (checkArtistRemove(artist)) {
+            artistList.remove(artist);
+        }
     }
-    public void removePerformance(Performance performance){
-        this.performanceList.remove(performance);
+
+    public void removePerformance(Performance performance) {
+        performanceList.remove(performance);
     }
+
+    //methode voor het controleren of er geen dubbele boeking is
+    public boolean checkForOverlap(Performance performance) {
+        if (performance.getStartTime() >= performance.getEndTime()) {
+            return false;
+        }
+
+        int startTime = performance.getStartTime();
+        int endTime = performance.getEndTime();
+
+        for (Performance p : performanceList) {
+            int pStartTime = p.getStartTime();
+            int pEndTime = p.getEndTime();
+
+            if (endTime >= pStartTime && endTime <= pEndTime || startTime >= pStartTime && startTime <= pEndTime) {
+                if (p.getPodium().equals(performance.getPodium()) || p.getArtist().equals(performance.getArtist())) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    //methode voor het controleren of er geen dubbele boeking is voor de setters
+    public boolean checkForOverlapSetter(Performance performance, Performance updatedPerformance) {
+        if (updatedPerformance.getStartTime() >= updatedPerformance.getEndTime()) {
+            return false;
+        }
+
+        int startTime = updatedPerformance.getStartTime();
+        int endTime = updatedPerformance.getEndTime();
+
+        for (Performance p : performanceList) {
+            int pStartTime = p.getStartTime();
+            int pEndTime = p.getEndTime();
+            if (p.equals(performance)) {
+                continue;
+            }
+
+            if (endTime >= pStartTime && endTime <= pEndTime || startTime >= pStartTime && startTime <= pEndTime) {
+                if (p.getPodium().equals(updatedPerformance.getPodium()) || p.getArtist().equals(updatedPerformance.getArtist())) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean checkPodiumRemove(Podium podium) {
+        for (Performance performance : performanceList) {
+            if (performance.getPodium().equals(podium)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean checkArtistRemove(Artist artist) {
+        for (Performance performance : performanceList) {
+            if (performance.getArtist().equals(artist)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     @Override
     public String toString() {
-        return "Agenda{" +
-                "artistList=" + artistList +
-                ", podiumList=" + podiumList +
-                ", performanceList=" + performanceList +
-                '}';
+        return "Agenda: " +
+                "Artiesten: " + artistList +
+                ", Podia: " + podiumList +
+                ", Optredens: " + performanceList;
     }
 }
