@@ -4,7 +4,6 @@ import GUI.GUI;
 import Data.Performance;
 import Data.Podium;
 import GUI.Simulator.NPC.NPC;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.animation.AnimationTimer;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -38,7 +37,7 @@ public class Simulator {
     private int hours = 0;
     private Label label = new Label("");
     private HBox hBox = new HBox();
-    private Button playButton;
+    private Button playPauseButton;
     private Button pauseButton;
     private Button emergencyButton;
     private Boolean running;
@@ -55,16 +54,11 @@ public class Simulator {
         sliderValue = 0.0;
         init();
 
-        playButton = new Button("▶");
-        playButton.setOnAction(event -> {
-            running = true;
-
+        playPauseButton = new Button("▶/II");
+        playPauseButton.setOnAction(event -> {
+            running = !running;
         });
-        pauseButton = new Button("II");
-        pauseButton.setOnAction(event -> {
-            running = false;
 
-        });
         emergencyButton = new Button("Noodgeval");
         emergencyButton.setOnAction(event -> {
             for (NPC npc : npcs) {
@@ -88,7 +82,7 @@ public class Simulator {
         hBox.setPadding(new Insets(1));
         hBox.setSpacing(5);
 
-        hBox.getChildren().addAll(label, playButton, pauseButton, emergencyButton,label1, timeLine);
+        hBox.getChildren().addAll(label, playPauseButton, emergencyButton,label1, timeLine);
 
         mainPane.setBottom(hBox);
 
