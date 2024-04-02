@@ -53,12 +53,12 @@ public class Simulator {
 
         playButton = new Button("▶");
         playButton.setOnAction(event -> {
-            running=true;
+            running = true;
 
         });
         pauseButton = new Button("II");
         pauseButton.setOnAction(event -> {
-            running=false;
+            running = false;
 
         });
         emergencyButton = new Button("Noodgeval");
@@ -104,7 +104,7 @@ public class Simulator {
 
 
     public void init() {
-        running=true;
+        running = true;
         map = new Map("files/Festival Planner Normal Version V.5.3.json");
         ArrayList<Podium> podiums = gui.getAgenda().getPodiumList();
         targets = map.getSpectatorTargets();
@@ -148,16 +148,12 @@ public class Simulator {
     }
 
     public void update(double deltaTime) {
-        String minutes = String.valueOf(this.minutes);
-        for (NPC visitor : npcs) {
-            visitor.update(this.npcs, String.valueOf(hours), minutes);
+        if (running) {
+            for (NPC visitor : npcs) {
+                visitor.update(this.npcs, String.valueOf(hours), String.valueOf(minutes));
+            }
         }
 
-        
-        if(running) {
-            for (NPC visitor : npcs) {
-                visitor.update(this.npcs);
-            }
         //fixme
         Random r = new Random();
         Point2D newPosition = new Point2D.Double(entranceAndExitTargets.get(r.nextInt(2)).getX(), entranceAndExitTargets.get(r.nextInt(2)).getY());
@@ -185,33 +181,29 @@ public class Simulator {
                     if (hours > 23) {
                         hours = 0;
 
-                        }
                     }
                 }
-                if (hours < 10 && minutes < 10) {
-                    label.setText("0" + hours + " : 0" + minutes);
-                } else if (hours < 10) {
-                    label.setText("0" + hours + " : " + minutes);
-                } else if (minutes < 10) {
-                    label.setText(hours + " : 0" + minutes);
-                } else {
-                    label.setText(hours + " : " + minutes);
-                }
             }
-            if (hours < 10 && this.minutes < 10) {
+            if (hours < 10 && minutes < 10) {
                 label.setText("0" + hours + " : 0" + minutes);
             } else if (hours < 10) {
                 label.setText("0" + hours + " : " + minutes);
-            } else if (this.minutes < 10) {
+            } else if (minutes < 10) {
                 label.setText(hours + " : 0" + minutes);
             } else {
                 label.setText(hours + " : " + minutes);
             }
         }
-        setNpcTarget();
-//        System.out.println(npcs.size());
+        if (hours < 10 && this.minutes < 10) {
+            label.setText("0" + hours + " : 0" + minutes);
+        } else if (hours < 10) {
+            label.setText("0" + hours + " : " + minutes);
+        } else if (this.minutes < 10) {
+            label.setText(hours + " : 0" + minutes);
+        } else {
+            label.setText(hours + " : " + minutes);
+        }
     }
-
     private Random r = new Random();
 
     public void setNpcTarget() {
