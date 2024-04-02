@@ -4,7 +4,7 @@ import GUI.Simulator.NPC.NPC;
 
 import java.util.ArrayList;
 
-public class Performance implements Comparable<Performance> {
+public class Performance {
     private Podium podium;
     private int startTime;
     private String  startTimeGui;
@@ -162,10 +162,5 @@ public class Performance implements Comparable<Performance> {
     @Override
     public String toString() {
         return this.getArtist() + " op " + podium + " van " + getStartTimeGui() + " tot " + getEndTimeGui() ;
-    }
-
-    @Override
-    public int compareTo(Performance o) {
-        return this.popularity - o.popularity;
     }
 }

@@ -34,7 +34,7 @@ public class Performance2D {
     private void createArea() {
         this.artists = trimString(getArtistString());
         this.timeDuration = trimString(getBeginAndEndTime());
-        this.popularity = trimString("Popularity: " + performance.getPopularity());
+        this.popularity = trimString("Populariteit: " + performance.getPopularity());
     }
 
     //geeft een String van de begintijd en eindtijd
@@ -47,9 +47,9 @@ public class Performance2D {
         ArrayList<Artist> artists = performance.getArtists();
         StringBuilder artistName;
         if (artists.size() == 1) {
-            artistName = new StringBuilder("Artist: " + artists.get(0).getName());
+            artistName = new StringBuilder("Artiest: " + artists.get(0).getName());
         } else {
-            artistName = new StringBuilder("Artists: ");
+            artistName = new StringBuilder("Artiest: ");
             for (int i = 0; i < artists.size(); i++) {
                 if (i == artists.size() - 1) {
                     artistName.append(" ").append(artists.get(i).getName());
