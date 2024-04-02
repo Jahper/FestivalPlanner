@@ -72,7 +72,7 @@ public class Simulator {
 
 
     public void init() {
-        map = new Map("files/Festival Planner Normal Version V.5.json");
+        map = new Map("files/Festival Planner Normal Version V.5.3.json");
         ArrayList<Podium> podiums = agenda.getPodiumList();
         targets = map.getSpectatorTargets();
         for (int i = 0; i < podiums.size(); i++) {
