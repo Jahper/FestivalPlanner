@@ -1,6 +1,6 @@
 package GUI.Simulator;
 
-import Data.Agenda;
+import GUI.GUI;
 import Data.Performance;
 import Data.Podium;
 import GUI.Simulator.NPC.NPC;
@@ -15,7 +15,6 @@ import org.jfree.fx.ResizableCanvas;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -33,12 +32,12 @@ public class Simulator {
     private int minutes = 0;
     private int hours = 0;
     private Label label = new Label("");
-    private Agenda agenda;
+    private GUI gui;
     private HashMap<Podium, Target> podia;
 
 
-    public Simulator(Agenda agenda) throws Exception {
-        this.agenda = agenda;
+    public Simulator(GUI gui) throws Exception {
+        this.gui = gui;
         podia = new HashMap<>();
 
         init();
@@ -73,7 +72,7 @@ public class Simulator {
 
     public void init() {
         map = new Map("files/Festival Planner Normal Version V.5.3.json");
-        ArrayList<Podium> podiums = agenda.getPodiumList();
+        ArrayList<Podium> podiums = gui.getAgenda().getPodiumList();
         targets = map.getSpectatorTargets();
         for (int i = 0; i < podiums.size(); i++) {
             podia.put(podiums.get(i), targets.get(i + 4));
@@ -171,7 +170,7 @@ public class Simulator {
         if (minutes.length() < 2) {
             minutes = "0" + minutes;
         }
-        ArrayList<Performance> performances = this.agenda.getLivePerformances(String.valueOf(hours), minutes);
+        ArrayList<Performance> performances = this.gui.getAgenda().getLivePerformances(String.valueOf(hours), minutes);
         ArrayList<NPC> notBusyList = new ArrayList<>();
 //        for (NPC npc : npcs) {
 //            if (!npc.isBusy()) {
