@@ -120,8 +120,12 @@ public class Simulator {
     }
 
     public void update(double deltaTime) {
+        String minutes = String.valueOf(this.minutes);
+        if (minutes.length() < 2) {
+            minutes = "0" + minutes;
+        }
         for (NPC visitor : npcs) {
-            visitor.update(this.npcs, hours, minutes);
+            visitor.update(this.npcs, String.valueOf(hours), minutes);
         }
 
         //fixme
@@ -142,22 +146,22 @@ public class Simulator {
         if (deltaTime > 0.01) {
             seconds += 5;
             if (seconds > 60) {
-                minutes++;
+                this.minutes++;
                 seconds = 0;
-                if (minutes > 59) {
+                if (this.minutes > 59) {
                     hours++;
-                    minutes = 0;
+                    this.minutes = 0;
                     if (hours > 23) {
                         hours = 0;
 
                     }
                 }
             }
-            if (hours < 10 && minutes < 10) {
+            if (hours < 10 && this.minutes < 10) {
                 label.setText("0" + hours + " : 0" + minutes);
             } else if (hours < 10) {
                 label.setText("0" + hours + " : " + minutes);
-            } else if (minutes < 10) {
+            } else if (this.minutes < 10) {
                 label.setText(hours + " : 0" + minutes);
             } else {
                 label.setText(hours + " : " + minutes);
@@ -175,39 +179,30 @@ public class Simulator {
             minutes = "0" + minutes;
         }
         ArrayList<Performance> performances = this.agenda.getLivePerformances(String.valueOf(hours), minutes);
-//        ArrayList<NPC> notBusyList = new ArrayList<>();
-//        Collections.sort(performances);
+        ArrayList<NPC> notBusyList = new ArrayList<>();
 //        for (NPC npc : npcs) {
 //            if (!npc.isBusy()) {
 //                notBusyList.add(npc);
 //            }
 //        }
-//
-//        for (int i = 0; i < notBusyList.size(); i++) {
-//            if (performances.isEmpty()) {
-//                notBusyList.get(i).setTarget(targets.get(2), hours, minutes, true);
-//            } else {
-//                if (i < notBusyList.size() / 10) {
-//                    notBusyList.get(i).setTarget(targets.get(2), hours, minutes, true);
-//                } else if (i < notBusyList.size() / performances.size()) {
-//                    notBusyList.get(i).setTarget(podia.get(performances.get(0).getPodium()), hours, minutes, false);
-//                } else {
-//                    notBusyList.get(i).setTarget(podia.get(performances.get(1).getPodium()), hours, minutes, false);
+//        if (performances.isEmpty()) {
+//            for (NPC npc : npcs) {
+//                npc.setTarget(targets.get(r.nextInt(4)));
+//            }
+//        } else {
+//            if (notBusyList.isEmpty()) {
+//                int deeldinges = notBusyList.size() / performances.size();
+//                for (int i = 0; i < performances.size(); i++) {
+//                    performances.get(i);
+//                    for (int j = 0; j < notBusyList.size(); i++) {
+//                        notBusyList.get(j + (i * deeldinges)).setTarget(podia.get(performances.get(i).getPodium()));
+//                    }
 //                }
 //            }
-//        }
-
-//        for (Performance performance: performances){
-        if (performances.isEmpty()) {
             for (NPC npc : npcs) {
-                npc.setTarget(targets.get(r.nextInt(4)));
+                npc.setTarget(podia.get(performances.get(0).getPodium()));
             }
-            System.out.println(targets.get(2));
-        } else {
-            for (NPC npc : npcs) {
-                npc.setTarget(podia.get(performances.get(0).getPodium()), String.valueOf(hours), minutes);
-            }
-        System.out.println(podia.get(performances.get(0).getPodium()));
+//        System.out.println(podia.get(performances.get(0).getPodium()));
         }
     }
 

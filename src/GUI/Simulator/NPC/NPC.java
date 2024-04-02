@@ -24,6 +24,7 @@ public class NPC {
     private BufferedImage[] finalImage;
     private Point2D targetPosition;
     private Point2D lastPosition;
+    private int endTime;
     private boolean hasCollision = false;
     private boolean hasCollisionWithBorder = false;
     private Node lastNode;
@@ -37,6 +38,7 @@ public class NPC {
         this.target = target;
         this.isDancing = false;
         this.speed = 2;
+        this.isBusy = false;
 
         Random r = new Random();
 
@@ -70,7 +72,7 @@ public class NPC {
         this.targetPosition = position;
     }
 
-    public void update(ArrayList<NPC> npcs, int hour, int minutes) {
+    public void update(ArrayList<NPC> npcs, String hour, String minutes) {
         //target route
         int x = (int) position.getX() / 32;
         int y = (int) position.getY() / 32;
@@ -101,12 +103,19 @@ public class NPC {
 
         Point2D newPosition = updatePosition(npcs);
 
-        if (!hasCollision) {
-            this.position = newPosition;
-        } else if (hasCollisionWithBorder) {
-            this.targetPosition = lastPosition;
-        } else {
-            this.angle += 0.2;
+//        if (!hasCollision) {
+//            this.position = newPosition;
+//        } else if (hasCollisionWithBorder) {
+//            this.targetPosition = lastPosition;
+//        } else {
+//            this.angle += 0.2;
+//        }
+        this.position = newPosition;
+
+        // test code
+        int time = Integer.parseInt(hour + minutes);
+        if (this.endTime > time) {
+            this.isBusy = false;
         }
     }
 
@@ -188,10 +197,14 @@ public class NPC {
     public void setTarget(Target target,String hour, String minutes) {
         this.isBusy = true;
         this.target = target;
+        this.endTime = Integer.parseInt(hour + minutes);
     }
 
     public void setTarget(Target target) {
-        this.target = target;
+        if (!this.isBusy) {
+            this.target = target;
+            this.isBusy = false;
+        }
     }
 
     public void setTargetPosition(Point2D targetPosition) {
