@@ -38,15 +38,14 @@ public class Simulator {
     private Label label = new Label("");
     private HBox hBox = new HBox();
     private Button playPauseButton;
-    private Button pauseButton;
     private Button emergencyButton;
     private Boolean running;
     private GUI gui;
     private HashMap<Podium, Target> podia;
     private Slider timeLine;
     private double sliderValue;
-    private Label label1;
-
+    private Label tijdlijnLabel;
+    private boolean emergency = false;
 
     public Simulator(GUI gui) throws Exception {
         this.gui = gui;
@@ -61,17 +60,14 @@ public class Simulator {
 
         emergencyButton = new Button("Noodgeval");
         emergencyButton.setOnAction(event -> {
-            for (NPC npc : npcs) {
-                npc.setTarget(entranceAndExitTargets.get(0));//todo dichtstbijzijnde toevoegen
-            }
+            emergency = true;
         });
 
-        label1 = new Label("Tijdlijn: ");
+        tijdlijnLabel = new Label("Tijdlijn: ");
         timeLine = new Slider(0.0, 24.0, 1.0);
         timeLine.setValue(sliderValue);
         timeLine.setMinWidth(240.0);
         timeLine.setBlockIncrement(1.0);
-
 
         mainPane = new BorderPane();
         canvas = new ResizableCanvas(g -> draw(g), mainPane);
@@ -82,7 +78,7 @@ public class Simulator {
         hBox.setPadding(new Insets(1));
         hBox.setSpacing(5);
 
-        hBox.getChildren().addAll(label, playPauseButton, emergencyButton,label1, timeLine);
+        hBox.getChildren().addAll(label, playPauseButton, emergencyButton, tijdlijnLabel, timeLine);
 
         mainPane.setBottom(hBox);
 
@@ -128,11 +124,9 @@ public class Simulator {
                 hasCollision = true;
             }
         }
-        if (!hasCollision) {
+        if (!hasCollision && !emergency) {
             npcs.add(new NPC(newPosition, 0, targets.get(r.nextInt(4)), false));
         }
-
-
     }
 
     public void draw(FXGraphics2D g) {
@@ -144,7 +138,6 @@ public class Simulator {
         for (NPC visitor : npcs) {
             visitor.draw(g);
         }
-
     }
 
     public void drawNpc(FXGraphics2D g) {
@@ -162,21 +155,31 @@ public class Simulator {
         if (!running || !gui.getTabPane().getTabs().get(2).isSelected()) {
             return;
         }
-        for (NPC visitor : npcs) {
-            visitor.update(this.npcs, String.valueOf(hours), String.valueOf(minutes));
+        ArrayList<NPC> toRemove = new ArrayList<>();
+        for (NPC npc : npcs) {
+            toRemove.add(npc.update(this.npcs, this.entranceAndExitTargets));
+        }
+
+        for (NPC npc : toRemove) {
+            npcs.remove(npc);
+        }
+        if (emergency) {
+            for (NPC npc : npcs) {
+                npc.emergencyExit(entranceAndExitTargets);
+            }
         }
 
 
         //fixme
         Random r = new Random();
-        Point2D newPosition = new Point2D.Double(entranceAndExitTargets.get(r.nextInt(2)).getX(), entranceAndExitTargets.get(r.nextInt(2)).getY());
+        Point2D newPosition = new Point2D.Double(entranceAndExitTargets.get(r.nextInt(2)).getX() + 32, entranceAndExitTargets.get(r.nextInt(2)).getY() + 32);
         boolean hasCollision = false;
         for (NPC visitor : npcs) {
             if (visitor.getPosition().distance(newPosition) < 64) {
                 hasCollision = true;
             }
         }
-        if (!hasCollision) {
+        if (!hasCollision && !emergency) {
             if (npcs.size() < 51) {//fixme
                 npcs.add(new NPC(newPosition, 0, targets.get(r.nextInt(4)), false));
             }
@@ -216,8 +219,10 @@ public class Simulator {
         } else {
             label.setText(hours + " : " + minutes);
         }
-        sliderValue = hours +minutes/60.0;
+        sliderValue = hours + minutes / 60.0;
         timeLine.setValue(sliderValue);
+
+        setNpcTarget();
     }
 
     private Random r = new Random();
@@ -227,7 +232,7 @@ public class Simulator {
         if (minutes.length() < 2) {
             minutes = "0" + minutes;
         }
-        ArrayList<Performance> performances = this.gui.getAgenda().getLivePerformances(String.valueOf(hours), minutes);
+        ArrayList<Performance> livePerformances = this.gui.getAgenda().getLivePerformances(String.valueOf(hours), minutes);
         ArrayList<NPC> notBusyList = new ArrayList<>();
         for (NPC npc : npcs) {
             if (!npc.isBusy()) {
@@ -260,16 +265,7 @@ public class Simulator {
                 npc.setTarget(targets.get(r.nextInt(4)));
             }
         }
-//        for (NPC npc : npcs) {
-//            npc.setTarget(targets.get(4));
-//        }
-//        if (!performances.isEmpty()) {
-//            for (NPC npc : npcs) {
-//                npc.setTarget(podia.get(performances.get(0).getPodium()));
-//            }
-//        }
     }
-
 
     public Tab getTab() {
         Tab t = new Tab("Simulatie");

@@ -27,11 +27,9 @@ public class NPC {
     private Point2D lastPosition;
     private int endTime;
     private boolean hasCollision = false;
+    private boolean hasCollisionWithBorder = false;
     private double scale;
     private boolean isArtist;
-    //todo volgorde van loop sprites aanpassen voor animatie
-    //todo dansen laten werken
-
     public NPC(Point2D position, double angle, Target target, boolean isArtist) {
         this.position = position;
         this.lastPosition = position;
@@ -43,7 +41,6 @@ public class NPC {
         this.isResting = true;
         this.scale =.7;
         this.isArtist = isArtist;
-
 
         try {
             BufferedImage image1 = ImageIO.read(getClass().getResourceAsStream("NPC sprites.png"));
@@ -69,50 +66,42 @@ public class NPC {
         this.targetPosition = position;
     }
 
-    public void update(ArrayList<NPC> npcs, String hour, String minutes) {
+    public NPC update(ArrayList<NPC> npcs, ArrayList<Target> exits) {
         //target route
         int x = (int) position.getX() / 32;
         int y = (int) position.getY() / 32;
 
         hasCollision = false;
-        boolean hasCollisionWithBorder = false;
+        hasCollisionWithBorder = false;
 
         Node node = target.getGraph().getNodes()[x][y];
         stopDancing();
         if (node.getDistance() == 0) {
+            if (this.target.equals(exits.get(0)) || this.target.equals(exits.get(1))) {
+                return this;
+            }
             targetPosition = position;
-//            lastPosition = position;
-
             lastPosition = new Point2D.Double(node.getX(), node.getY());
-            //todo laten dansen fzo
             startDancing();
         } else if (!node.isCollision()) {
             createTargetPosition(node);
             lastPosition = new Point2D.Double(node.getX(), node.getY());
-        } else {
-            //todo als hij tegen de wand loopt, terug op pad laten lopen
-            //todo ook pathfinding toepassen wanneer de weg kwijt is
-//            this.targetPosition = lastPosition;
-//            createTargetPosition(lastNode);
-            hasCollisionWithBorder = true;
+        } else if (node.getDistance() == -1){
+            this.hasCollisionWithBorder = true;
         }
 
+        if (hasCollisionWithBorder) {
+            this.targetPosition = lastPosition;
+        }
 
         Point2D newPosition = updatePosition(npcs);
 
         if (!hasCollision) {
             this.position = newPosition;
-        } else if (hasCollisionWithBorder) {
-            this.targetPosition = lastPosition;
-            angle += 0.2;
         } else {
             angle += 0.2;
         }
-        // test code
-//        int time = Integer.parseInt(hour + minutes);
-//        if (this.endTime <= time) {
-//            this.isBusy = false;
-//        }
+        return null;
     }
 
     private Point2D updatePosition(ArrayList<NPC> npcs) {
@@ -194,7 +183,7 @@ public class NPC {
         tx.translate(position.getX() - finalImage[frame].getWidth() / 2, position.getY() - finalImage[frame].getHeight() / 2);
         tx.rotate(angle, finalImage[frame].getWidth() / 2, finalImage[frame].getHeight() / 2);
         //todo scale
-//        tx.scale(.7,.7);
+        tx.scale(.7,.7);
         g2d.drawImage(finalImage[frame], tx, null);
 
         g2d.setColor(Color.BLACK);
@@ -212,6 +201,22 @@ public class NPC {
             this.target = target;
             this.isResting = true;
         }
+    }
+
+    public void emergencyExit(ArrayList<Target> exits) {
+        int x = (int) position.getX() / 32;
+        int y = (int) position.getY() / 32;
+
+        Node exit1 = exits.get(0).getGraph().getNodes()[x][y];
+        Node exit2 = exits.get(1).getGraph().getNodes()[x][y];
+
+        if (exit1.getDistance() < exit2.getDistance()) {
+            this.target = exits.get(0);
+        } else {
+            this.target = exits.get(1);
+        }
+
+        isBusy = true;
     }
 
     public void setSpeed(double speed) {
