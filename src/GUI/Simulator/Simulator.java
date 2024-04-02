@@ -17,7 +17,6 @@ import javafx.scene.text.Font;
 import org.jfree.fx.FXGraphics2D;
 import org.jfree.fx.ResizableCanvas;
 
-import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -38,16 +37,12 @@ public class Simulator {
     private int seconds = 0;
     private int minutes = 0;
     private int hours = 0;
-    private Label label = new Label("");
-    private HBox hBox = new HBox();
-    private Button playPauseButton;
-    private Button emergencyButton;
+    private Label timeLabel = new Label("");
     private Boolean running;
     private GUI gui;
     private HashMap<Podium, Target> podia;
     private Slider timeLine;
     private double sliderValue;
-    private Label tijdlijnLabel;
     private boolean emergency = false;
     private Random r = new Random();
     private TextField numberOfVisitors;
@@ -58,45 +53,44 @@ public class Simulator {
         sliderValue = 0.0;
         init();
 
-        playPauseButton = new Button("▶/II");
+        Button playPauseButton = new Button("▶/II");
         playPauseButton.setOnAction(event -> {
             running = !running;
         });
 
-        emergencyButton = new Button("Noodgeval");
+        Button emergencyButton = new Button("Noodgeval");
         emergencyButton.setOnAction(event -> {
             emergency = true;
         });
 
-        tijdlijnLabel = new Label("Tijdlijn: ");
         timeLine = new Slider(0.0, 24.0, 1.0);
         timeLine.setValue(sliderValue);
         timeLine.setMinWidth(240.0);
         timeLine.setBlockIncrement(1.0);
 
-        numberOfVisitors = new TextField("75");//fixme
-        numberOfVisitors.setMinWidth(100);
-
-
+        numberOfVisitors = new TextField("75");
+        numberOfVisitors.setMinWidth(75);
+        numberOfVisitors.setMaxWidth(75);
 
         mainPane = new BorderPane();
         canvas = new ResizableCanvas(g -> draw(g), mainPane);
         mainPane.setCenter(canvas);
 
-        label.setFont(new Font(20));
+        timeLabel.setFont(new Font(20));
 
+        HBox hBox = new HBox();
         hBox.setPadding(new Insets(1));
         hBox.setSpacing(5);
 
-        hBox.getChildren().addAll(label, playPauseButton, emergencyButton, numberOfVisitors, tijdlijnLabel, timeLine);
+        hBox.getChildren().addAll(timeLabel, playPauseButton, emergencyButton, new Label("Aantal bezoekers: "),
+                numberOfVisitors, new Label("Tijdlijn: "), timeLine
+        );
 
         mainPane.setBottom(hBox);
-
 
         this.g2d = new FXGraphics2D(canvas.getGraphicsContext2D());
         this.camera = new Camera(canvas, g -> draw(g), g2d);
         g2d.clearRect(0, 0, (int) canvas.getWidth(), (int) canvas.getHeight());
-
 
         new AnimationTimer() {
             long last = -1;
@@ -165,29 +159,43 @@ public class Simulator {
             toRemove.add(npc.update(this.npcs, this.entranceAndExitTargets));
         }
 
-        for (NPC npc : toRemove) {
-            npcs.remove(npc);
-        }
+
         if (emergency) {
             for (NPC npc : npcs) {
                 npc.emergencyExit(entranceAndExitTargets);
             }
         }
 
+        //checks if textField is in bounds
+        if (numberOfVisitors.getText().isEmpty()) {
+            numberOfVisitors.setText(0 + "");
+        } else if (Integer.parseInt(numberOfVisitors.getText()) > 10001) {
+            numberOfVisitors.setText(10000 + "");
+        } else if (Integer.parseInt(numberOfVisitors.getText()) <= 0) {
+            numberOfVisitors.setText(0 + "");
+        }
 
-        //fixme
         Random r = new Random();
         Point2D newPosition = new Point2D.Double(entranceAndExitTargets.get(r.nextInt(2)).getX() + 32, entranceAndExitTargets.get(r.nextInt(2)).getY() + 32);
         boolean hasCollision = false;
-        for (NPC visitor : npcs) {
-            if (visitor.getPosition().distance(newPosition) < 64) {
+        for (NPC npc : npcs) {
+            if (npc.getPosition().distance(newPosition) < 64) {
                 hasCollision = true;
             }
+
+            if (npcs.indexOf(npc) >= Integer.parseInt(numberOfVisitors.getText())) {
+                npc.emergencyExit(entranceAndExitTargets);
+            }
         }
+
         if (!hasCollision && !emergency) {
             if (npcs.size() < Integer.parseInt(numberOfVisitors.getText())) {//fixme
                 npcs.add(new NPC(newPosition, 0, targets.get(r.nextInt(4)), false));
             }
+        }
+
+        for (NPC npc : toRemove) {
+            npcs.remove(npc);
         }
 
 
@@ -206,23 +214,23 @@ public class Simulator {
                 }
             }
             if (hours < 10 && minutes < 10) {
-                label.setText("0" + hours + " : 0" + minutes);
+                timeLabel.setText("0" + hours + " : 0" + minutes);
             } else if (hours < 10) {
-                label.setText("0" + hours + " : " + minutes);
+                timeLabel.setText("0" + hours + " : " + minutes);
             } else if (minutes < 10) {
-                label.setText(hours + " : 0" + minutes);
+                timeLabel.setText(hours + " : 0" + minutes);
             } else {
-                label.setText(hours + " : " + minutes);
+                timeLabel.setText(hours + " : " + minutes);
             }
         }
         if (hours < 10 && this.minutes < 10) {
-            label.setText("0" + hours + " : 0" + minutes);
+            timeLabel.setText("0" + hours + " : 0" + minutes);
         } else if (hours < 10) {
-            label.setText("0" + hours + " : " + minutes);
+            timeLabel.setText("0" + hours + " : " + minutes);
         } else if (this.minutes < 10) {
-            label.setText(hours + " : 0" + minutes);
+            timeLabel.setText(hours + " : 0" + minutes);
         } else {
-            label.setText(hours + " : " + minutes);
+            timeLabel.setText(hours + " : " + minutes);
         }
         sliderValue = hours + minutes / 60.0;
         timeLine.setValue(sliderValue);
