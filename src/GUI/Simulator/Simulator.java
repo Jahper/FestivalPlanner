@@ -10,12 +10,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import org.jfree.fx.FXGraphics2D;
 import org.jfree.fx.ResizableCanvas;
 
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -48,6 +50,7 @@ public class Simulator {
     private Label tijdlijnLabel;
     private boolean emergency = false;
     private Random r = new Random();
+    private TextField numberOfVisitors;
 
     public Simulator(GUI gui) throws Exception {
         this.gui = gui;
@@ -71,6 +74,11 @@ public class Simulator {
         timeLine.setMinWidth(240.0);
         timeLine.setBlockIncrement(1.0);
 
+        numberOfVisitors = new TextField("75");//fixme
+        numberOfVisitors.setMinWidth(100);
+
+
+
         mainPane = new BorderPane();
         canvas = new ResizableCanvas(g -> draw(g), mainPane);
         mainPane.setCenter(canvas);
@@ -80,7 +88,7 @@ public class Simulator {
         hBox.setPadding(new Insets(1));
         hBox.setSpacing(5);
 
-        hBox.getChildren().addAll(label, playPauseButton, emergencyButton, tijdlijnLabel, timeLine);
+        hBox.getChildren().addAll(label, playPauseButton, emergencyButton, numberOfVisitors, tijdlijnLabel, timeLine);
 
         mainPane.setBottom(hBox);
 
@@ -177,7 +185,7 @@ public class Simulator {
             }
         }
         if (!hasCollision && !emergency) {
-            if (npcs.size() < 75) {//fixme
+            if (npcs.size() < Integer.parseInt(numberOfVisitors.getText())) {//fixme
                 npcs.add(new NPC(newPosition, 0, targets.get(r.nextInt(4)), false));
             }
         }
