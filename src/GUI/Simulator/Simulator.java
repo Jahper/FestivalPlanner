@@ -1,13 +1,17 @@
 package GUI.Simulator;
 
-import Data.Agenda;
+import GUI.GUI;
 import Data.Performance;
 import Data.Podium;
 import GUI.Simulator.NPC.NPC;
 import javafx.animation.AnimationTimer;
+import javafx.geometry.Insets;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import org.jfree.fx.FXGraphics2D;
 import org.jfree.fx.ResizableCanvas;
@@ -15,7 +19,6 @@ import org.jfree.fx.ResizableCanvas;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -33,26 +36,61 @@ public class Simulator {
     private int minutes = 0;
     private int hours = 0;
     private Label label = new Label("");
-    private Agenda agenda;
+    private HBox hBox = new HBox();
+    private Button playPauseButton;
+    private Button pauseButton;
+    private Button emergencyButton;
+    private Boolean running;
+    private GUI gui;
     private HashMap<Podium, Target> podia;
+    private Slider timeLine;
+    private double sliderValue;
+    private Label label1;
 
 
-    public Simulator(Agenda agenda) throws Exception {
-        this.agenda = agenda;
+    public Simulator(GUI gui) throws Exception {
+        this.gui = gui;
         podia = new HashMap<>();
-
+        sliderValue = 0.0;
         init();
+
+        playPauseButton = new Button("▶/II");
+        playPauseButton.setOnAction(event -> {
+            running = !running;
+        });
+
+        emergencyButton = new Button("Noodgeval");
+        emergencyButton.setOnAction(event -> {
+            for (NPC npc : npcs) {
+                npc.setTarget(entranceAndExitTargets.get(0));//todo dichtstbijzijnde toevoegen
+            }
+        });
+
+        label1 = new Label("Tijdlijn: ");
+        timeLine = new Slider(0.0, 24.0, 1.0);
+        timeLine.setValue(sliderValue);
+        timeLine.setMinWidth(240.0);
+        timeLine.setBlockIncrement(1.0);
+
 
         mainPane = new BorderPane();
         canvas = new ResizableCanvas(g -> draw(g), mainPane);
         mainPane.setCenter(canvas);
 
         label.setFont(new Font(20));
-        mainPane.setTop(label);
+
+        hBox.setPadding(new Insets(1));
+        hBox.setSpacing(5);
+
+        hBox.getChildren().addAll(label, playPauseButton, emergencyButton,label1, timeLine);
+
+        mainPane.setBottom(hBox);
+
 
         this.g2d = new FXGraphics2D(canvas.getGraphicsContext2D());
         this.camera = new Camera(canvas, g -> draw(g), g2d);
         g2d.clearRect(0, 0, (int) canvas.getWidth(), (int) canvas.getHeight());
+
 
         new AnimationTimer() {
             long last = -1;
@@ -72,8 +110,9 @@ public class Simulator {
 
 
     public void init() {
-        map = new Map("files/Festival Planner Normal Version V.4.json");
-        ArrayList<Podium> podiums = agenda.getPodiumList();
+        running = true;
+        map = new Map("files/Festival Planner Normal Version V.5.3.json");
+        ArrayList<Podium> podiums = gui.getAgenda().getPodiumList();
         targets = map.getSpectatorTargets();
         for (int i = 0; i < podiums.size(); i++) {
             podia.put(podiums.get(i), targets.get(i + 4));
@@ -120,13 +159,13 @@ public class Simulator {
     }
 
     public void update(double deltaTime) {
-        String minutes = String.valueOf(this.minutes);
-        if (minutes.length() < 2) {
-            minutes = "0" + minutes;
+        if (!running || !gui.getTabPane().getTabs().get(2).isSelected()) {
+            return;
         }
         for (NPC visitor : npcs) {
-            visitor.update(this.npcs, String.valueOf(hours), minutes);
+            visitor.update(this.npcs, String.valueOf(hours), String.valueOf(minutes));
         }
+
 
         //fixme
         Random r = new Random();
@@ -158,18 +197,27 @@ public class Simulator {
                     }
                 }
             }
-            if (hours < 10 && this.minutes < 10) {
+            if (hours < 10 && minutes < 10) {
                 label.setText("0" + hours + " : 0" + minutes);
             } else if (hours < 10) {
                 label.setText("0" + hours + " : " + minutes);
-            } else if (this.minutes < 10) {
+            } else if (minutes < 10) {
                 label.setText(hours + " : 0" + minutes);
             } else {
                 label.setText(hours + " : " + minutes);
             }
         }
-        setNpcTarget();
-//        System.out.println(npcs.size());
+        if (hours < 10 && this.minutes < 10) {
+            label.setText("0" + hours + " : 0" + minutes);
+        } else if (hours < 10) {
+            label.setText("0" + hours + " : " + minutes);
+        } else if (this.minutes < 10) {
+            label.setText(hours + " : 0" + minutes);
+        } else {
+            label.setText(hours + " : " + minutes);
+        }
+        sliderValue = hours +minutes/60.0;
+        timeLine.setValue(sliderValue);
     }
 
     private Random r = new Random();
@@ -179,7 +227,7 @@ public class Simulator {
         if (minutes.length() < 2) {
             minutes = "0" + minutes;
         }
-        ArrayList<Performance> livePerformances = this.agenda.getLivePerformances(String.valueOf(hours), minutes);
+        ArrayList<Performance> performances = this.gui.getAgenda().getLivePerformances(String.valueOf(hours), minutes);
         ArrayList<NPC> notBusyList = new ArrayList<>();
         for (NPC npc : npcs) {
             if (!npc.isBusy()) {

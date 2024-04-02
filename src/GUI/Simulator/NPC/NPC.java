@@ -51,13 +51,13 @@ public class NPC {
             imageDancing = new BufferedImage[3];
 
             if (isArtist){
-                loadCharacter(image1, 108);
+                loadCharacter(image1, 84);
             } else {
                 Random r = new Random();
                 if (r.nextInt(2) == 1) {
                     loadCharacter(image1,14);
                 } else {
-                    loadCharacter(image1,61);
+                    loadCharacter(image1,49);
                 }
             }
 
@@ -81,11 +81,14 @@ public class NPC {
         stopDancing();
         if (node.getDistance() == 0) {
             targetPosition = position;
-            lastPosition = position;
+//            lastPosition = position;
+
+            lastPosition = new Point2D.Double(node.getX(), node.getY());
             //todo laten dansen fzo
             startDancing();
         } else if (!node.isCollision()) {
             createTargetPosition(node);
+            lastPosition = new Point2D.Double(node.getX(), node.getY());
         } else {
             //todo als hij tegen de wand loopt, terug op pad laten lopen
             //todo ook pathfinding toepassen wanneer de weg kwijt is
@@ -167,11 +170,11 @@ public class NPC {
 
     private void loadCharacter(BufferedImage image1, int y){
         for (int i = 0; i < 4; i++) {
-            imageWalking[i] = image1.getSubimage((34 * i) + 15, y, 34, 34);
+                imageWalking[i] = image1.getSubimage((35 * i) + 15, y, 34, 34);
         }
 
         for (int i = 0; i < 3; i++) {
-            imageDancing[i] = image1.getSubimage((34 * (i + 4)) + 15, y, 34, 34);
+            imageDancing[i] = image1.getSubimage((35 * (i + 4)) + 15, y, 34, 34);
         }
     }
 
@@ -209,6 +212,10 @@ public class NPC {
             this.target = target;
             this.isResting = true;
         }
+    }
+
+    public void setSpeed(double speed) {
+        this.speed = speed;
     }
 
     public void setTargetPosition(Point2D targetPosition) {
