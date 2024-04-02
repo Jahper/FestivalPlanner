@@ -15,83 +15,102 @@ import java.util.Random;
 public class NPC {
     private Point2D position;
     private double angle;
+    private boolean isBusy;
     private Boolean isDancing;
     private Target target;
     private double speed;
     private BufferedImage[] imageWalking;
     private BufferedImage[] imageDancing;
     private BufferedImage[] finalImage;
-
     private Point2D targetPosition;
+    private Point2D lastPosition;
+    private int endTime;
+    private boolean hasCollision = false;
+    private double scale;
+    private boolean isArtist;
     //todo volgorde van loop sprites aanpassen voor animatie
     //todo dansen laten werken
 
-    public NPC(Point2D position, double angle, Target target) {
+    public NPC(Point2D position, double angle, Target target, boolean isArtist) {
         this.position = position;
+        this.lastPosition = position;
         this.angle = angle;
         this.target = target;
-        this.isDancing = false;
+        this.isDancing = true;
         this.speed = 2;
+        this.isBusy = false;
+        this.scale =.7;
+        this.isArtist = isArtist;
 
-        Random r = new Random();
 
         try {
             BufferedImage image1 = ImageIO.read(getClass().getResourceAsStream("NPC sprites.png"));
-            imageWalking = new BufferedImage[3];
+            imageWalking = new BufferedImage[4];
             imageDancing = new BufferedImage[3];
 
-            if (r.nextInt(2) == 1) {
-                for (int i = 0; i < 3; i++) {
-                    imageWalking[i] = image1.getSubimage((34 * i) + 15, 14, 34, 34);
-                }
-
-                for (int i = 0; i < 3; i++) {
-                    imageDancing[i] = image1.getSubimage((34 * (i + 3)) + 15, 14, 34, 34);
-                }
+            if (isArtist){
+                loadCharacter(image1, 108);
             } else {
-                for (int i = 0; i < 3; i++) {
-                    imageWalking[i] = image1.getSubimage((34 * i) + 15, 61, 34, 34);
-                }
-                for (int i = 0; i < 3; i++) {
-                    imageDancing[i] = image1.getSubimage((34 * (i + 3)) + 15, 61, 34, 34);
+                Random r = new Random();
+                if (r.nextInt(2) == 1) {
+                    loadCharacter(image1,14);
+                } else {
+                    loadCharacter(image1,61);
                 }
             }
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        this.finalImage = this.imageWalking;
 
+        stopDancing();
         this.targetPosition = position;
     }
 
-    public void update(ArrayList<NPC> npcs) {
+    public void update(ArrayList<NPC> npcs, String hour, String minutes) {
         //target route
         int x = (int) position.getX() / 32;
         int y = (int) position.getY() / 32;
 
+        hasCollision = false;
+        boolean hasCollisionWithBorder = false;
+
         Node node = target.getGraph().getNodes()[x][y];
+        stopDancing();
         if (node.getDistance() == 0) {
-            targetPosition = new Point2D.Double(position.getX(), position.getY());
+            targetPosition = position;
+            lastPosition = position;
             //todo laten dansen fzo
             startDancing();
-            return;
+        } else if (!node.isCollision()) {
+            createTargetPosition(node);
         } else {
-            stopDancing();
-        }
-        Node nearest = node.getNearestNode();
-        if (!(node.getX() == nearest.getX())) {
-            this.targetPosition = new Point2D.Double(node.getX() + nearest.getX(), node.getY());
-            if (node.getX() > nearest.getX()) {
-                this.targetPosition = new Point2D.Double(nearest.getX() - node.getX(), node.getY());
-            }
-        } else if (!(node.getY() == nearest.getY())) {
-            this.targetPosition = new Point2D.Double(node.getX(), nearest.getY() + node.getY());
-            if (node.getY() > nearest.getY()) {
-                this.targetPosition = new Point2D.Double(node.getX(), nearest.getY() - node.getY());
-            }
+            //todo als hij tegen de wand loopt, terug op pad laten lopen
+            //todo ook pathfinding toepassen wanneer de weg kwijt is
+//            this.targetPosition = lastPosition;
+//            createTargetPosition(lastNode);
+            hasCollisionWithBorder = true;
         }
 
+
+        Point2D newPosition = updatePosition(npcs);
+
+        if (!hasCollision) {
+            this.position = newPosition;
+        } else if (hasCollisionWithBorder) {
+            this.targetPosition = lastPosition;
+            angle += 0.2;
+        } else {
+            angle += 0.2;
+        }
+        // test code
+        int time = Integer.parseInt(hour + minutes);
+        if (this.endTime > time) {
+            this.isBusy = false;
+        }
+    }
+
+    private Point2D updatePosition(ArrayList<NPC> npcs) {
         double newAngle = Math.atan2(this.targetPosition.getY() - this.position.getY(), this.targetPosition.getX() - this.position.getX());
         double angleDifference = angle - newAngle;
 
@@ -115,46 +134,79 @@ public class NPC {
                 this.position.getY() + speed * Math.sin(angle)
         );
 
-        boolean hasCollision = false;
 
         for (NPC visitor : npcs) {
             if (visitor != this) {
-                if (visitor.position.distance(newPosition) <= 32) {
+                if (visitor.position.distance(newPosition) <= 32 * scale) {
                     hasCollision = true;
                 }
             }
         }
+        return newPosition;
+    }
 
-        if (!hasCollision) {
-            this.position = newPosition;
-        } else {
-            this.angle += 0.2;
+    private void createTargetPosition(Node node) {
+        Node nearest = node.getNearestNode();
+        if (!(node.getX() == nearest.getX())) {
+            this.targetPosition = new Point2D.Double(node.getX() + nearest.getX(), node.getY());
+            lastPosition = new Point2D.Double(node.getX(), node.getY());
+            if (node.getX() > nearest.getX()) {
+                this.targetPosition = new Point2D.Double(nearest.getX() - node.getX(), node.getY());
+            }
+        } else if (!(node.getY() == nearest.getY())) {
+            this.targetPosition = new Point2D.Double(node.getX(), nearest.getY() + node.getY());
+            lastPosition = new Point2D.Double(node.getX(), node.getY());
+            if (node.getY() > nearest.getY()) {
+                this.targetPosition = new Point2D.Double(node.getX(), nearest.getY() - node.getY());
+            }
+        }
+        lastPosition = position;
+    }
+
+    private void loadCharacter(BufferedImage image1, int y){
+        for (int i = 0; i < 4; i++) {
+            imageWalking[i] = image1.getSubimage((34 * i) + 15, y, 34, 34);
+        }
+
+        for (int i = 0; i < 3; i++) {
+            imageDancing[i] = image1.getSubimage((34 * (i + 4)) + 15, y, 34, 34);
         }
     }
 
     public void startDancing() {
-        this.finalImage = this.imageDancing;
+        finalImage = imageDancing;
+        System.out.println("dancing");
     }
 
     public void stopDancing() {
-        this.finalImage = this.imageWalking;
+        finalImage = imageWalking;
     }
 
     public void draw(Graphics2D g2d) {
 
         AffineTransform tx = new AffineTransform();
 
-        int frame = (int) ((position.getX() + position.getY()) / 50) % 3;
+        int frame = (int) ((position.getX() + position.getY()) / 50) % finalImage.length;
         tx.translate(position.getX() - finalImage[frame].getWidth() / 2, position.getY() - finalImage[frame].getHeight() / 2);
         tx.rotate(angle, finalImage[frame].getWidth() / 2, finalImage[frame].getHeight() / 2);
-
-        g2d.drawImage(imageWalking[frame], tx, null);
+        //todo scale
+//        tx.scale(.7,.7);
+        g2d.drawImage(finalImage[frame], tx, null);
 
         g2d.setColor(Color.BLACK);
     }
 
-    public void setTarget(Target target) {
+    public void setTarget(Target target, String hour, String minutes) {
+        this.isBusy = true;
         this.target = target;
+        this.endTime = Integer.parseInt(hour + minutes);
+    }
+
+    public void setTarget(Target target) {
+        if (!this.isBusy) {
+            this.target = target;
+            this.isBusy = false;
+        }
     }
 
     public void setTargetPosition(Point2D targetPosition) {
@@ -163,5 +215,9 @@ public class NPC {
 
     public Point2D getPosition() {
         return this.position;
+    }
+
+    public boolean isBusy() {
+        return isBusy;
     }
 }
