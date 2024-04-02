@@ -25,7 +25,6 @@ public class NPC {
     private BufferedImage[] finalImage;
     private Point2D targetPosition;
     private Point2D lastPosition;
-    private int endTime;
     private boolean hasCollision = false;
     private boolean hasCollisionWithBorder = false;
     private double scale;
@@ -182,18 +181,16 @@ public class NPC {
         int frame = (int) ((position.getX() + position.getY()) / 50) % finalImage.length;
         tx.translate(position.getX() - finalImage[frame].getWidth() / 2, position.getY() - finalImage[frame].getHeight() / 2);
         tx.rotate(angle, finalImage[frame].getWidth() / 2, finalImage[frame].getHeight() / 2);
-        //todo scale
         tx.scale(.7,.7);
         g2d.drawImage(finalImage[frame], tx, null);
 
         g2d.setColor(Color.BLACK);
     }
 
-    public void setTarget(Target target, String hour, String minutes) {
+    public void setPerformanceTarget(Target target) {
         this.isBusy = true;
         this.isResting = false;
         this.target = target;
-        this.endTime = Integer.parseInt(hour + minutes);
     }
 
     public void setTarget(Target target) {

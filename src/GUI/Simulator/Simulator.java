@@ -32,6 +32,7 @@ public class Simulator {
     private ArrayList<NPC> npcs;
     private ArrayList<Target> targets;
     private ArrayList<Target> entranceAndExitTargets;
+    private ArrayList<Performance> performances;
     private int seconds = 0;
     private int minutes = 0;
     private int hours = 0;
@@ -46,6 +47,7 @@ public class Simulator {
     private double sliderValue;
     private Label tijdlijnLabel;
     private boolean emergency = false;
+    private Random r = new Random();
 
     public Simulator(GUI gui) throws Exception {
         this.gui = gui;
@@ -114,6 +116,9 @@ public class Simulator {
             podia.put(podiums.get(i), targets.get(i + 4));
         }
 
+        performances = new ArrayList<>();
+        performances.addAll(gui.getAgenda().getPerformanceList());
+
         entranceAndExitTargets = map.getEntranceAndExitTargets();
 
         npcs = new ArrayList<>();
@@ -140,21 +145,13 @@ public class Simulator {
         }
     }
 
-    public void drawNpc(FXGraphics2D g) {
-        AffineTransform tx = new AffineTransform();
-        double zoom = canvas.getWidth() / 3000;
-        tx.scale(.53, 1);
-        g.setTransform(tx);
-
-        for (NPC visitor : npcs) {
-            visitor.draw(g);
-        }
-    }
-
     public void update(double deltaTime) {
         if (!running || !gui.getTabPane().getTabs().get(2).isSelected()) {
             return;
         }
+
+        tooLate();
+
         ArrayList<NPC> toRemove = new ArrayList<>();
         for (NPC npc : npcs) {
             toRemove.add(npc.update(this.npcs, this.entranceAndExitTargets));
@@ -225,7 +222,11 @@ public class Simulator {
         setNpcTarget();
     }
 
-    private Random r = new Random();
+    public void tooLate() {
+        if (hours > 22 && minutes > 58) {
+            emergency = true;
+        }
+    }
 
     public void setNpcTarget() {
         String minutes = String.valueOf(this.minutes);
@@ -245,8 +246,12 @@ public class Simulator {
             for (NPC npc : npcs) {
                 npc.setTarget(targets.get(r.nextInt(4)));
             }
+            if (performances.isEmpty()) {
+                emergency = true;
+            }
         } else {
             for (Performance performance : livePerformances) {
+                performances.remove(performance);
                 count = performance.getAttendanceList();
                 while (count < performance.getPopularity() * 2) {
                     if (notBusyList.isEmpty()) {
@@ -254,7 +259,7 @@ public class Simulator {
                     }
                     int npc = r.nextInt(notBusyList.size());
 
-                    notBusyList.get(npc).setTarget(podia.get(performance.getPodium()), String.valueOf(hours + 1), minutes);
+                    notBusyList.get(npc).setPerformanceTarget(podia.get(performance.getPodium()));
                     performance.addNpc(notBusyList.get(npc));
 
                     notBusyList.remove(npc);
