@@ -40,7 +40,7 @@ public class Simulator {
     private Label timeLabel = new Label("");
     private Boolean running;
     private GUI gui;
-    private HashMap<Podium, Target> podia;
+    private HashMap<Podium, Target> podiums;
     private Slider timeLine;
     private double sliderValue;
     private boolean emergency = false;
@@ -49,7 +49,7 @@ public class Simulator {
 
     public Simulator(GUI gui) throws Exception {
         this.gui = gui;
-        podia = new HashMap<>();
+        podiums = new HashMap<>();
         sliderValue = 0.0;
         init();
 
@@ -115,7 +115,7 @@ public class Simulator {
         ArrayList<Podium> podiums = gui.getAgenda().getPodiumList();
         targets = map.getSpectatorTargets();
         for (int i = 0; i < podiums.size(); i++) {
-            podia.put(podiums.get(i), targets.get(i + 4));
+            this.podiums.put(podiums.get(i), targets.get(i + 4));
         }
 
         performances = new ArrayList<>();
@@ -189,7 +189,7 @@ public class Simulator {
         }
 
         if (!hasCollision && !emergency) {
-            if (npcs.size() < Integer.parseInt(numberOfVisitors.getText())) {//fixme
+            if (npcs.size() < Integer.parseInt(numberOfVisitors.getText())) {
                 npcs.add(new NPC(newPosition, 0, targets.get(r.nextInt(4)), false));
             }
         }
@@ -275,7 +275,7 @@ public class Simulator {
                     }
                     int npc = r.nextInt(notBusyList.size());
 
-                    notBusyList.get(npc).setPerformanceTarget(podia.get(performance.getPodium()));
+                    notBusyList.get(npc).setPerformanceTarget(podiums.get(performance.getPodium()));
                     performance.addNpc(notBusyList.get(npc));
 
                     notBusyList.remove(npc);

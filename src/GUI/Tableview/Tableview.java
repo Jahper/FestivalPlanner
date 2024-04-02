@@ -18,15 +18,11 @@ import javafx.scene.layout.VBox;
 
 public class Tableview implements Refreshable {
     private final Tab tab;
-    private final Agenda agenda;
     private final GUI gui;
-    private final Popup popup;
 
     public Tableview(GUI gui, Popup popup, String name, Agenda agenda) {
         this.gui = gui;
-        this.popup = popup;
 
-        this.agenda = agenda;
         Tab overview = new Tab(name);
         TableView table = new TableView();
         table.setEditable(true);
@@ -89,12 +85,10 @@ public class Tableview implements Refreshable {
             gui.refresh();
         });
 
-        final VBox vbox = new VBox();
         BorderPane borderPane = new BorderPane();
         borderPane.setCenter(table);
         borderPane.setBottom(buttonBox);
-
-
+        
         overview.setContent(borderPane);
 
         this.tab = overview;

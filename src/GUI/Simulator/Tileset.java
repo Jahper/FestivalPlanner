@@ -23,7 +23,7 @@ public class Tileset {
 
     private void createTileset() {
         try {
-            BufferedImage tilemap = ImageIO.read(getClass().getResourceAsStream("files/"+ root.getJsonArray("tilesets").getJsonObject(index).getString("name") + ".png"));
+            BufferedImage tilemap = ImageIO.read(getClass().getResourceAsStream("files/" + root.getJsonArray("tilesets").getJsonObject(index).getString("name") + ".png"));
 
             for (int y = 0; y < tilemap.getHeight(); y += 32) {
                 for (int x = 0; x < tilemap.getWidth(); x += 32) {

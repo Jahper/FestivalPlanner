@@ -7,23 +7,12 @@ import java.util.ArrayList;
 public class Performance {
     private Podium podium;
     private int startTime;
-    private String  startTimeGui;
+    private String startTimeGui;
     private int endTime;
     private String endTimeGui;
     private ArrayList<Artist> artists = new ArrayList<>();
     private ArrayList<NPC> npcList = new ArrayList<>();
     private int popularity;
-
-    public Performance(Podium podium, String startTimeHour, String startTimeMinute, String endTimeHour, String endTimeMinute, ArrayList<Artist> artists, int popularity) {
-        this.podium = podium;
-        this.startTime = Integer.parseInt(startTimeHour + startTimeMinute);
-        this.endTime = Integer.parseInt(endTimeHour + endTimeMinute);
-        this.popularity = popularity;
-        this.startTimeGui = startTimeHour + ":" + startTimeMinute;
-        this.endTimeGui = endTimeHour + ":" + endTimeMinute;
-
-        this.artists.addAll(artists);
-    }
 
     public Performance(Podium podium, String startTime, String endTime, ArrayList<Artist> artists, int popularity) {
         this.podium = podium;
@@ -158,9 +147,8 @@ public class Performance {
         return this.npcList.size();
     }
 
-
     @Override
     public String toString() {
-        return this.getArtist() + " op " + podium + " van " + getStartTimeGui() + " tot " + getEndTimeGui() ;
+        return this.getArtist() + " op " + podium + " van " + getStartTimeGui() + " tot " + getEndTimeGui();
     }
 }

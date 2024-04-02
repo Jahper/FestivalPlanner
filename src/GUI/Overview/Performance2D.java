@@ -65,10 +65,10 @@ public class Performance2D {
     private String trimString(String s) {
         if (s.length() > maxLength) {
             String temp = s.substring(0, maxLength - 2) + "...";
-            if (temp.length() <= 3){
+            if (temp.length() <= 3) {
                 return temp;
             }
-            return  s.substring(0, maxLength - 3) + "...";
+            return s.substring(0, maxLength - 3) + "...";
         }
         return s;
     }

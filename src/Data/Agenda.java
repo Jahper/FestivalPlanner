@@ -1,6 +1,5 @@
 package Data;
 
-import javax.sound.midi.Soundbank;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -164,19 +163,6 @@ public class Agenda {
         }
     }
 
-    public void removePodium(Podium podium) {
-
-        if (checkPodiumRemove(podium)) {
-            podiumList.remove(podium);
-        }
-    }
-
-    public void removeArtist(Artist artist) {
-        if (checkArtistRemove(artist)) {
-            artistList.remove(artist);
-        }
-    }
-
     public void removePerformance(Performance performance) {
         performanceList.remove(performance);
     }
@@ -228,27 +214,8 @@ public class Agenda {
         return true;
     }
 
-    private boolean checkPodiumRemove(Podium podium) {
-        for (Performance performance : performanceList) {
-            if (performance.getPodium().equals(podium)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean checkArtistRemove(Artist artist) {
-        for (Performance performance : performanceList) {
-            if (performance.getArtist().equals(artist)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     public ArrayList<Performance> getLivePerformances(String hour, String minutes) {
         ArrayList<Performance> performances = new ArrayList<>();
-        performances.clear();
         for (Performance performance : this.performanceList) {
             if (performance.isLive(hour, minutes)) {
                 performances.add(performance);
@@ -256,8 +223,6 @@ public class Agenda {
         }
         return performances;
     }
-
-
 
     @Override
     public String toString() {

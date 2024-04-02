@@ -17,7 +17,6 @@ public class NPC {
     private double angle;
     private boolean isBusy;
     private boolean isResting;
-    private Boolean isDancing;
     private Target target;
     private double speed;
     private BufferedImage[] imageWalking;
@@ -26,34 +25,31 @@ public class NPC {
     private Point2D targetPosition;
     private Point2D lastPosition;
     private boolean hasCollision = false;
-    private boolean hasCollisionWithBorder = false;
     private double scale;
-    private boolean isArtist;
+
     public NPC(Point2D position, double angle, Target target, boolean isArtist) {
         this.position = position;
         this.lastPosition = position;
         this.angle = angle;
         this.target = target;
-        this.isDancing = true;
         this.speed = 2;
         this.isBusy = false;
         this.isResting = true;
-        this.scale =.7;
-        this.isArtist = isArtist;
+        this.scale = .7;
 
         try {
             BufferedImage image1 = ImageIO.read(getClass().getResourceAsStream("NPC sprites.png"));
             imageWalking = new BufferedImage[4];
             imageDancing = new BufferedImage[3];
 
-            if (isArtist){
+            if (isArtist) {
                 loadCharacter(image1, 84);
             } else {
                 Random r = new Random();
                 if (r.nextInt(2) == 1) {
-                    loadCharacter(image1,14);
+                    loadCharacter(image1, 14);
                 } else {
-                    loadCharacter(image1,49);
+                    loadCharacter(image1, 49);
                 }
             }
 
@@ -71,7 +67,7 @@ public class NPC {
         int y = (int) position.getY() / 32;
 
         hasCollision = false;
-        hasCollisionWithBorder = false;
+        boolean hasCollisionWithBorder = false;
 
         Node node = target.getGraph().getNodes()[x][y];
         stopDancing();
@@ -85,8 +81,8 @@ public class NPC {
         } else if (!node.isCollision()) {
             createTargetPosition(node);
             lastPosition = new Point2D.Double(node.getX(), node.getY());
-        } else if (node.getDistance() == -1){
-            this.hasCollisionWithBorder = true;
+        } else if (node.getDistance() == -1) {
+            hasCollisionWithBorder = true;
         }
 
         if (hasCollisionWithBorder) {
@@ -156,9 +152,9 @@ public class NPC {
         lastPosition = position;
     }
 
-    private void loadCharacter(BufferedImage image1, int y){
+    private void loadCharacter(BufferedImage image1, int y) {
         for (int i = 0; i < 4; i++) {
-                imageWalking[i] = image1.getSubimage((35 * i) + 15, y, 34, 34);
+            imageWalking[i] = image1.getSubimage((35 * i) + 15, y, 34, 34);
         }
 
         for (int i = 0; i < 3; i++) {
@@ -175,13 +171,12 @@ public class NPC {
     }
 
     public void draw(Graphics2D g2d) {
-
         AffineTransform tx = new AffineTransform();
 
         int frame = (int) ((position.getX() + position.getY()) / 50) % finalImage.length;
-        tx.translate(position.getX() - finalImage[frame].getWidth() / 2, position.getY() - finalImage[frame].getHeight() / 2);
-        tx.rotate(angle, finalImage[frame].getWidth() / 2, finalImage[frame].getHeight() / 2);
-        tx.scale(.7,.7);
+        tx.translate(position.getX() - (double) finalImage[frame].getWidth() / 2, position.getY() - (double) finalImage[frame].getHeight() / 2);
+        tx.rotate(angle, (double) finalImage[frame].getWidth() / 2, (double) finalImage[frame].getHeight() / 2);
+        tx.scale(.7, .7);
         g2d.drawImage(finalImage[frame], tx, null);
 
         g2d.setColor(Color.BLACK);
@@ -214,14 +209,6 @@ public class NPC {
         }
 
         isBusy = true;
-    }
-
-    public void setSpeed(double speed) {
-        this.speed = speed;
-    }
-
-    public void setTargetPosition(Point2D targetPosition) {
-        this.targetPosition = targetPosition;
     }
 
     public Point2D getPosition() {

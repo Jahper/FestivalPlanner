@@ -6,13 +6,13 @@ import java.util.ArrayList;
 public class Layer {
     private ArrayList<Tile> tiles = new ArrayList<>();
     private int[] tileData;
-    private ArrayList<Tileset> tilesets;
+    private ArrayList<Tileset> tileSets;
     private Tileset usedTileSet;
     private int correction;
 
     public Layer(int[] tileData, ArrayList<Tileset> tileset) {
         this.tileData = tileData;
-        this.tilesets = tileset;
+        this.tileSets = tileset;
 
         getTiles();
     }
@@ -42,7 +42,7 @@ public class Layer {
             return;
         }
 
-        for (Tileset tileset : tilesets) {
+        for (Tileset tileset : tileSets) {
             if (tileset.usesTileset(tile)) {
                 this.usedTileSet = tileset;
                 this.correction = tileset.getOffset();

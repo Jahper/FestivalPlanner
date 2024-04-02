@@ -20,7 +20,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import sun.misc.Perf;
 
 import java.util.ArrayList;
 
@@ -51,9 +50,9 @@ public class Popup implements Refreshable {
         Label label = createLabel("Kies een optie om toe te voegen", 25);
 
         //Creating all buttons
-        Button performaceButton = createButton("Optreden", 150, 75, 20);
-        Button artistButton = createButton("Artiest", 150, 75, 20);
-        Button podiumButton = createButton("Podium", 150, 75, 20);
+        Button performaceButton = createButton("Optreden");
+        Button artistButton = createButton("Artiest");
+        Button podiumButton = createButton("Podium");
 
         //Aligning everything and adding to vBox
         VBox vBox = new VBox(performaceButton, artistButton, podiumButton);
@@ -95,10 +94,9 @@ public class Popup implements Refreshable {
         HBox hBox = new HBox(applyButton, terugButton, exitButton);
 
         applyButton.setOnAction(event -> {
-            if (artistNameTextField.getText().contains("_") || artistGenreTextField.getText().contains("_")){
+            if (artistNameTextField.getText().contains("_") || artistGenreTextField.getText().contains("_")) {
                 vBox.getChildren().add(errorLabel);
-            }
-            else if (!artistNameTextField.getText().isEmpty() && !artistGenreTextField.getText().isEmpty()) {
+            } else if (!artistNameTextField.getText().isEmpty() && !artistGenreTextField.getText().isEmpty()) {
                 agenda.addArtist(new Artist(artistNameTextField.getText(), artistGenreTextField.getText()));
                 artistNameTextField.clear();
                 artistGenreTextField.clear();
@@ -141,10 +139,9 @@ public class Popup implements Refreshable {
         borderPane.setBottom(buttonHbox);
 
         applyButton.setOnAction(event -> {
-            if (podiumNameTextField.getText().contains("_")){
+            if (podiumNameTextField.getText().contains("_")) {
                 vBox.getChildren().add(errorLabel);
-            }
-            else if (!podiumNameTextField.getText().isEmpty()) {
+            } else if (!podiumNameTextField.getText().isEmpty()) {
                 agenda.addPodium(new Podium(podiumNameTextField.getText()));
                 podiumNameTextField.clear();
                 vBox.getChildren().remove(errorLabel);
@@ -217,9 +214,9 @@ public class Popup implements Refreshable {
 
         Label label = createLabel("Kies een optie om te veranderen", 25);
 
-        Button performanceButton = createButton("Optreden", 150, 75, 20);
-        Button artistButton = createButton("Artiest", 150, 75, 20);
-        Button podiumButton = createButton("Podium", 150, 75, 20);
+        Button performanceButton = createButton("Optreden");
+        Button artistButton = createButton("Artiest");
+        Button podiumButton = createButton("Podium");
 
         VBox vBox = new VBox(performanceButton, artistButton, podiumButton);
         vBox.setSpacing(35);
@@ -442,9 +439,9 @@ public class Popup implements Refreshable {
 
         Label label = createLabel("Kies een optie om te verwijderen", 25);
 
-        Button performanceButton = createButton("Optreden", 150, 75, 20);
-        Button artistButton = createButton("Artiest", 150, 75, 20);
-        Button podiumButton = createButton("Podium", 150, 75, 20);
+        Button performanceButton = createButton("Optreden");
+        Button artistButton = createButton("Artiest");
+        Button podiumButton = createButton("Podium");
 
         VBox vBox = new VBox(performanceButton, artistButton, podiumButton);
         vBox.setSpacing(35);
@@ -553,19 +550,17 @@ public class Popup implements Refreshable {
         borderPane.setCenter(vBox);
         borderPane.setBottom(exitButton);
 
-        exitButton.setOnAction(event -> {
-            this.stage.close();
-        });
+        exitButton.setOnAction(event -> this.stage.close());
 
         Scene scene = new Scene(borderPane);
         stage.setScene(scene);
         return stage;
     }
 
-    private Button createButton(String text, double width, double height, double fontSize) {
+    private Button createButton(String text) {
         Button button = new Button(text);
-        button.setMinSize(width, height);
-        button.setFont(new Font(fontSize));
+        button.setMinSize(150, 75);
+        button.setFont(new Font(20));
         return button;
     }
 

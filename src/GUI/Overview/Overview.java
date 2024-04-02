@@ -1,14 +1,11 @@
 package GUI.Overview;
 
 import Data.Agenda;
-import Data.Artist;
 import Data.Performance;
 import Data.Podium;
 import GUI.GUI;
 import GUI.Popup.Popup;
 import GUI.Refreshable;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
@@ -218,7 +215,7 @@ public class Overview implements Refreshable {
         } else if (popularity > 4) {
             return new Color(241, 230, 128, 255);
         }
-        return  new Color(238, 165, 118);
+        return new Color(238, 165, 118);
     }
 
     @Override

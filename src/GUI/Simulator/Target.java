@@ -77,7 +77,7 @@ public class Target {
                 }
             }
         }
-        Iterator iterator = toCheck.iterator();
+        Iterator<Node> iterator = toCheck.iterator();
         Comparator<Node> comparator = new NodeComparator();
         while (iterator.hasNext()) {
             Node next = toCheck.poll();
@@ -157,15 +157,6 @@ public class Target {
         return node;
     }
 
-    public void draw(FXGraphics2D g2d) {
-        for (int y = 0; y < 100; y++) {
-            for (int x = 0; x < 100; x++) {
-                Node node = graph.getNodes()[x][y];
-                g2d.drawString(node.getDistance() + "", x * 32, y * 32);
-            }
-        }
-    }
-
     public Graph getGraph() {
         return graph;
     }
@@ -196,10 +187,10 @@ public class Target {
 
     @Override
     public String toString() {
-        return "name: " + this.getName() + " id: " + this.id + " height: " + this.height + " whidth: " + this.width + " x: " + this.x + " y: " + this.y;
+        return "name: " + this.getName() + " id: " + this.id + " height: " + this.height + " width: " + this.width + " x: " + this.x + " y: " + this.y;
     }
 
-    public class NodeComparator implements Comparator<Node> {
+    public static class NodeComparator implements Comparator<Node> {
         @Override
         public int compare(Node o1, Node o2) {
             if (o2 == null) {

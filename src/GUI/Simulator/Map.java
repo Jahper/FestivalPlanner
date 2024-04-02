@@ -28,7 +28,7 @@ public class Map {
         this.width = root.getInt("width");
         this.height = root.getInt("height");
 
-        loadTilesets(root);
+        loadTileSets(root);
         addLayers(root);
     }
 
@@ -81,7 +81,7 @@ public class Map {
                 }
                 continue;
             }
-            int layer[] = new int[height * width];
+            int[] layer = new int[height * width];
             for (int j = 0; j < 100 * 100; j++) {
                 layer[j] = root.getJsonArray("layers").getJsonObject(i).getJsonArray("data").getInt(j);
             }
@@ -104,12 +104,9 @@ public class Map {
         } else {
             g2d.drawImage(cacheImage, null, null);
         }
-
-        //fixme test draw
-        spectatorTargets.get(0).draw(g2d);
     }
 
-    private void loadTilesets(JsonObject root) {
+    private void loadTileSets(JsonObject root) {
         for (int i = 0; i < root.getJsonArray("tilesets").size(); i++) {
             allTileSets.add(new Tileset(root, i));
         }
