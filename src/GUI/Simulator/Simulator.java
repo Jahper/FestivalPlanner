@@ -75,7 +75,7 @@ public class Simulator {
         map = new Map("files/Festival Planner Normal Version V.4.json");
         ArrayList<Podium> podiums = agenda.getPodiumList();
         targets = map.getSpectatorTargets();
-        for (int i = 0; i < podiums.size(); i++){
+        for (int i = 0; i < podiums.size(); i++) {
             podia.put(podiums.get(i), targets.get(i + 4));
         }
 
@@ -85,7 +85,7 @@ public class Simulator {
         Point2D newPosition = new Point2D.Double(entranceAndExitTargets.get(0).getX() + 70, entranceAndExitTargets.get(0).getY() + 50);
         boolean hasCollision = false;
         for (NPC visitor : npcs) {
-            if (visitor.getPosition().distance(newPosition) < 32 ) {
+            if (visitor.getPosition().distance(newPosition) < 32) {
                 hasCollision = true;
             }
         }
@@ -139,7 +139,7 @@ public class Simulator {
         }
         if (!hasCollision) {
             if (npcs.size() < 5) {//fixme
-                npcs.add(new NPC(newPosition, 0, targets.get(5)));
+                npcs.add(new NPC(newPosition, 0, targets.get(5), false));
             }
         }
 
@@ -200,11 +200,11 @@ public class Simulator {
 //                    }
 //                }
 //            }
-            for (NPC npc : npcs) {
-                npc.setTarget(podia.get(performances.get(0).getPodium()));
-            }
+//        for (NPC npc : npcs) { fixme
+//            npc.setTarget(podia.get(performances.get(0).getPodium()));
+//        }
 //        System.out.println(podia.get(performances.get(0).getPodium()));
-        }
+
     }
 
 

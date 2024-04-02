@@ -102,6 +102,7 @@ public class NPC {
             angle += 0.2;
         } else {
             angle += 0.2;
+        }
         // test code
         int time = Integer.parseInt(hour + minutes);
         if (this.endTime > time) {
