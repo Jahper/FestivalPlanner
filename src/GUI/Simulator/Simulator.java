@@ -82,15 +82,15 @@ public class Simulator {
         entranceAndExitTargets = map.getEntranceAndExitTargets();
 
         npcs = new ArrayList<>();
-        Point2D newPosition = new Point2D.Double(500, 700);
+        Point2D newPosition = new Point2D.Double(entranceAndExitTargets.get(0).getX() + 70, entranceAndExitTargets.get(0).getY() + 50);
         boolean hasCollision = false;
         for (NPC visitor : npcs) {
-            if (visitor.getPosition().distance(newPosition) < 32) {
+            if (visitor.getPosition().distance(newPosition) < 32 ) {
                 hasCollision = true;
             }
         }
         if (!hasCollision) {
-            npcs.add(new NPC(newPosition, 0, entranceAndExitTargets.get(0)));
+            npcs.add(new NPC(newPosition, 0, targets.get(0), false));
         }
 
 
@@ -129,7 +129,8 @@ public class Simulator {
         }
 
         //fixme
-        Point2D newPosition = new Point2D.Double(500, 700);
+        Random r = new Random();
+        Point2D newPosition = new Point2D.Double(entranceAndExitTargets.get(r.nextInt(2)).getX(), entranceAndExitTargets.get(r.nextInt(2)).getY());
         boolean hasCollision = false;
         for (NPC visitor : npcs) {
             if (visitor.getPosition().distance(newPosition) < 64) {
