@@ -106,7 +106,7 @@ public class Map {
         }
 
         //fixme test draw
-        spectatorTargets.get(6).draw(g2d);
+        spectatorTargets.get(0).draw(g2d);
     }
 
     private void loadTilesets(JsonObject root) {

@@ -1118,7 +1118,7 @@
          "name":"Spectators",
          "objects":[
                 {
-                 "height":0,
+                 "height":32,
                  "id":42,
                  "name":"Toilets Right",
                  "polygon":[
@@ -1145,12 +1145,12 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":0,
+                 "width":32,
                  "x":1792,
                  "y":1343
                 }, 
                 {
-                 "height":0,
+                 "height":32,
                  "id":43,
                  "name":"Toilets Left",
                  "polygon":[
@@ -1177,7 +1177,7 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":0,
+                 "width":32,
                  "x":1151,
                  "y":1344
                 }, 
