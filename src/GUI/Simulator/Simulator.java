@@ -72,7 +72,7 @@ public class Simulator {
 
 
     public void init() {
-        map = new Map("files/Festival Planner Normal Version V.4.json");
+        map = new Map("files/Festival Planner Normal Version V.5.json");
         ArrayList<Podium> podiums = agenda.getPodiumList();
         targets = map.getSpectatorTargets();
         for (int i = 0; i < podiums.size(); i++) {
@@ -89,11 +89,6 @@ public class Simulator {
                 hasCollision = true;
             }
         }
-        if (!hasCollision) {
-            npcs.add(new NPC(newPosition, 0, targets.get(0), false));
-        }
-
-
     }
 
     public void draw(FXGraphics2D g) {
@@ -121,9 +116,6 @@ public class Simulator {
 
     public void update(double deltaTime) {
         String minutes = String.valueOf(this.minutes);
-        if (minutes.length() < 2) {
-            minutes = "0" + minutes;
-        }
         for (NPC visitor : npcs) {
             visitor.update(this.npcs, String.valueOf(hours), minutes);
         }
@@ -139,7 +131,7 @@ public class Simulator {
         }
         if (!hasCollision) {
             if (npcs.size() < 5) {//fixme
-                npcs.add(new NPC(newPosition, 0, targets.get(5), false));
+                npcs.add(new NPC(newPosition, 0, targets.get(3), false));
             }
         }
 
