@@ -79,11 +79,14 @@ public class NPC {
         stopDancing();
         if (node.getDistance() == 0) {
             targetPosition = position;
-            lastPosition = position;
+//            lastPosition = position;
+
+            lastPosition = new Point2D.Double(node.getX(), node.getY());
             //todo laten dansen fzo
             startDancing();
         } else if (!node.isCollision()) {
             createTargetPosition(node);
+            lastPosition = new Point2D.Double(node.getX(), node.getY());
         } else {
             //todo als hij tegen de wand loopt, terug op pad laten lopen
             //todo ook pathfinding toepassen wanneer de weg kwijt is
