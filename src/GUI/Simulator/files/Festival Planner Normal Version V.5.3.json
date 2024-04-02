@@ -1203,6 +1203,17 @@
                "x":1727,
                "y":1952
             },
+            {
+               "height":97,
+               "id":62,
+               "name":"Main Podium Spec",
+               "rotation":0,
+               "type":"",
+               "visible":true,
+               "width":226,
+               "x":1472,
+               "y":544
+            },
                 {
                  "height":154,
                  "id":51,
@@ -1268,17 +1279,6 @@
                  "width":65,
                  "x":2624,
                  "y":672
-                }, 
-                {
-                 "height":97,
-                 "id":62,
-                 "name":"Main Podium Spec",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":226,
-                 "x":1472,
-                 "y":544
                 }],
          "opacity":1,
          "type":"objectgroup",

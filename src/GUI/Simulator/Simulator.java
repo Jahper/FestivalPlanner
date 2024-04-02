@@ -177,7 +177,7 @@ public class Simulator {
             }
         }
         if (!hasCollision && !emergency) {
-            if (npcs.size() < 51) {//fixme
+            if (npcs.size() < 75) {//fixme
                 npcs.add(new NPC(newPosition, 0, targets.get(r.nextInt(4)), false));
             }
         }
@@ -253,7 +253,7 @@ public class Simulator {
             for (Performance performance : livePerformances) {
                 performances.remove(performance);
                 count = performance.getAttendanceList();
-                while (count < performance.getPopularity() * 2) {
+                while (count < performance.getPopularity() * (npcs.size() / 10)) {
                     if (notBusyList.isEmpty()) {
                         return;
                     }
