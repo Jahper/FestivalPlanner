@@ -1,10 +1,11 @@
 package GUI.Simulator;
 
 import GUI.Simulator.NPC.NPC;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.animation.AnimationTimer;
 import javafx.geometry.Insets;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -28,27 +29,32 @@ public class Simulator {
     private int seconds = 0;
     private int minutes = 0;
     private int hours = 0;
-//    private String clock = "test";
+    //    private String clock = "test";
     private Label label = new Label("");
     private HBox hBox = new HBox();
-    private Slider slider = new Slider();
-
-    private double sliderValue=0;
-
-   // Slider slider = new Slider(0.0,100,0.0);
+    private Button playButton;
+    private Button pauseButton;
+    private Button emergencyButton;
+    private Boolean running;
 
 
     public Simulator() throws Exception {
         init();
 
+        playButton = new Button("▶");
+        playButton.setOnAction(event -> {
+            running=true;
 
-        slider.setMin(0);
-        slider.setMax(24);
-        slider.setValue(sliderValue);
-        slider.setMinWidth(1500);
-        slider.setShowTickLabels(true);
-        slider.setShowTickMarks(true);
-        slider.setBlockIncrement(23);
+        });
+        pauseButton = new Button("II");
+        pauseButton.setOnAction(event -> {
+            running=false;
+
+        });
+        emergencyButton = new Button("Noodgeval");
+        emergencyButton.setOnAction(event -> {
+
+        });
 
 
         mainPane = new BorderPane();
@@ -57,20 +63,17 @@ public class Simulator {
 
         label.setFont(new Font(20));
 
-        hBox.setPadding(new Insets(10));
-        hBox.setSpacing(10);
+        hBox.setPadding(new Insets(1));
+        hBox.setSpacing(5);
 
-        hBox.getChildren().add(label);
-        hBox.getChildren().add(slider);
+        hBox.getChildren().addAll(label, playButton, pauseButton, emergencyButton);
 
         mainPane.setBottom(hBox);
-
 
 
         this.g2d = new FXGraphics2D(canvas.getGraphicsContext2D());
         this.camera = new Camera(canvas, g -> draw(g), g2d);
         g2d.clearRect(0, 0, (int) canvas.getWidth(), (int) canvas.getHeight());
-
 
 
         new AnimationTimer() {
@@ -91,6 +94,7 @@ public class Simulator {
 
 
     public void init() {
+        running=true;
         map = new Map("files/Festival Planner Normal Version V.2.json");
 
         targets = map.getSpectatorTargets();
@@ -132,38 +136,39 @@ public class Simulator {
     }
 
     public void update(double deltaTime) {
-        for (NPC visitor : npcs) {
-            visitor.update(this.npcs);
-        }
 
+        
+        if(running) {
+            for (NPC visitor : npcs) {
+                visitor.update(this.npcs);
+            }
 
-        if (deltaTime > 0.01){
-            seconds+= 5;
-            if (seconds> 60){
-                minutes++;
-                seconds = 0;
-                if (minutes > 59){
-                    hours++;
-                    minutes = 0;
-                    if (hours > 23){
-                        hours = 0;
+            if (deltaTime > 0.01) {
+                seconds += 5;
+                if (seconds > 60) {
+                    minutes++;
+                    seconds = 0;
+                    if (minutes > 59) {
+                        hours++;
+                        minutes = 0;
+                        if (hours > 23) {
+                            hours = 0;
 
+                        }
                     }
                 }
-            }
-            if (hours < 10 && minutes < 10) {
-                label.setText("0" + hours + " : 0" + minutes);
-            } else if (hours < 10) {
-                label.setText("0" + hours + " : " + minutes);
-            } else if (minutes < 10) {
-            label.setText(hours + " : 0" + minutes);
-            } else {
-                label.setText(hours + " : " + minutes);
+                if (hours < 10 && minutes < 10) {
+                    label.setText("0" + hours + " : 0" + minutes);
+                } else if (hours < 10) {
+                    label.setText("0" + hours + " : " + minutes);
+                } else if (minutes < 10) {
+                    label.setText(hours + " : 0" + minutes);
+                } else {
+                    label.setText(hours + " : " + minutes);
+                }
             }
         }
 
-
-        slider.setValue(hours+((double) minutes /60));
     }
 
 
