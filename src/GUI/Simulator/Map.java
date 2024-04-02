@@ -17,6 +17,7 @@ public class Map {
     private ArrayList<Tileset> allTileSets = new ArrayList<>();
     private ArrayList<Target> spectatorTargets = new ArrayList<>();
     private ArrayList<Target> artistTargets = new ArrayList<>();
+    private ArrayList<Target> entranceAndExitTargets = new ArrayList<>();
     private int[] paths;
 
     public Map(String filename) {
@@ -64,6 +65,22 @@ public class Map {
                 }
                 continue;
             }
+
+            if(checkForObject.equals("Entrence/Exit")) {
+                JsonArray objects = root.getJsonArray("layers").getJsonObject(i).getJsonArray("objects");
+                //entrance index 0, exit index 1.
+                for (int j = 0; j < objects.size(); j++) {
+                    String name = objects.getJsonObject(j).getString("name");
+                    int id = objects.getJsonObject(j).getInt("id");
+                    int height = objects.getJsonObject(j).getInt("height");
+                    int width = objects.getJsonObject(j).getInt("width");
+                    int x = objects.getJsonObject(j).getInt("x");
+                    int y = objects.getJsonObject(j).getInt("y");
+
+                    entranceAndExitTargets.add(new Target(name, id, height, width, x, y, paths));
+                }
+                continue;
+            }
             int layer[] = new int[height * width];
             for (int j = 0; j < 100 * 100; j++) {
                 layer[j] = root.getJsonArray("layers").getJsonObject(i).getJsonArray("data").getInt(j);
@@ -89,7 +106,7 @@ public class Map {
         }
 
         //fixme test draw
-        spectatorTargets.get(9).draw(g2d);
+        spectatorTargets.get(6).draw(g2d);
     }
 
     private void loadTilesets(JsonObject root) {
@@ -100,5 +117,9 @@ public class Map {
 
     public ArrayList<Target> getSpectatorTargets() {
         return spectatorTargets;
+    }
+
+    public ArrayList<Target> getEntranceAndExitTargets() {
+        return entranceAndExitTargets;
     }
 }

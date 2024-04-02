@@ -2,7 +2,7 @@ package Data;
 
 import java.util.ArrayList;
 
-public class Performance {
+public class Performance implements Comparable<Performance> {
     private Podium podium;
     private int startTime;
     private String  startTimeGui;
@@ -123,8 +123,24 @@ public class Performance {
         return endTimeGui.substring(3, 5);
     }
 
+    public boolean isLive(String hour, String minutes) {
+        int time = Integer.parseInt(hour + minutes);
+        if (time >= startTime && time <= endTime) {
+            return true;
+        }
+        return false;
+    }
+
+
+
+
     @Override
     public String toString() {
         return this.getArtist() + " op " + podium + " van " + getStartTimeGui() + " tot " + getEndTimeGui() ;
+    }
+
+    @Override
+    public int compareTo(Performance o) {
+        return this.popularity - o.popularity;
     }
 }

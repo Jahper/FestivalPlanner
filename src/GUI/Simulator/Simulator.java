@@ -1,5 +1,8 @@
 package GUI.Simulator;
 
+import GUI.GUI;
+import Data.Performance;
+import Data.Podium;
 import GUI.Simulator.NPC.NPC;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.animation.AnimationTimer;
@@ -16,6 +19,8 @@ import org.jfree.fx.ResizableCanvas;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
 
 public class Simulator {
 
@@ -26,19 +31,24 @@ public class Simulator {
     private Camera camera;
     private ArrayList<NPC> npcs;
     private ArrayList<Target> targets;
+    private ArrayList<Target> entranceAndExitTargets;
     private int seconds = 0;
     private int minutes = 0;
     private int hours = 0;
-    //    private String clock = "test";
     private Label label = new Label("");
     private HBox hBox = new HBox();
     private Button playButton;
     private Button pauseButton;
     private Button emergencyButton;
     private Boolean running;
+    private GUI gui;
+    private HashMap<Podium, Target> podia;
 
 
-    public Simulator() throws Exception {
+    public Simulator(GUI gui) throws Exception {
+        this.gui = gui;
+        podia = new HashMap<>();
+
         init();
 
         playButton = new Button("▶");
@@ -95,20 +105,22 @@ public class Simulator {
 
     public void init() {
         running=true;
-        map = new Map("files/Festival Planner Normal Version V.2.json");
-
+        map = new Map("files/Festival Planner Normal Version V.5.3.json");
+        ArrayList<Podium> podiums = gui.getAgenda().getPodiumList();
         targets = map.getSpectatorTargets();
+        for (int i = 0; i < podiums.size(); i++) {
+            podia.put(podiums.get(i), targets.get(i + 4));
+        }
+
+        entranceAndExitTargets = map.getEntranceAndExitTargets();
 
         npcs = new ArrayList<>();
-
-        Point2D newPosition = new Point2D.Double(500, 700);
+        Point2D newPosition = new Point2D.Double(entranceAndExitTargets.get(0).getX() + 70, entranceAndExitTargets.get(0).getY() + 50);
         boolean hasCollision = false;
         for (NPC visitor : npcs) {
-            if (visitor.getPosition().distance(newPosition) < 64)
+            if (visitor.getPosition().distance(newPosition) < 32) {
                 hasCollision = true;
-        }
-        if (!hasCollision) {
-            npcs.add(new NPC(newPosition, 0, targets.get(9)));
+            }
         }
     }
 
@@ -136,23 +148,42 @@ public class Simulator {
     }
 
     public void update(double deltaTime) {
+        String minutes = String.valueOf(this.minutes);
+        for (NPC visitor : npcs) {
+            visitor.update(this.npcs, String.valueOf(hours), minutes);
+        }
 
         
         if(running) {
             for (NPC visitor : npcs) {
                 visitor.update(this.npcs);
             }
+        //fixme
+        Random r = new Random();
+        Point2D newPosition = new Point2D.Double(entranceAndExitTargets.get(r.nextInt(2)).getX(), entranceAndExitTargets.get(r.nextInt(2)).getY());
+        boolean hasCollision = false;
+        for (NPC visitor : npcs) {
+            if (visitor.getPosition().distance(newPosition) < 64) {
+                hasCollision = true;
+            }
+        }
+        if (!hasCollision) {
+            if (npcs.size() < 5) {//fixme
+                npcs.add(new NPC(newPosition, 0, targets.get(3), false));
+            }
+        }
 
-            if (deltaTime > 0.01) {
-                seconds += 5;
-                if (seconds > 60) {
-                    minutes++;
-                    seconds = 0;
-                    if (minutes > 59) {
-                        hours++;
-                        minutes = 0;
-                        if (hours > 23) {
-                            hours = 0;
+
+        if (deltaTime > 0.01) {
+            seconds += 5;
+            if (seconds > 60) {
+                this.minutes++;
+                seconds = 0;
+                if (this.minutes > 59) {
+                    hours++;
+                    this.minutes = 0;
+                    if (hours > 23) {
+                        hours = 0;
 
                         }
                     }
@@ -167,7 +198,52 @@ public class Simulator {
                     label.setText(hours + " : " + minutes);
                 }
             }
+            if (hours < 10 && this.minutes < 10) {
+                label.setText("0" + hours + " : 0" + minutes);
+            } else if (hours < 10) {
+                label.setText("0" + hours + " : " + minutes);
+            } else if (this.minutes < 10) {
+                label.setText(hours + " : 0" + minutes);
+            } else {
+                label.setText(hours + " : " + minutes);
+            }
         }
+        setNpcTarget();
+//        System.out.println(npcs.size());
+    }
+
+    private Random r = new Random();
+
+    public void setNpcTarget() {
+        String minutes = String.valueOf(this.minutes);
+        if (minutes.length() < 2) {
+            minutes = "0" + minutes;
+        }
+        ArrayList<Performance> performances = this.gui.getAgenda().getLivePerformances(String.valueOf(hours), minutes);
+        ArrayList<NPC> notBusyList = new ArrayList<>();
+//        for (NPC npc : npcs) {
+//            if (!npc.isBusy()) {
+//                notBusyList.add(npc);
+//            }
+//        }
+//        if (performances.isEmpty()) {
+//            for (NPC npc : npcs) {
+//                npc.setTarget(targets.get(r.nextInt(4)));
+//            }
+//        } else {
+//            if (notBusyList.isEmpty()) {
+//                int deeldinges = notBusyList.size() / performances.size();
+//                for (int i = 0; i < performances.size(); i++) {
+//                    performances.get(i);
+//                    for (int j = 0; j < notBusyList.size(); i++) {
+//                        notBusyList.get(j + (i * deeldinges)).setTarget(podia.get(performances.get(i).getPodium()));
+//                    }
+//                }
+//            }
+//        for (NPC npc : npcs) { fixme
+//            npc.setTarget(podia.get(performances.get(0).getPodium()));
+//        }
+//        System.out.println(podia.get(performances.get(0).getPodium()));
 
     }
 

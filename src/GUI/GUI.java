@@ -20,6 +20,7 @@ public class GUI extends Application {
     final ObservableList<Artist> artists = FXCollections.observableArrayList();
     final ObservableList<Podium> podiums = FXCollections.observableArrayList();
     final ObservableList<Performance> performances = FXCollections.observableArrayList();
+    private TabPane tabPane;
     private Overview overview;
     private Tableview tableview;
     private Popup popup;
@@ -36,13 +37,13 @@ public class GUI extends Application {
         this.popup = new Popup(this);
         this.overview = new Overview(this, popup);
         this.tableview = new Tableview(this, popup, "Tabelweergave", this.agenda);
-        this.simulator = new Simulator();
+        this.simulator = new Simulator(this);
 
         artists.addAll(agenda.getArtistList());
         podiums.addAll(agenda.getPodiumList());
         performances.addAll(agenda.getPerformanceList());
 
-        TabPane tabPane = new TabPane(overview.getTab(), tableview.getTab(), simulator.getTab());
+        this.tabPane = new TabPane(overview.getTab(), tableview.getTab(), simulator.getTab());
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
         Scene scene = new Scene(tabPane);
@@ -84,5 +85,9 @@ public class GUI extends Application {
 
     public ObservableList<Performance> getPerformances() {
         return performances;
+    }
+
+    public TabPane getTabPane() {
+        return tabPane;
     }
 }
