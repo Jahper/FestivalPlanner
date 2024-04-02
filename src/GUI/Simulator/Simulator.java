@@ -133,7 +133,7 @@ public class Simulator {
             }
         }
         if (!hasCollision) {
-            if (npcs.size() < 100) {//fixme
+            if (npcs.size() < 5) {//fixme
                 npcs.add(new NPC(newPosition, 0, targets.get(5)));
             }
         }
