@@ -9,6 +9,7 @@ import javafx.animation.AnimationTimer;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -43,12 +44,15 @@ public class Simulator {
     private Boolean running;
     private GUI gui;
     private HashMap<Podium, Target> podia;
+    private Slider timeLine;
+    private double sliderValue;
+    private Label label1;
 
 
     public Simulator(GUI gui) throws Exception {
         this.gui = gui;
         podia = new HashMap<>();
-
+        sliderValue = 0.0;
         init();
 
         playButton = new Button("▶");
@@ -68,6 +72,12 @@ public class Simulator {
             }
         });
 
+        label1 = new Label("Tijdlijn: ");
+        timeLine = new Slider(0.0, 24.0, 1.0);
+        timeLine.setValue(sliderValue);
+        timeLine.setMinWidth(100.0);
+        timeLine.setBlockIncrement(1.0);
+
 
         mainPane = new BorderPane();
         canvas = new ResizableCanvas(g -> draw(g), mainPane);
@@ -78,7 +88,7 @@ public class Simulator {
         hBox.setPadding(new Insets(1));
         hBox.setSpacing(5);
 
-        hBox.getChildren().addAll(label, playButton, pauseButton, emergencyButton);
+        hBox.getChildren().addAll(label, playButton, pauseButton, emergencyButton,label1, timeLine);
 
         mainPane.setBottom(hBox);
 
@@ -207,6 +217,8 @@ public class Simulator {
         } else {
             label.setText(hours + " : " + minutes);
         }
+        sliderValue = hours + (minutes / 60);
+        timeLine.setValue(sliderValue);
     }
 
     private Random r = new Random();
