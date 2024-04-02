@@ -148,11 +148,13 @@ public class Simulator {
     }
 
     public void update(double deltaTime) {
-        if (running) {
-            for (NPC visitor : npcs) {
-                visitor.update(this.npcs, String.valueOf(hours), String.valueOf(minutes));
-            }
+        if (!running || !gui.getTabPane().getTabs().get(2).isSelected()) {
+            return;
         }
+        for (NPC visitor : npcs) {
+            visitor.update(this.npcs, String.valueOf(hours), String.valueOf(minutes));
+        }
+
 
         //fixme
         Random r = new Random();
@@ -204,6 +206,7 @@ public class Simulator {
             label.setText(hours + " : " + minutes);
         }
     }
+
     private Random r = new Random();
 
     public void setNpcTarget() {
